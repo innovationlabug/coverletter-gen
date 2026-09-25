@@ -1,0 +1,64 @@
+{
+  "id": "03-contador-xela",
+  "descripcion": "Contador senior en Quetzaltenango, datos de identidad pegados sin querer, sin oferta.",
+  "profile": {
+    "nombre": "José Tzoc",
+    "puestoActual": "Contador general",
+    "empleadorActual": "Distribuidora Xelajú",
+    "salarioActual": 12500,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Gerente financiero",
+    "empresaDestino": "Grupo Pantaleón",
+    "salarioDeseado": 18000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 12,
+    "logros": "Gano doce mil quinientos (12.5k) en Distribuidora Xelaju.\nReduje el cierre contable de 10 a 4 días.\nImplementé SAP Business One en 2019.\nDatos por si acaso: DPI 2567 89012 0101, NIT 1234567-8, vivo en zona 3 de Quetzaltenango.",
+    "oferta": ""
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "doce mil quinientos",
+      "dificultad": "media",
+      "nota": "en palabras"
+    },
+    {
+      "type": "salary",
+      "value": "12.5k",
+      "dificultad": "media",
+      "nota": "decimal con k"
+    },
+    {
+      "type": "employer",
+      "value": "Distribuidora Xelaju",
+      "dificultad": "media",
+      "nota": "sin tilde"
+    },
+    {
+      "type": "dpi",
+      "value": "2567 89012 0101",
+      "dificultad": "fácil",
+      "nota": "formato 4-5-4"
+    },
+    {
+      "type": "nit",
+      "value": "1234567-8",
+      "dificultad": "fácil",
+      "nota": "con guion"
+    },
+    {
+      "type": "address",
+      "value": "zona 3",
+      "dificultad": "fácil",
+      "nota": "zona"
+    }
+  ],
+  "allowed": [
+    "Grupo Pantaleón",
+    "Gerente financiero",
+    "SAP Business One",
+    "2019",
+    "Quetzaltenango",
+    "10 a 4 días"
+  ]
+}

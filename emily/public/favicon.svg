@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#edefe9"/>
+  <path d="M32 6c4 0 5 3 8 4s6-1 8 2 0 6 2 9 5 3 5 7-3 5-4 8 1 6-2 8-6 0-9 2-3 5-7 5-4-3-8-4-6 1-8-2 0-6-2-9-5-3-5-7 3-5 4-8-1-6 2-8 6 0 9-2 3-5 7-5z" fill="#7b2236" transform="translate(0 2)"/>
+  <circle cx="32" cy="34" r="15" fill="none" stroke="#f3e6e8" stroke-opacity=".35" stroke-width="1.5"/>
+  <text x="32" y="42" text-anchor="middle" font-family="Georgia, serif" font-size="24" font-style="italic" fill="#f8ecee">E</text>
+</svg>

@@ -1,0 +1,35 @@
+{
+  "id": "11-barista-falsos-positivos",
+  "descripcion": "Prueba de falsos positivos: empresa destino que parece dirección, trimestres \"Q2\", conteos.",
+  "profile": {
+    "nombre": "Andrea Sical",
+    "puestoActual": "Barista líder",
+    "empleadorActual": "Café Barista",
+    "salarioActual": 4200,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Supervisora de tienda",
+    "empresaDestino": "Café Calle Real",
+    "salarioDeseado": 5200,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 3,
+    "logros": "En el Q2 aumenté las ventas de bebidas de temporada 18%.\nEntrené a 6 baristas nuevos.\nAtendemos 300 clientes al día.\nHoy gano Q4,200.",
+    "oferta": "Café Calle Real busca Supervisora de tienda en Antigua Guatemala. Requisitos: 2 años en café de especialidad, manejo de caja e inventarios."
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "Q4,200",
+      "dificultad": "fácil",
+      "nota": "prefijo Q"
+    }
+  ],
+  "allowed": [
+    "Café Calle Real",
+    "Supervisora de tienda",
+    "Q2",
+    "18%",
+    "6 baristas",
+    "300 clientes",
+    "Antigua Guatemala"
+  ]
+}

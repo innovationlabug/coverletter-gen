@@ -1,0 +1,50 @@
+{
+  "id": "09-contacto-ofuscado",
+  "descripcion": "Correo y teléfono escritos para \"burlar\" filtros; NIT sin etiqueta estándar.",
+  "profile": {
+    "nombre": "Carla Ruiz",
+    "puestoActual": "Asistente administrativa",
+    "empleadorActual": "Seguros El Roble",
+    "salarioActual": 7000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Analista de recursos humanos",
+    "empresaDestino": "Cementos Progreso",
+    "salarioDeseado": 9000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 3,
+    "logros": "Organicé el archivo de 1,200 expedientes de personal.\nApoyé 3 procesos de reclutamiento masivo.\nGano Q7 mil.\nEscríbanme a carla punto ruiz arroba gmail punto com o al +502 55 55 12 34.\nMi nit es 45678912.",
+    "oferta": "Analista de recursos humanos. Requisitos: estudios en psicología industrial o administración, manejo de reclutamiento y nómina."
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "Q7 mil",
+      "dificultad": "fácil",
+      "nota": "Q + mil"
+    },
+    {
+      "type": "email",
+      "value": "carla punto ruiz arroba gmail punto com",
+      "dificultad": "difícil",
+      "nota": "correo ofuscado"
+    },
+    {
+      "type": "phone",
+      "value": "+502 55 55 12 34",
+      "dificultad": "difícil",
+      "nota": "agrupado 2-2-2-2"
+    },
+    {
+      "type": "nit",
+      "value": "45678912",
+      "dificultad": "media",
+      "nota": "NIT sin etiqueta estándar ni guion"
+    }
+  ],
+  "allowed": [
+    "Cementos Progreso",
+    "Analista de recursos humanos",
+    "1,200 expedientes",
+    "3 procesos"
+  ]
+}

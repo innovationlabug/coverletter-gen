@@ -1,0 +1,44 @@
+{
+  "id": "17-recien-graduado-minimo",
+  "descripcion": "Recién graduado, sin experiencia formal, texto mínimo, sin oferta.",
+  "profile": {
+    "nombre": "Juan Pablo Xitumul",
+    "puestoActual": "Cajero",
+    "empleadorActual": "Pizza Hut",
+    "salarioActual": 3500,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Asistente de marketing digital",
+    "empresaDestino": "Publicis Guatemala",
+    "salarioDeseado": 4500,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 0,
+    "logros": "Me gradué de Mercadotecnia en la URL.\nManejo las redes de un emprendimiento con 3,000 seguidores.\nGano 3.5k en Pizza Hut.\nmi correo es juanito_gt@hotmail.com",
+    "oferta": ""
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "3.5k",
+      "dificultad": "media",
+      "nota": "decimal con k"
+    },
+    {
+      "type": "employer",
+      "value": "Pizza Hut",
+      "dificultad": "fácil",
+      "nota": "nombre completo"
+    },
+    {
+      "type": "email",
+      "value": "juanito_gt@hotmail.com",
+      "dificultad": "fácil",
+      "nota": "correo"
+    }
+  ],
+  "allowed": [
+    "Publicis Guatemala",
+    "Asistente de marketing digital",
+    "3,000 seguidores",
+    "Mercadotecnia"
+  ]
+}

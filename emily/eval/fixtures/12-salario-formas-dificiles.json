@@ -1,0 +1,46 @@
+{
+  "id": "12-salario-formas-dificiles",
+  "descripcion": "Salario escrito de formas coloquiales difíciles.",
+  "profile": {
+    "nombre": "Rodrigo Estrada",
+    "puestoActual": "Ingeniero de QA",
+    "empleadorActual": "Bantrab",
+    "salarioActual": 12500,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "QA Lead",
+    "empresaDestino": "Encora",
+    "salarioDeseado": 16000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 6,
+    "logros": "Automaticé 400 casos de prueba con Cypress.\nBajé los defectos en producción 35%.\nHoy me pagan doce y medio.\nO sea mi sueldo base es de 12,5 más bono.\nEn total unos 12 mil 500.",
+    "oferta": "QA Lead. Requisitos: automatización con Cypress o Playwright, liderazgo de equipos de QA, ISTQB deseable."
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "doce y medio",
+      "dificultad": "difícil",
+      "nota": "coloquial, sin \"mil\""
+    },
+    {
+      "type": "salary",
+      "value": "12,5",
+      "dificultad": "difícil",
+      "nota": "\"12,5\" significando 12,500"
+    },
+    {
+      "type": "salary",
+      "value": "12 mil 500",
+      "dificultad": "media",
+      "nota": "mixto"
+    }
+  ],
+  "allowed": [
+    "Encora",
+    "QA Lead",
+    "Cypress",
+    "400 casos",
+    "35%",
+    "ISTQB"
+  ]
+}

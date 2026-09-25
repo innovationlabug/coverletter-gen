@@ -1,0 +1,23 @@
+{
+  "id": "04-enfermera-recorte",
+  "description": "Enfermera acepta recorte por horario, oferta sin rango",
+  "profile": {
+    "fullName": "Karla Estefanía Ramírez",
+    "email": "karla.ramirez@correo.com",
+    "currentRole": "Enfermera jefe de turno",
+    "currentEmployer": "Hospital Herrera Llerandi",
+    "currentSalary": {
+      "amount": 8800,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Enfermera de salud ocupacional",
+    "desiredSalary": {
+      "amount": 8000,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Maquiladora Textiles del Sur",
+    "yearsExperience": 10,
+    "achievements": "Coordiné un turno de 12 enfermeras sin incidentes graves durante 2 años. Diseñé el protocolo de triage que redujo el tiempo de espera 25%.",
+    "jobOffer": "Se busca enfermera profesional para clínica empresarial.\nRequisitos:\n- Licenciatura en enfermería\n- Colegiado activo\n- Experiencia en salud ocupacional (deseable)\nHorario de lunes a viernes, 7:00 a 16:00."
+  }
+}

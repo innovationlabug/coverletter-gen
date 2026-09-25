@@ -1,0 +1,57 @@
+{
+  "id": "05-enfermera-no-tech",
+  "descripcion": "No técnico: enfermería; dirección exacta y nombre con título.",
+  "profile": {
+    "nombre": "Marleny Coyoy",
+    "puestoActual": "Enfermera profesional",
+    "empleadorActual": "Hospital Herrera Llerandi",
+    "salarioActual": 8500,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Coordinadora de enfermería",
+    "empresaDestino": "Centro Médico Militar",
+    "salarioDeseado": 10500,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 7,
+    "logros": "Coordino un turno de 12 enfermeras en el área de intensivo del Herrera Llerandi.\nCapacité a 40 colegas en protocolos de higiene de manos.\nLa Licda. Marta Cifuentes puede dar referencias.\nGano Q 8 500 y trabajo en 6a avenida 8-71 zona 10.",
+    "oferta": "Se busca Coordinadora de enfermería. Requisitos: licenciatura en enfermería, colegiado activo, experiencia en intensivo y manejo de personal."
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "Herrera Llerandi",
+      "dificultad": "media",
+      "nota": "sin la palabra Hospital"
+    },
+    {
+      "type": "person_name",
+      "value": "Licda. Marta Cifuentes",
+      "dificultad": "fácil",
+      "nota": "título + nombre"
+    },
+    {
+      "type": "salary",
+      "value": "Q 8 500",
+      "dificultad": "fácil",
+      "nota": "espacios como separador"
+    },
+    {
+      "type": "address",
+      "value": "6a avenida 8-71",
+      "dificultad": "fácil",
+      "nota": "dirección GT"
+    },
+    {
+      "type": "address",
+      "value": "zona 10",
+      "dificultad": "fácil",
+      "nota": "zona"
+    }
+  ],
+  "allowed": [
+    "Centro Médico Militar",
+    "Coordinadora de enfermería",
+    "12 enfermeras",
+    "40 colegas",
+    "intensivo"
+  ]
+}

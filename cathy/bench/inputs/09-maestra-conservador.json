@@ -1,0 +1,22 @@
+{
+  "id": "09-maestra-conservador",
+  "description": "Docente a coordinadora académica, gap conservador, oferta con 'hasta'",
+  "profile": {
+    "fullName": "Gabriela Isabel Choc",
+    "currentRole": "Maestra de primaria",
+    "currentEmployer": "Colegio Americano de Guatemala",
+    "currentSalary": {
+      "amount": 6500,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Coordinadora académica",
+    "desiredSalary": {
+      "amount": 7000,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Colegio Monte María",
+    "yearsExperience": 11,
+    "achievements": "Diseñé el programa de lectura que subió 20 puntos el promedio de comprensión lectora. Capacité a 15 docentes en herramientas digitales.",
+    "jobOffer": "Coordinadora Académica de Primaria\nRequisitos:\n- Licenciatura en educación\n- 8 años de experiencia docente\n- Experiencia coordinando equipos\nSueldo hasta Q8,500 según experiencia."
+  }
+}

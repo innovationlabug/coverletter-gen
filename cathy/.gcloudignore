@@ -1,0 +1,12 @@
+node_modules
+.next
+ollama
+bench
+tests
+docs
+playwright-report
+test-results
+.env
+.env.*
+!.env.example
+*.md

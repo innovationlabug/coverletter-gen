@@ -1,0 +1,54 @@
+01-junior-soporte-tigo blocked=false residual= FP=[] sal=null emp=false
+   leaks: employer:TIGO[difícil]→fuga(TIGO)
+   other: 
+02-analista-datos-bi blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: salary:Q18,000 | salary:Q22,000
+03-contador-xela blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: 
+04-disenadora-usd-oferta-ingles blocked=false residual= FP=[Lead Product Designer] sal=null emp=false
+   leaks: 
+   other: person_name:Designer | person_name:Designer | salary:USD 4,000 | salary:4,800
+05-enfermera-no-tech blocked=true residual=person_role:Empresa FP=[] sal=null emp=false
+   leaks: 
+   other: 
+06-vendedor-texto-desordenado blocked=true residual=person_role:Empresa FP=[] sal=null emp=false
+   leaks: person_name:don Beto[difícil]→fuga(don Beto)
+   other: 
+07-nombres-minuscula blocked=true residual=person_role:Empleador|person_role:Empresa FP=[] sal=null emp=false
+   leaks: person_name:Carlos Méndez[difícil]→fuga(Carlos Méndez) ; person_name:ana lópez[difícil]→fuga(ana lópez)
+   other: 
+08-dev-remoto-oferta-ingles blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: salary:$3,500 | salary:$4,000
+09-contacto-ofuscado blocked=false residual= FP=[] sal=null emp=false
+   leaks: email:carla punto ruiz arroba gmail punto com[difícil]→fuga(carla punto ruiz arroba gmail punto com) ; phone:+502 55 55 12 34[difícil]→fuga(+502 55 55 12 34)
+   other: 
+10-maestra-colegio blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: 
+11-barista-falsos-positivos blocked=true residual=person_role:Empleador|person_role:Empresa FP=[Café Calle Real] sal=null emp=false
+   leaks: 
+   other: employer:Barista | address:Calle Real | address:Calle Real busca
+12-salario-formas-dificiles blocked=true residual=person_role:Empresa FP=[] sal=null emp=false
+   leaks: salary:doce y medio[difícil]→fuga(doce y medio) ; salary:12,5[difícil]→fuga(12,5)
+   other: 
+13-personas-variadas blocked=false residual= FP=[] sal=null emp=false
+   leaks: person_name:Luis Fernando Ajú[difícil]→fuga(Luis Fernando Ajú)
+   other: 
+14-direcciones blocked=true residual=person_role:Empleador|person_role:Empresa FP=[] sal=null emp=false
+   leaks: employer:Cerve[difícil]→fuga(Cerve) ; address:Vista Hermosa III[difícil]→fuga(Vista Hermosa III) ; address:Residenciales Los Álamos[fácil]→fuga(Residenciales Los Álamos)
+   other: address:carretera a El Salvador
+15-dpi-nit-variantes blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: 
+16-gerente-oferta-ingles-pretension blocked=true residual=person_role:Empresa FP=[] sal=null emp=false
+   leaks: person_name:Ricardo Arzú[difícil]→fuga(Ricardo Arzú)
+   other: 
+17-recien-graduado-minimo blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: 
+18-mezcla-typos-bam blocked=false residual= FP=[] sal=null emp=false
+   leaks: 
+   other: salary:USD 3,500 | salary:4,200

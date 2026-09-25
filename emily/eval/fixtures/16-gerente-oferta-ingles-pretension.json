@@ -1,0 +1,45 @@
+{
+  "id": "16-gerente-oferta-ingles-pretension",
+  "descripcion": "Gerente senior; oferta en inglés que pide pretensión salarial; cargo \"CEO\" antes del nombre.",
+  "profile": {
+    "nombre": "Fernando Arriola",
+    "puestoActual": "Gerente comercial",
+    "empleadorActual": "Grupo Unipharm",
+    "salarioActual": 35000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Country Manager",
+    "empresaDestino": "Bayer Centroamérica",
+    "salarioDeseado": 42000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 15,
+    "logros": "Crecí las ventas de Unipharm en Centroamérica 22% en dos años.\nDirijo un equipo de 35 representantes.\nReporto directamente al CEO Ricardo Arzú.\nMi paquete actual es Q35,000 más bonos.",
+    "oferta": "Country Manager — Central America.\nRequirements: 10+ years in pharma sales, P&L ownership, team leadership.\nPlease include your salary expectations in your application."
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "Unipharm",
+      "dificultad": "media",
+      "nota": "palabra distintiva"
+    },
+    {
+      "type": "person_name",
+      "value": "Ricardo Arzú",
+      "dificultad": "difícil",
+      "nota": "cargo \"CEO\" no está en la lista de roles"
+    },
+    {
+      "type": "salary",
+      "value": "Q35,000",
+      "dificultad": "fácil",
+      "nota": "prefijo Q"
+    }
+  ],
+  "allowed": [
+    "Bayer Centroamérica",
+    "Country Manager",
+    "22%",
+    "35 representantes",
+    "P&L"
+  ]
+}

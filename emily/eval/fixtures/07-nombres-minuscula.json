@@ -1,0 +1,51 @@
+{
+  "id": "07-nombres-minuscula",
+  "descripcion": "Personas mencionadas en minúscula o sin cargo; empleador por su palabra distintiva.",
+  "profile": {
+    "nombre": "Gabriela Monterroso",
+    "puestoActual": "Gerente de tienda",
+    "empleadorActual": "Pollo Campero",
+    "salarioActual": 11000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Gerente de operaciones",
+    "empresaDestino": "Starbucks Guatemala",
+    "salarioDeseado": 14000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 6,
+    "logros": "En Campero manejo una tienda con 22 colaboradores y ventas récord en 2023.\nJunto a Carlos Méndez rediseñamos los turnos y bajamos la rotación 15%.\nmi jefa ana lópez me nominó a gerente del año.\nMi salario es de Q.11,000.00 mensuales.",
+    "oferta": "Gerente de operaciones — Starbucks Guatemala. Buscamos liderazgo de equipos multi-tienda, indicadores de servicio y experiencia en retail de alimentos."
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "Campero",
+      "dificultad": "media",
+      "nota": "palabra distintiva"
+    },
+    {
+      "type": "person_name",
+      "value": "Carlos Méndez",
+      "dificultad": "difícil",
+      "nota": "nombre sin cargo delante"
+    },
+    {
+      "type": "person_name",
+      "value": "ana lópez",
+      "dificultad": "difícil",
+      "nota": "nombre en minúscula"
+    },
+    {
+      "type": "salary",
+      "value": "Q.11,000.00",
+      "dificultad": "fácil",
+      "nota": "Q. con decimales"
+    }
+  ],
+  "allowed": [
+    "Starbucks Guatemala",
+    "Gerente de operaciones",
+    "22 colaboradores",
+    "15%",
+    "2023"
+  ]
+}

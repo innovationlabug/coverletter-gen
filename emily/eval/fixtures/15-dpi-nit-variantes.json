@@ -1,0 +1,50 @@
+{
+  "id": "15-dpi-nit-variantes",
+  "descripcion": "DPI y NIT en variantes de formato.",
+  "profile": {
+    "nombre": "Silvia Monzón",
+    "puestoActual": "Auxiliar contable",
+    "empleadorActual": "Farmacias Galeno",
+    "salarioActual": 5200,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Contadora",
+    "empresaDestino": "Deloitte Guatemala",
+    "salarioDeseado": 7000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 4,
+    "logros": "Llevo la conciliación de 15 cuentas bancarias.\nPara el expediente: DPI 1234-56789-0101 y también lo escribí como 1234.56789.0101.\nNIT: 987654-K\nSalario Q5,200.",
+    "oferta": "Contadora. Requisitos: pensum cerrado en Contaduría Pública y Auditoría, Excel avanzado."
+  },
+  "canaries": [
+    {
+      "type": "dpi",
+      "value": "1234-56789-0101",
+      "dificultad": "fácil",
+      "nota": "con guiones"
+    },
+    {
+      "type": "dpi",
+      "value": "1234.56789.0101",
+      "dificultad": "difícil",
+      "nota": "con puntos"
+    },
+    {
+      "type": "nit",
+      "value": "987654-K",
+      "dificultad": "fácil",
+      "nota": "etiquetado, dígito K"
+    },
+    {
+      "type": "salary",
+      "value": "Q5,200",
+      "dificultad": "fácil",
+      "nota": "prefijo Q"
+    }
+  ],
+  "allowed": [
+    "Deloitte Guatemala",
+    "Contadora",
+    "15 cuentas bancarias",
+    "Excel avanzado"
+  ]
+}

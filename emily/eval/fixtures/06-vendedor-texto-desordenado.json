@@ -1,0 +1,51 @@
+{
+  "id": "06-vendedor-texto-desordenado",
+  "descripcion": "Texto desordenado, sin puntuación ni mayúsculas; apodo con \"don\".",
+  "profile": {
+    "nombre": "Byron López",
+    "puestoActual": "vendedor de ruta",
+    "empleadorActual": "Distribuidora El Sol",
+    "salarioActual": 5800,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Supervisor de ventas",
+    "empresaDestino": "Walmart Centroamérica",
+    "salarioDeseado": 7500,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 4,
+    "logros": "pues trabajo en distribuidora el sol desde hace 4 años gano 5mil800 mas comisiones cubro 85 clientes en la ruta de villa nueva y subi las ventas un 25 por ciento mi supervisor don Beto dice que ya estoy listo para supervisar mi whatsapp 5512 3434",
+    "oferta": ""
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "distribuidora el sol",
+      "dificultad": "fácil",
+      "nota": "minúsculas"
+    },
+    {
+      "type": "salary",
+      "value": "5mil800",
+      "dificultad": "difícil",
+      "nota": "\"5mil800\" pegado"
+    },
+    {
+      "type": "person_name",
+      "value": "don Beto",
+      "dificultad": "difícil",
+      "nota": "apodo con \"don\" en minúscula, sin apellido"
+    },
+    {
+      "type": "phone",
+      "value": "5512 3434",
+      "dificultad": "fácil",
+      "nota": "con espacio"
+    }
+  ],
+  "allowed": [
+    "Walmart Centroamérica",
+    "Supervisor de ventas",
+    "85 clientes",
+    "25 por ciento",
+    "villa nueva"
+  ]
+}

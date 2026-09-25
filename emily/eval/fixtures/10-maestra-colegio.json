@@ -1,0 +1,45 @@
+{
+  "id": "10-maestra-colegio",
+  "descripcion": "No técnico: docente; empleador con palabras genéricas; salario en palabras largas; colonia.",
+  "profile": {
+    "nombre": "Lucía Barrios",
+    "puestoActual": "Maestra de primaria",
+    "empleadorActual": "Colegio Americano de Guatemala",
+    "salarioActual": 5800,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Coordinadora académica",
+    "empresaDestino": "Fundación Sergio Paiz",
+    "salarioDeseado": 8000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 9,
+    "logros": "Diseñé el programa de lectura del Americano para 3 grados.\nMis alumnos subieron 18 puntos en la prueba de comprensión lectora.\nMe pagan cinco mil ochocientos quetzales.\nVivo en Mixco, colonia El Naranjo.",
+    "oferta": "Coordinadora académica para programas educativos. Buscamos experiencia docente, diseño curricular y trabajo con comunidades."
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "Americano",
+      "dificultad": "media",
+      "nota": "palabra distintiva"
+    },
+    {
+      "type": "salary",
+      "value": "cinco mil ochocientos quetzales",
+      "dificultad": "media",
+      "nota": "en palabras"
+    },
+    {
+      "type": "address",
+      "value": "colonia El Naranjo",
+      "dificultad": "fácil",
+      "nota": "colonia"
+    }
+  ],
+  "allowed": [
+    "Fundación Sergio Paiz",
+    "Coordinadora académica",
+    "18 puntos",
+    "3 grados",
+    "Mixco"
+  ]
+}

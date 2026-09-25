@@ -1,0 +1,58 @@
+{
+  "id": "04-disenadora-usd-oferta-ingles",
+  "descripcion": "Senior en USD con oferta remota en inglés; correo personal y teléfono del reclutador.",
+  "profile": {
+    "nombre": "Sofía Herrera",
+    "puestoActual": "Senior Product Designer",
+    "empleadorActual": "Cementos Progreso",
+    "salarioActual": 3200,
+    "monedaActual": "USD",
+    "puestoDeseado": "Lead Product Designer",
+    "empresaDestino": "Hugo Technologies",
+    "salarioDeseado": 4200,
+    "monedaDeseada": "USD",
+    "aniosExperiencia": 8,
+    "logros": "Lideré el design system en Progreso, usado por 4 equipos.\nSubí la conversión del portal de clientes en 40%.\nCobro $3,200 (unos 3.2k al mes).\nPortafolio y contacto: sofia.h@gmail.com",
+    "oferta": "Lead Product Designer (Remote, LATAM)\nWe are looking for:\n- 6+ years in product design\n- Strong Figma and design systems\n- Experience mentoring designers\nSalary: USD 4,000 - 4,800 per month. Questions: +502 5555-1234"
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "$3,200",
+      "dificultad": "fácil",
+      "nota": "prefijo $"
+    },
+    {
+      "type": "salary",
+      "value": "3.2k",
+      "dificultad": "media",
+      "nota": "decimal con k"
+    },
+    {
+      "type": "employer",
+      "value": "Progreso",
+      "dificultad": "media",
+      "nota": "solo la palabra distintiva"
+    },
+    {
+      "type": "email",
+      "value": "sofia.h@gmail.com",
+      "dificultad": "fácil",
+      "nota": "correo personal"
+    },
+    {
+      "type": "phone",
+      "value": "+502 5555-1234",
+      "dificultad": "fácil",
+      "nota": "con código de país"
+    }
+  ],
+  "allowed": [
+    "Hugo Technologies",
+    "Lead Product Designer",
+    "Figma",
+    "design system",
+    "40%",
+    "4 equipos"
+  ]
+}

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es-GT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Carta de interés y nota privada de negociación. Tu salario actual nunca sale del dispositivo." />
+    <meta name="theme-color" content="#1c2940" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <title>Emily · Carta de interés</title>
+  </head>
+  <body>
+    <a class="skip" href="#hoja">Saltar a la carta</a>
+    <header class="masthead">
+      <div class="masthead__title">
+        <h1>Tu carta, sin contar lo que ganás.</h1>
+        <p class="lede">
+          Contá tu situación con franqueza. La carta sale de aquí; tu salario actual, tu empleador y los nombres de
+          otras personas se quedan en este dispositivo.
+        </p>
+      </div>
+      <ul class="status" aria-label="Estado">
+        <li id="st-red" data-testid="status-network"></li>
+        <li id="st-nube" data-testid="status-cloud"></li>
+        <li id="st-modelo" data-testid="status-model"></li>
+      </ul>
+    </header>
+
+    <main class="desk">
+      <form id="perfil" class="form" novalidate aria-labelledby="form-title">
+        <h2 id="form-title" class="section-title">Tu situación</h2>
+        <p class="hint">Los campos con sello <span class="seal-dot" aria-hidden="true"></span><span class="sr">marcado como privado</span> nunca se envían a la nube.</p>
+
+        <fieldset>
+          <legend>Hoy</legend>
+          <label>Nombre completo
+            <input name="nombre" autocomplete="name" required />
+          </label>
+          <label>Puesto actual
+            <input name="puestoActual" required />
+          </label>
+          <label class="private">Empleador actual
+            <input name="empleadorActual" autocomplete="organization" required />
+          </label>
+          <div class="row">
+            <label class="private grow">Salario actual (mensual)
+              <input name="salarioActual" inputmode="decimal" required />
+            </label>
+            <label class="private">Moneda
+              <select name="monedaActual"><option value="GTQ">GTQ</option><option value="USD">USD</option></select>
+            </label>
+          </div>
+          <label>Años de experiencia
+            <input name="aniosExperiencia" inputmode="numeric" required />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Lo que buscás</legend>
+          <label>Puesto deseado
+            <input name="puestoDeseado" required />
+          </label>
+          <label>Empresa destino
+            <input name="empresaDestino" required />
+          </label>
+          <div class="row">
+            <label class="grow">Salario deseado (mensual)
+              <input name="salarioDeseado" inputmode="decimal" required />
+            </label>
+            <label>Moneda
+              <select name="monedaDeseada"><option value="GTQ">GTQ</option><option value="USD">USD</option></select>
+            </label>
+          </div>
+          <p class="hint">El salario deseado solo lo usa la nota privada; la carta nunca menciona cifras.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Lo que has logrado</legend>
+          <label>Logros, en tus palabras
+            <textarea name="logros" rows="6" required placeholder="Un logro por línea. Podés escribir como hablás: lo que haya de sensible se tapa antes de salir."></textarea>
+          </label>
+          <label>Oferta de trabajo (opcional)
+            <textarea name="oferta" rows="5" placeholder="Pegá aquí la oferta tal cual."></textarea>
+          </label>
+        </fieldset>
+
+        <label class="check">
+          <input type="checkbox" name="usarNube" checked />
+          Pedir también la carta a la nube (Gemini)
+        </label>
+
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="submit" class="btn btn--primary" data-testid="generate">Preparar carta y nota</button>
+          <button type="button" class="btn btn--quiet" id="ejemplo" data-testid="fill-example">Usar un ejemplo</button>
+        </div>
+      </form>
+
+      <section class="outputs" aria-label="Resultados">
+        <section class="model" aria-labelledby="model-title">
+          <h2 id="model-title" class="section-title">Modelo en tu dispositivo</h2>
+          <p id="model-desc" class="model__desc"></p>
+          <div class="progress" id="model-progress" hidden>
+            <progress id="model-bar" max="100" value="0" aria-label="Descarga del modelo"></progress>
+            <span id="model-bytes" aria-live="polite"></span>
+          </div>
+          <button type="button" class="btn btn--quiet" id="model-load" data-testid="model-load">Descargar modelo</button>
+        </section>
+
+        <article id="hoja" class="sheet" aria-labelledby="sheet-title" tabindex="-1">
+          <div class="sheet__head">
+            <h2 id="sheet-title" class="section-title">La carta</h2>
+            <div class="tabs" role="tablist" aria-label="Versión de la carta">
+              <button role="tab" aria-controls="sheet-body" id="tab-local" data-view="local" aria-selected="false" data-testid="tab-local">Borrador local</button>
+              <button role="tab" aria-controls="sheet-body" id="tab-nube" data-view="nube" aria-selected="false" data-testid="tab-nube">Carta de la nube</button>
+              <button role="tab" aria-controls="sheet-body" id="tab-plantilla" data-view="plantilla" aria-selected="true" data-testid="tab-plantilla">Plantilla</button>
+              <button role="tab" aria-controls="sheet-body" id="tab-comparar" data-view="comparar" aria-selected="false" data-testid="tab-comparar">Comparar</button>
+            </div>
+          </div>
+          <div id="sheet-body" class="sheet__body" role="tabpanel" aria-live="polite" data-testid="letter">
+            <p class="empty">Completá tu situación y tocá “Preparar carta y nota”. La plantilla y la nota funcionan incluso sin internet.</p>
+          </div>
+        </article>
+
+        <section id="nota" class="envelope" aria-labelledby="nota-title" data-testid="note">
+          <div class="envelope__flap" aria-hidden="true"></div>
+          <h2 id="nota-title" class="section-title">Nota privada de negociación</h2>
+          <p class="envelope__stamp">Solo en este dispositivo</p>
+          <div id="nota-body"><p class="empty">Aquí vas a ver qué tan realista es tu expectativa y cuándo mencionarla.</p></div>
+        </section>
+
+        <section id="nube" class="airmail" aria-labelledby="nube-title" data-testid="cloud-panel">
+          <h2 id="nube-title" class="section-title">Qué salió a la nube</h2>
+          <div id="nube-body"><p class="empty">Todavía no ha salido nada de este dispositivo.</p></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>
+        Plantilla, nota y tachado de datos: en tu navegador. Borrador local: Gemma 4 E2B con transformers.js, en tu
+        dispositivo. Carta de la nube: Gemini vía Firebase AI Logic, solo con lo que ves en “Qué salió a la nube”.
+      </p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

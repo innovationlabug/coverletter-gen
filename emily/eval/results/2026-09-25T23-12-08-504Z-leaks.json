@@ -1,0 +1,1115 @@
+{
+  "meta": {
+    "timestamp": "2026-09-25T23:12:08.505Z",
+    "durationS": 0.079,
+    "mode": "leaks-only",
+    "fixtures": [
+      "01-junior-soporte-tigo",
+      "02-analista-datos-bi",
+      "03-contador-xela",
+      "04-disenadora-usd-oferta-ingles",
+      "05-enfermera-no-tech",
+      "06-vendedor-texto-desordenado",
+      "07-nombres-minuscula",
+      "08-dev-remoto-oferta-ingles",
+      "09-contacto-ofuscado",
+      "10-maestra-colegio",
+      "11-barista-falsos-positivos",
+      "12-salario-formas-dificiles",
+      "13-personas-variadas",
+      "14-direcciones",
+      "15-dpi-nit-variantes",
+      "16-gerente-oferta-ingles-pretension",
+      "17-recien-graduado-minimo",
+      "18-mezcla-typos-bam"
+    ],
+    "node": "v24.21.0",
+    "platform": "darwin arm64 · Apple M1 Max · 69 GB RAM",
+    "localModel": {
+      "id": "onnx-community/gemma-4-E2B-it-qat-mobile-ONNX",
+      "dtype": "q2f16",
+      "device": "webgpu",
+      "runtime": "transformers.js (Node, onnxruntime-node)"
+    },
+    "cloudModel": {
+      "project": "ai-experiments-487722",
+      "location": "global",
+      "model": "gemini-3.8-flash",
+      "via": "@google/genai (Vertex AI, ADC)",
+      "appVia": "Firebase AI Logic (GoogleAIBackend)"
+    },
+    "judge": {
+      "model": "gemini-3.8-flash",
+      "temperature": 0,
+      "blind": true
+    },
+    "pricing": {
+      "inputPerM": 0.75,
+      "outputPerM": 3.75,
+      "note": "Precio introductorio hasta el 31-12-2026; desde el 1-1-2027: US$1.50 / US$7.50 por millón (entrada / salida con razonamiento)."
+    },
+    "samplePayload": "Escribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Agente de soporte técnico\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 1\nPuesto al que aplica: Desarrollador web junior\nEmpresa destino: Nearsure\n\nLogros y experiencia (texto del candidato):\n<<<\nEn TIGO atiendo unos 60 tickets diarios y armé una base de conocimiento en Notion.\nHice un curso de JavaScript y React y publiqué 2 proyectos en GitHub.\nHoy gano [SALARIO], o sea [SALARIO], y quiero dar el salto.\nMi jefe [PERSONA] me recomienda para el puesto. Mi cel es [TELÉFONO].\n>>>\n\nNo se proporcionó oferta: enfoca la carta en el puesto y la empresa destino."
+  },
+  "leaks": {
+    "summary": {
+      "cases": 18,
+      "canaries": 78,
+      "blockedCases": 0,
+      "sentCases": 18,
+      "casesWithFinalLeak": 8,
+      "byType": {
+        "salary": {
+          "total": 26,
+          "atrapadosRedactor": 24,
+          "atrapadosFinal": 24,
+          "fugas": 2,
+          "parciales": 0
+        },
+        "employer": {
+          "total": 15,
+          "atrapadosRedactor": 13,
+          "atrapadosFinal": 13,
+          "fugas": 2,
+          "parciales": 0
+        },
+        "person_name": {
+          "total": 11,
+          "atrapadosRedactor": 6,
+          "atrapadosFinal": 6,
+          "fugas": 5,
+          "parciales": 0
+        },
+        "phone": {
+          "total": 6,
+          "atrapadosRedactor": 5,
+          "atrapadosFinal": 5,
+          "fugas": 1,
+          "parciales": 0
+        },
+        "email": {
+          "total": 5,
+          "atrapadosRedactor": 4,
+          "atrapadosFinal": 4,
+          "fugas": 1,
+          "parciales": 0
+        },
+        "dpi": {
+          "total": 3,
+          "atrapadosRedactor": 3,
+          "atrapadosFinal": 3,
+          "fugas": 0,
+          "parciales": 0
+        },
+        "address": {
+          "total": 9,
+          "atrapadosRedactor": 8,
+          "atrapadosFinal": 8,
+          "fugas": 1,
+          "parciales": 0
+        },
+        "nit": {
+          "total": 3,
+          "atrapadosRedactor": 3,
+          "atrapadosFinal": 3,
+          "fugas": 0,
+          "parciales": 0
+        }
+      },
+      "byDifficulty": {
+        "fácil": {
+          "total": 44,
+          "atrapadosFinal": 44
+        },
+        "media": {
+          "total": 20,
+          "atrapadosFinal": 20
+        },
+        "difícil": {
+          "total": 14,
+          "atrapadosFinal": 2
+        }
+      },
+      "recallRedactor": 0.8461538461538461,
+      "recallFinal": 0.8461538461538461,
+      "falsePositives": 0,
+      "allowedTotal": 101,
+      "currentSalaryAnyFormLeaks": 0,
+      "employerStructuralLeaks": 0
+    },
+    "cases": [
+      {
+        "id": "01-junior-soporte-tigo",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "Q6,500",
+            "dificultad": "fácil",
+            "nota": "prefijo Q con comas",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "seis mil quinientos",
+            "dificultad": "media",
+            "nota": "en palabras",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "TIGO",
+            "dificultad": "difícil",
+            "nota": "marca de 4 letras en mayúsculas; el nombre declarado es \"Tigo Guatemala\"",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "TIGO"
+          },
+          {
+            "type": "person_name",
+            "value": "Mario Chen",
+            "dificultad": "fácil",
+            "nota": "\"mi jefe\" + nombre",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "phone",
+            "value": "4455-6677",
+            "dificultad": "fácil",
+            "nota": "celular GT 4-4",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 7,
+        "allowedTotal": 7,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 4,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Agente de soporte técnico\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 1\nPuesto al que aplica: Desarrollador web junior\nEmpresa destino: Nearsure\n\nLogros y experiencia (texto del candidato):\n<<<\nEn TIGO atiendo unos 60 tickets diarios y armé una base de conocimiento en Notion.\nHice un curso de JavaScript y React y publiqué 2 proyectos en GitHub.\nHoy gano [SALARIO], o sea [SALARIO], y quiero dar el salto.\nMi jefe [PERSONA] me recomienda para el puesto. Mi cel es [TELÉFONO].\n>>>\n\nNo se proporcionó oferta: enfoca la carta en el puesto y la empresa destino."
+      },
+      {
+        "id": "02-analista-datos-bi",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "15k",
+            "dificultad": "media",
+            "nota": "abreviatura k",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "Q15,000",
+            "dificultad": "fácil",
+            "nota": "prefijo Q",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "Banco Industrial",
+            "dificultad": "fácil",
+            "nota": "nombre completo en el puesto actual",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "BI",
+            "dificultad": "media",
+            "nota": "acrónimo",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Ana López",
+            "dificultad": "fácil",
+            "nota": "\"mi jefa\" + nombre",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "email",
+            "value": "talento@telus.example.com",
+            "dificultad": "fácil",
+            "nota": "correo en la oferta",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "phone",
+            "value": "2222-3333",
+            "dificultad": "fácil",
+            "nota": "teléfono fijo en la oferta",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 7,
+        "allowedTotal": 7,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 9,
+        "otherRedactions": [
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "Q18,000",
+            "rule": "money"
+          },
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "Q22,000",
+            "rule": "money"
+          }
+        ],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Analista de datos en [EMPLEADOR_ACTUAL]\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 5\nPuesto al que aplica: Data Engineer\nEmpresa destino: Telus International\n\nLogros y experiencia (texto del candidato):\n<<<\n- Automaticé en Python los reportes de cartera: ahorro de 20 horas al mes.\n- En el [EMPLEADOR_ACTUAL] migramos 3 bases de datos a BigQuery con mi jefa [PERSONA].\n- Actualmente gano [SALARIO] ([SALARIO] brutos) y quiero crecer.\n- Reduje en 30% los errores de conciliación.\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nData Engineer — Telus International\nRequisitos:\n- Python y SQL avanzado\n- BigQuery o Snowflake\n- Airflow\nSalario entre [SALARIO] y [SALARIO]. Enviar CV a [CORREO] o llamar al [TELÉFONO].\n>>>"
+      },
+      {
+        "id": "03-contador-xela",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "doce mil quinientos",
+            "dificultad": "media",
+            "nota": "en palabras",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "12.5k",
+            "dificultad": "media",
+            "nota": "decimal con k",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "Distribuidora Xelaju",
+            "dificultad": "media",
+            "nota": "sin tilde",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "dpi",
+            "value": "2567 89012 0101",
+            "dificultad": "fácil",
+            "nota": "formato 4-5-4",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "nit",
+            "value": "1234567-8",
+            "dificultad": "fácil",
+            "nota": "con guion",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "zona 3",
+            "dificultad": "fácil",
+            "nota": "zona",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 6,
+        "allowedTotal": 6,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 6,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Contador general\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 12\nPuesto al que aplica: Gerente financiero\nEmpresa destino: Grupo Pantaleón\n\nLogros y experiencia (texto del candidato):\n<<<\nGano [SALARIO] ([SALARIO]) en [EMPLEADOR_ACTUAL].\nReduje el cierre contable de 10 a 4 días.\nImplementé SAP Business One en 2019.\nDatos por si acaso: DPI [DPI], [NIT], vivo en [DIRECCIÓN] de Quetzaltenango.\n>>>\n\nNo se proporcionó oferta: enfoca la carta en el puesto y la empresa destino."
+      },
+      {
+        "id": "04-disenadora-usd-oferta-ingles",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "$3,200",
+            "dificultad": "fácil",
+            "nota": "prefijo $",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "3.2k",
+            "dificultad": "media",
+            "nota": "decimal con k",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "Progreso",
+            "dificultad": "media",
+            "nota": "solo la palabra distintiva",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "email",
+            "value": "sofia.h@gmail.com",
+            "dificultad": "fácil",
+            "nota": "correo personal",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "phone",
+            "value": "+502 5555-1234",
+            "dificultad": "fácil",
+            "nota": "con código de país",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 6,
+        "allowedTotal": 6,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 7,
+        "otherRedactions": [
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "USD 4,000",
+            "rule": "money"
+          },
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "4,800",
+            "rule": "money"
+          }
+        ],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Senior Product Designer\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 8\nPuesto al que aplica: Lead Product Designer\nEmpresa destino: Hugo Technologies\n\nLogros y experiencia (texto del candidato):\n<<<\nLideré el design system en [EMPLEADOR_ACTUAL], usado por 4 equipos.\nSubí la conversión del portal de clientes en 40%.\nCobro [SALARIO] (unos [SALARIO] al mes).\nPortafolio y contacto: [CORREO]\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nLead Product Designer (Remote, LATAM)\nWe are looking for:\n- 6+ years in product design\n- Strong Figma and design systems\n- Experience mentoring designers\nSalary: [SALARIO] - [SALARIO] per month. Questions: [TELÉFONO]\n>>>"
+      },
+      {
+        "id": "05-enfermera-no-tech",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "Herrera Llerandi",
+            "dificultad": "media",
+            "nota": "sin la palabra Hospital",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Licda. Marta Cifuentes",
+            "dificultad": "fácil",
+            "nota": "título + nombre",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "Q 8 500",
+            "dificultad": "fácil",
+            "nota": "espacios como separador",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "6a avenida 8-71",
+            "dificultad": "fácil",
+            "nota": "dirección GT",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "zona 10",
+            "dificultad": "fácil",
+            "nota": "zona",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 5,
+        "allowedTotal": 5,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 6,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Enfermera profesional\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 7\nPuesto al que aplica: Coordinadora de enfermería\nEmpresa destino: Centro Médico Militar\n\nLogros y experiencia (texto del candidato):\n<<<\nCoordino un turno de 12 enfermeras en el área de intensivo del [EMPLEADOR_ACTUAL] [EMPLEADOR_ACTUAL].\nCapacité a 40 colegas en protocolos de higiene de manos.\nLa [PERSONA] puede dar referencias.\nGano [SALARIO] y trabajo en [DIRECCIÓN] [DIRECCIÓN].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nSe busca Coordinadora de enfermería. Requisitos: licenciatura en enfermería, colegiado activo, experiencia en intensivo y manejo de personal.\n>>>"
+      },
+      {
+        "id": "06-vendedor-texto-desordenado",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "distribuidora el sol",
+            "dificultad": "fácil",
+            "nota": "minúsculas",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "5mil800",
+            "dificultad": "difícil",
+            "nota": "\"5mil800\" pegado",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "don Beto",
+            "dificultad": "difícil",
+            "nota": "apodo con \"don\" en minúscula, sin apellido",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "don Beto"
+          },
+          {
+            "type": "phone",
+            "value": "5512 3434",
+            "dificultad": "fácil",
+            "nota": "con espacio",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 5,
+        "allowedTotal": 5,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 3,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: vendedor de ruta\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 4\nPuesto al que aplica: Supervisor de ventas\nEmpresa destino: Walmart Centroamérica\n\nLogros y experiencia (texto del candidato):\n<<<\npues trabajo en [EMPLEADOR_ACTUAL] desde hace 4 años gano [SALARIO]800 mas comisiones cubro 85 clientes en la ruta de villa nueva y subi las ventas un 25 por ciento mi supervisor don Beto dice que ya estoy listo para supervisar mi whatsapp [TELÉFONO]\n>>>\n\nNo se proporcionó oferta: enfoca la carta en el puesto y la empresa destino."
+      },
+      {
+        "id": "07-nombres-minuscula",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "Campero",
+            "dificultad": "media",
+            "nota": "palabra distintiva",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Carlos Méndez",
+            "dificultad": "difícil",
+            "nota": "nombre sin cargo delante",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "Carlos Méndez"
+          },
+          {
+            "type": "person_name",
+            "value": "ana lópez",
+            "dificultad": "difícil",
+            "nota": "nombre en minúscula",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "ana lópez"
+          },
+          {
+            "type": "salary",
+            "value": "Q.11,000.00",
+            "dificultad": "fácil",
+            "nota": "Q. con decimales",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 5,
+        "allowedTotal": 5,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 2,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Gerente de tienda\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 6\nPuesto al que aplica: Gerente de operaciones\nEmpresa destino: Starbucks Guatemala\n\nLogros y experiencia (texto del candidato):\n<<<\nEn [EMPLEADOR_ACTUAL] manejo una tienda con 22 colaboradores y ventas récord en 2023.\nJunto a Carlos Méndez rediseñamos los turnos y bajamos la rotación 15%.\nmi jefa ana lópez me nominó a gerente del año.\nMi salario es de [SALARIO] mensuales.\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nGerente de operaciones — Starbucks Guatemala. Buscamos liderazgo de equipos multi-tienda, indicadores de servicio y experiencia en retail de alimentos.\n>>>"
+      },
+      {
+        "id": "08-dev-remoto-oferta-ingles",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "Applaudo",
+            "dificultad": "media",
+            "nota": "palabra distintiva",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "USD 2,800",
+            "dificultad": "fácil",
+            "nota": "prefijo USD",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "2.8k",
+            "dificultad": "media",
+            "nota": "decimal con k",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "email",
+            "value": "jobs@lumenhealth.io",
+            "dificultad": "fácil",
+            "nota": "correo en la oferta",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 7,
+        "allowedTotal": 7,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 6,
+        "otherRedactions": [
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "$3,500",
+            "rule": "money"
+          },
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "$4,000",
+            "rule": "money"
+          }
+        ],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Mobile Developer\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 6\nPuesto al que aplica: Senior React Native Engineer\nEmpresa destino: Lumen Health\n\nLogros y experiencia (texto del candidato):\n<<<\nBuilt and shipped 5 React Native apps at [EMPLEADOR_ACTUAL], one with 100,000 downloads.\nMigrated the CI to GitHub Actions and cut build times by 50%.\nCurrent pay: [SALARIO] ([SALARIO]).\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nSenior React Native Engineer (Remote)\nRequirements:\n- 5+ years with React Native and TypeScript\n- Experience with AWS and CI/CD\n- Fluent English\nCompensation: [SALARIO]-[SALARIO]/month. Apply at [CORREO]\n>>>"
+      },
+      {
+        "id": "09-contacto-ofuscado",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "Q7 mil",
+            "dificultad": "fácil",
+            "nota": "Q + mil",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "email",
+            "value": "carla punto ruiz arroba gmail punto com",
+            "dificultad": "difícil",
+            "nota": "correo ofuscado",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "carla punto ruiz arroba gmail punto com"
+          },
+          {
+            "type": "phone",
+            "value": "+502 55 55 12 34",
+            "dificultad": "difícil",
+            "nota": "agrupado 2-2-2-2",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "+502 55 55 12 34"
+          },
+          {
+            "type": "nit",
+            "value": "45678912",
+            "dificultad": "media",
+            "nota": "NIT sin etiqueta estándar ni guion",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 4,
+        "allowedTotal": 4,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 2,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Asistente administrativa\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 3\nPuesto al que aplica: Analista de recursos humanos\nEmpresa destino: Cementos Progreso\n\nLogros y experiencia (texto del candidato):\n<<<\nOrganicé el archivo de 1,200 expedientes de personal.\nApoyé 3 procesos de reclutamiento masivo.\nGano [SALARIO].\nEscríbanme a carla punto ruiz arroba gmail punto com o al +502 55 55 12 34.\nMi nit es [TELÉFONO].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nAnalista de recursos humanos. Requisitos: estudios en psicología industrial o administración, manejo de reclutamiento y nómina.\n>>>"
+      },
+      {
+        "id": "10-maestra-colegio",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "Americano",
+            "dificultad": "media",
+            "nota": "palabra distintiva",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "cinco mil ochocientos quetzales",
+            "dificultad": "media",
+            "nota": "en palabras",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "colonia El Naranjo",
+            "dificultad": "fácil",
+            "nota": "colonia",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 5,
+        "allowedTotal": 5,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 3,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Maestra de primaria\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 9\nPuesto al que aplica: Coordinadora académica\nEmpresa destino: Fundación Sergio Paiz\n\nLogros y experiencia (texto del candidato):\n<<<\nDiseñé el programa de lectura del [EMPLEADOR_ACTUAL] para 3 grados.\nMis alumnos subieron 18 puntos en la prueba de comprensión lectora.\nMe pagan [SALARIO].\nVivo en Mixco, [DIRECCIÓN].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nCoordinadora académica para programas educativos. Buscamos experiencia docente, diseño curricular y trabajo con comunidades.\n>>>"
+      },
+      {
+        "id": "11-barista-falsos-positivos",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "Q4,200",
+            "dificultad": "fácil",
+            "nota": "prefijo Q",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 7,
+        "allowedTotal": 7,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 2,
+        "otherRedactions": [
+          {
+            "field": "puestoActual",
+            "type": "employer",
+            "match": "Barista",
+            "rule": "employer_token"
+          }
+        ],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: [EMPLEADOR_ACTUAL] líder\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 3\nPuesto al que aplica: Supervisora de tienda\nEmpresa destino: Café Calle Real\n\nLogros y experiencia (texto del candidato):\n<<<\nEn el Q2 aumenté las ventas de bebidas de temporada 18%.\nEntrené a 6 baristas nuevos.\nAtendemos 300 clientes al día.\nHoy gano [SALARIO].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nCafé Calle Real busca Supervisora de tienda en Antigua Guatemala. Requisitos: 2 años en café de especialidad, manejo de caja e inventarios.\n>>>"
+      },
+      {
+        "id": "12-salario-formas-dificiles",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "doce y medio",
+            "dificultad": "difícil",
+            "nota": "coloquial, sin \"mil\"",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "doce y medio"
+          },
+          {
+            "type": "salary",
+            "value": "12,5",
+            "dificultad": "difícil",
+            "nota": "\"12,5\" significando 12,500",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "12,5"
+          },
+          {
+            "type": "salary",
+            "value": "12 mil 500",
+            "dificultad": "media",
+            "nota": "mixto",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 6,
+        "allowedTotal": 6,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 1,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Ingeniero de QA\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 6\nPuesto al que aplica: QA Lead\nEmpresa destino: Encora\n\nLogros y experiencia (texto del candidato):\n<<<\nAutomaticé 400 casos de prueba con Cypress.\nBajé los defectos en producción 35%.\nHoy me pagan doce y medio.\nO sea mi sueldo base es de 12,5 más bono.\nEn total unos [SALARIO] 500.\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nQA Lead. Requisitos: automatización con Cypress o Playwright, liderazgo de equipos de QA, ISTQB deseable.\n>>>"
+      },
+      {
+        "id": "13-personas-variadas",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "person_name",
+            "value": "Inga. Paola Rodas",
+            "dificultad": "fácil",
+            "nota": "título",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Tom Becker",
+            "dificultad": "fácil",
+            "nota": "\"my manager\" en inglés",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Andrea Sical",
+            "dificultad": "media",
+            "nota": "\"compañera de equipo,\" + nombre",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Luis Fernando Ajú",
+            "dificultad": "difícil",
+            "nota": "sin cargo",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "Luis Fernando Ajú"
+          },
+          {
+            "type": "salary",
+            "value": "16 mil",
+            "dificultad": "fácil",
+            "nota": "número + mil",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 6,
+        "allowedTotal": 6,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 4,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Scrum Master\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 7\nPuesto al que aplica: Agile Coach\nEmpresa destino: Globant\n\nLogros y experiencia (texto del candidato):\n<<<\nLa [PERSONA] y yo implementamos Scrum en 5 equipos.\nMy manager [PERSONA] nominated me for the leadership program.\nCon mi compañera de equipo, [PERSONA], redujimos el lead time 40%.\nTrabajé con Luis Fernando Ajú en la transformación ágil.\nGano [SALARIO].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nAgile Coach — Globant. Buscamos experiencia en Scrum, Kanban y SAFe, facilitación y coaching de equipos.\n>>>"
+      },
+      {
+        "id": "14-direcciones",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "Cerve",
+            "dificultad": "difícil",
+            "nota": "apodo del empleador",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "Cerve"
+          },
+          {
+            "type": "address",
+            "value": "12 calle 1-25",
+            "dificultad": "fácil",
+            "nota": "calle numerada",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "zona 10",
+            "dificultad": "fácil",
+            "nota": "zona",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "km 16.5",
+            "dificultad": "fácil",
+            "nota": "kilómetro",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "address",
+            "value": "Vista Hermosa III",
+            "dificultad": "difícil",
+            "nota": "colonia sin palabra clave",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "Vista Hermosa III"
+          },
+          {
+            "type": "address",
+            "value": "Residenciales Los Álamos",
+            "dificultad": "fácil",
+            "nota": "residenciales",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "13,000",
+            "dificultad": "fácil",
+            "nota": "número sin moneda",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 6,
+        "allowedTotal": 6,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 6,
+        "otherRedactions": [
+          {
+            "field": "logros",
+            "type": "address",
+            "match": "carretera a El Salvador",
+            "rule": "address_street_named"
+          }
+        ],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Coordinador de logística\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 10\nPuesto al que aplica: Gerente de logística\nEmpresa destino: Grupo Siman\n\nLogros y experiencia (texto del candidato):\n<<<\nCoordino 3 centros de distribución y 45 rutas.\nEn la Cerve reduje los costos de flete 12%.\nOficina en [DIRECCIÓN] [DIRECCIÓN]; bodega en [DIRECCIÓN] [DIRECCIÓN].\nVivo en Vista Hermosa III, cerca de [DIRECCIÓN].\nGano [SALARIO].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nGerente de logística. Requisitos: gestión de flota, centros de distribución y WMS.\n>>>"
+      },
+      {
+        "id": "15-dpi-nit-variantes",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "dpi",
+            "value": "1234-56789-0101",
+            "dificultad": "fácil",
+            "nota": "con guiones",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "dpi",
+            "value": "1234.56789.0101",
+            "dificultad": "difícil",
+            "nota": "con puntos",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "nit",
+            "value": "987654-K",
+            "dificultad": "fácil",
+            "nota": "etiquetado, dígito K",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "Q5,200",
+            "dificultad": "fácil",
+            "nota": "prefijo Q",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 4,
+        "allowedTotal": 4,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 4,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Auxiliar contable\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 4\nPuesto al que aplica: Contadora\nEmpresa destino: Deloitte Guatemala\n\nLogros y experiencia (texto del candidato):\n<<<\nLlevo la conciliación de 15 cuentas bancarias.\nPara el expediente: DPI [DPI] y también lo escribí como [SALARIO].0101.\n[NIT]\nSalario [SALARIO].\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nContadora. Requisitos: pensum cerrado en Contaduría Pública y Auditoría, Excel avanzado.\n>>>"
+      },
+      {
+        "id": "16-gerente-oferta-ingles-pretension",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "Unipharm",
+            "dificultad": "media",
+            "nota": "palabra distintiva",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "person_name",
+            "value": "Ricardo Arzú",
+            "dificultad": "difícil",
+            "nota": "cargo \"CEO\" no está en la lista de roles",
+            "redactor": "fuga",
+            "final": "fuga",
+            "evidencia": "Ricardo Arzú"
+          },
+          {
+            "type": "salary",
+            "value": "Q35,000",
+            "dificultad": "fácil",
+            "nota": "prefijo Q",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 5,
+        "allowedTotal": 5,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 2,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Gerente comercial\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 15\nPuesto al que aplica: Country Manager\nEmpresa destino: Bayer Centroamérica\n\nLogros y experiencia (texto del candidato):\n<<<\nCrecí las ventas de [EMPLEADOR_ACTUAL] en Centroamérica 22% en dos años.\nDirijo un equipo de 35 representantes.\nReporto directamente al CEO Ricardo Arzú.\nMi paquete actual es [SALARIO] más bonos.\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nCountry Manager — Central America.\nRequirements: 10+ years in pharma sales, P&L ownership, team leadership.\nPlease include your salary expectations in your application.\n>>>"
+      },
+      {
+        "id": "17-recien-graduado-minimo",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "salary",
+            "value": "3.5k",
+            "dificultad": "media",
+            "nota": "decimal con k",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "Pizza Hut",
+            "dificultad": "fácil",
+            "nota": "nombre completo",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "email",
+            "value": "juanito_gt@hotmail.com",
+            "dificultad": "fácil",
+            "nota": "correo",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 4,
+        "allowedTotal": 4,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 3,
+        "otherRedactions": [],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Cajero\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 0\nPuesto al que aplica: Asistente de marketing digital\nEmpresa destino: Publicis Guatemala\n\nLogros y experiencia (texto del candidato):\n<<<\nMe gradué de Mercadotecnia en la URL.\nManejo las redes de un emprendimiento con 3,000 seguidores.\nGano [SALARIO] en [EMPLEADOR_ACTUAL].\nmi correo es [CORREO]\n>>>\n\nNo se proporcionó oferta: enfoca la carta en el puesto y la empresa destino."
+      },
+      {
+        "id": "18-mezcla-typos-bam",
+        "blocked": false,
+        "residual": [],
+        "canaries": [
+          {
+            "type": "employer",
+            "value": "BAM",
+            "dificultad": "fácil",
+            "nota": "acrónimo declarado entre paréntesis",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "employer",
+            "value": "Banco Agromercantl",
+            "dificultad": "media",
+            "nota": "con error de dedo",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "Q 22 000",
+            "dificultad": "fácil",
+            "nota": "espacios",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "salary",
+            "value": "22K",
+            "dificultad": "fácil",
+            "nota": "K mayúscula",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          },
+          {
+            "type": "phone",
+            "value": "(502) 2333-4455",
+            "dificultad": "fácil",
+            "nota": "código entre paréntesis",
+            "redactor": "atrapado",
+            "final": "atrapado"
+          }
+        ],
+        "falsePositives": [],
+        "allowedKept": 6,
+        "allowedTotal": 6,
+        "currentSalaryInPayload": null,
+        "employerInPayload": false,
+        "redactionsCount": 7,
+        "otherRedactions": [
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "USD 3,500",
+            "rule": "money"
+          },
+          {
+            "field": "oferta",
+            "type": "salary",
+            "match": "4,200",
+            "rule": "money"
+          }
+        ],
+        "payload": "Eres un redactor profesional de cartas de interés (cover letters) para el mercado laboral de Guatemala.\nEscribe en español correcto y profesional, tratando de \"usted\" al lector.\nReglas obligatorias:\n1. La carta debe tener entre 250 y 400 palabras.\n2. Usa SOLO los datos proporcionados. No inventes cifras, porcentajes, empresas, títulos, certificaciones, fechas ni logros.\n3. No menciones salarios, pretensiones salariales, teléfonos, correos, DPI, NIT ni direcciones.\n4. Si ves etiquetas entre corchetes como [SALARIO], [PERSONA], [EMPLEADOR_ACTUAL], [TELÉFONO] o [DIRECCIÓN], NO las copies: reformula la idea sin ese dato.\n5. Estructura: saludo dirigido al equipo de la empresa destino; 3 o 4 párrafos que conecten la experiencia y los logros con el puesto (y con la oferta, si la hay); un cierre que invite explícitamente a una entrevista o conversación; despedida y firma.\n6. Firma exactamente con el nombre indicado en \"Nombre para la firma\", sin cambiarlo.\n7. Tono profesional y cálido, sin exageraciones, sin emojis y sin formato markdown.\n8. Devuelve solo el texto de la carta, sin comentarios antes ni después.\nEscribe la carta de interés con estos datos del candidato.\n\nNombre para la firma: {{NOMBRE}}\nPuesto actual: Backend Developer en [EMPLEADOR_ACTUAL]\nEmpleador actual: no se menciona en la carta\nAños de experiencia: 8\nPuesto al que aplica: Senior Backend Engineer\nEmpresa destino: Truelogic\n\nLogros y experiencia (texto del candidato):\n<<<\nEn [EMPLEADOR_ACTUAL] desarrollé microservicios en Java y Spring Boot para 1 millón de usuarios.\nLideré la migración a Kubernetes.\nMy current salary is [SALARIO] ([SALARIO]).\nTel. [TELÉFONO]\n>>>\n\nOferta de trabajo publicada (úsala para ajustar la carta a lo que piden):\n<<<\nSenior Backend Engineer (Remote)\n- Java 17, Spring Boot\n- Kubernetes, AWS\n- English B2+\nWe offer [SALARIO] - [SALARIO] monthly.\n>>>"
+      }
+    ]
+  },
+  "quality": null
+}

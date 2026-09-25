@@ -1,0 +1,58 @@
+{
+  "id": "18-mezcla-typos-bam",
+  "descripcion": "Mezcla español/inglés, empleador con typo y acrónimo, oferta en inglés con rango.",
+  "profile": {
+    "nombre": "Estuardo Lemus",
+    "puestoActual": "Backend Developer en BAM",
+    "empleadorActual": "Banco Agromercantil (BAM)",
+    "salarioActual": 22000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Senior Backend Engineer",
+    "empresaDestino": "Truelogic",
+    "salarioDeseado": 4000,
+    "monedaDeseada": "USD",
+    "aniosExperiencia": 8,
+    "logros": "En Banco Agromercantl desarrollé microservicios en Java y Spring Boot para 1 millón de usuarios.\nLideré la migración a Kubernetes.\nMy current salary is Q 22 000 (22K).\nTel. (502) 2333-4455",
+    "oferta": "Senior Backend Engineer (Remote)\n- Java 17, Spring Boot\n- Kubernetes, AWS\n- English B2+\nWe offer USD 3,500 - 4,200 monthly."
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "BAM",
+      "dificultad": "fácil",
+      "nota": "acrónimo declarado entre paréntesis"
+    },
+    {
+      "type": "employer",
+      "value": "Banco Agromercantl",
+      "dificultad": "media",
+      "nota": "con error de dedo"
+    },
+    {
+      "type": "salary",
+      "value": "Q 22 000",
+      "dificultad": "fácil",
+      "nota": "espacios"
+    },
+    {
+      "type": "salary",
+      "value": "22K",
+      "dificultad": "fácil",
+      "nota": "K mayúscula"
+    },
+    {
+      "type": "phone",
+      "value": "(502) 2333-4455",
+      "dificultad": "fácil",
+      "nota": "código entre paréntesis"
+    }
+  ],
+  "allowed": [
+    "Truelogic",
+    "Senior Backend Engineer",
+    "Java",
+    "Spring Boot",
+    "Kubernetes",
+    "AWS"
+  ]
+}

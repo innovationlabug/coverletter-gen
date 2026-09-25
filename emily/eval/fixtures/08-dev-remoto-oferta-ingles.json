@@ -1,0 +1,53 @@
+{
+  "id": "08-dev-remoto-oferta-ingles",
+  "descripcion": "Desarrollador en USD, oferta en inglés con rango y correo de RR. HH.",
+  "profile": {
+    "nombre": "Diego Samayoa",
+    "puestoActual": "Mobile Developer",
+    "empleadorActual": "Applaudo Studios",
+    "salarioActual": 2800,
+    "monedaActual": "USD",
+    "puestoDeseado": "Senior React Native Engineer",
+    "empresaDestino": "Lumen Health",
+    "salarioDeseado": 3800,
+    "monedaDeseada": "USD",
+    "aniosExperiencia": 6,
+    "logros": "Built and shipped 5 React Native apps at Applaudo, one with 100,000 downloads.\nMigrated the CI to GitHub Actions and cut build times by 50%.\nCurrent pay: USD 2,800 (2.8k).",
+    "oferta": "Senior React Native Engineer (Remote)\nRequirements:\n- 5+ years with React Native and TypeScript\n- Experience with AWS and CI/CD\n- Fluent English\nCompensation: $3,500-$4,000/month. Apply at jobs@lumenhealth.io"
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "Applaudo",
+      "dificultad": "media",
+      "nota": "palabra distintiva"
+    },
+    {
+      "type": "salary",
+      "value": "USD 2,800",
+      "dificultad": "fácil",
+      "nota": "prefijo USD"
+    },
+    {
+      "type": "salary",
+      "value": "2.8k",
+      "dificultad": "media",
+      "nota": "decimal con k"
+    },
+    {
+      "type": "email",
+      "value": "jobs@lumenhealth.io",
+      "dificultad": "fácil",
+      "nota": "correo en la oferta"
+    }
+  ],
+  "allowed": [
+    "Lumen Health",
+    "React Native",
+    "TypeScript",
+    "AWS",
+    "GitHub Actions",
+    "100,000 downloads",
+    "50%"
+  ]
+}

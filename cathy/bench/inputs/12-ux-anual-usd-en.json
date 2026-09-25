@@ -1,0 +1,23 @@
+{
+  "id": "12-ux-anual-usd-en",
+  "description": "Diseñadora UX; oferta en inglés con salario anual en USD",
+  "profile": {
+    "fullName": "Valeria Monzón",
+    "email": "vale.monzon@correo.com",
+    "currentRole": "UX Designer",
+    "currentEmployer": "Grupo Unicomer",
+    "currentSalary": {
+      "amount": 13500,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Product Designer",
+    "desiredSalary": {
+      "amount": 2400,
+      "currency": "USD"
+    },
+    "targetCompany": "Applaudo",
+    "yearsExperience": 5,
+    "achievements": "Redesigned Unicomer's credit application flow, cutting abandonment by 30%. Ran 40+ usability tests with real customers.",
+    "jobOffer": "Product Designer (Remote)\nWe're hiring a product designer to own end-to-end flows.\nRequirements:\n- 4+ years of product design experience\n- Figma and prototyping\n- User research skills\nSalary: US$26,000 - US$32,000 per year."
+  }
+}

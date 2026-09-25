@@ -1,0 +1,21 @@
+{
+  "id": "11-abogado-agresivo",
+  "description": "Abogado junior pide salto agresivo, sin oferta",
+  "profile": {
+    "fullName": "Rodrigo Estuardo Barrios",
+    "currentRole": "Abogado y notario asociado",
+    "currentEmployer": "Bufete Aguilar Castillo Love",
+    "currentSalary": {
+      "amount": 12000,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Asesor legal corporativo",
+    "desiredSalary": {
+      "amount": 18500,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Banrural",
+    "yearsExperience": 3,
+    "achievements": "Llevé la due diligence de 2 adquisiciones corporativas. Redacté 120 contratos mercantiles en el último año."
+  }
+}

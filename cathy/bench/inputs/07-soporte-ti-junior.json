@@ -1,0 +1,21 @@
+{
+  "id": "07-soporte-ti-junior",
+  "description": "Soporte TI junior, gap ambicioso, sin oferta",
+  "profile": {
+    "fullName": "Luis Fernando Ajú",
+    "currentRole": "Técnico de soporte",
+    "currentEmployer": "Almacenes Tropigas",
+    "currentSalary": {
+      "amount": 4500,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Administrador de sistemas Jr",
+    "desiredSalary": {
+      "amount": 5800,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Tecnoglass Guatemala",
+    "yearsExperience": 2,
+    "achievements": "Atendí más de 1500 tickets con 96% de satisfacción. Automaticé respaldos con scripts de PowerShell."
+  }
+}

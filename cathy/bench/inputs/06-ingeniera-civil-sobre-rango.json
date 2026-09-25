@@ -1,0 +1,23 @@
+{
+  "id": "06-ingeniera-civil-sobre-rango",
+  "description": "Ingeniera civil por encima del rango publicado",
+  "profile": {
+    "fullName": "Sofía Valentina Juárez",
+    "email": "sofia.juarez@ing.gt",
+    "currentRole": "Ingeniera residente",
+    "currentEmployer": "Constructora Novella",
+    "currentSalary": {
+      "amount": 16000,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Gerente de proyectos",
+    "desiredSalary": {
+      "amount": 24000,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Spectrum",
+    "yearsExperience": 9,
+    "achievements": "Entregué 3 torres residenciales a tiempo y 4% bajo presupuesto. Coordiné a 60 personas en obra.",
+    "jobOffer": "Gerente de Proyectos de Construcción\nRequisitos:\n- Ingeniería civil colegiada\n- 7 años de experiencia en edificación vertical\n- Manejo de MS Project y control de costos\nSalario: Q18,000 a Q21,000 más bonificación por desempeño."
+  }
+}

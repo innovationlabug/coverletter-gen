@@ -1,0 +1,21 @@
+{
+  "id": "03-contadora-sin-oferta",
+  "description": "Contadora sin oferta, gap conservador",
+  "profile": {
+    "fullName": "Ana Lucía Morales",
+    "currentRole": "Contadora general",
+    "currentEmployer": "Distribuidora La Económica, S.A.",
+    "currentSalary": {
+      "amount": 9500,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Contadora senior",
+    "desiredSalary": {
+      "amount": 10200,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Grupo Paiz",
+    "yearsExperience": 8,
+    "achievements": "Cerré los estados financieros mensuales en 5 días hábiles en lugar de 12. Implementé la facturación electrónica FEL para 3 sucursales."
+  }
+}

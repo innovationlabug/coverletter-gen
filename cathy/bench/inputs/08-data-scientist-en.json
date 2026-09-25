@@ -1,0 +1,23 @@
+{
+  "id": "08-data-scientist-en",
+  "description": "Data scientist, oferta en inglés sin rango, desea USD",
+  "profile": {
+    "fullName": "Andrea Sofía Mazariegos",
+    "email": "andrea.maz@proton.me",
+    "currentRole": "Data Scientist",
+    "currentEmployer": "Grupo Pantaleon",
+    "currentSalary": {
+      "amount": 22000,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Senior Data Scientist",
+    "desiredSalary": {
+      "amount": 4200,
+      "currency": "USD"
+    },
+    "targetCompany": "Crowdbotics",
+    "yearsExperience": 7,
+    "achievements": "Built a sugar-cane yield forecasting model at Pantaleon that improved harvest planning accuracy by 18%. Deployed 6 ML models to production on GCP.",
+    "jobOffer": "Senior Data Scientist\nAbout the role: you will build forecasting and optimization models for our clients.\nRequirements:\n- 5+ years of experience in data science\n- Python, SQL and cloud ML platforms\n- Experience deploying models to production\n- Excellent English\nPlease include your salary expectations in your application."
+  }
+}

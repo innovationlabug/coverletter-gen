@@ -1,0 +1,59 @@
+{
+  "id": "01-junior-soporte-tigo",
+  "descripcion": "Junior, de soporte técnico a desarrollo; empleador de 4 letras mencionado solo como marca; sin oferta.",
+  "profile": {
+    "nombre": "Kevin Ajú",
+    "puestoActual": "Agente de soporte técnico",
+    "empleadorActual": "Tigo Guatemala",
+    "salarioActual": 6500,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Desarrollador web junior",
+    "empresaDestino": "Nearsure",
+    "salarioDeseado": 9000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 1,
+    "logros": "En TIGO atiendo unos 60 tickets diarios y armé una base de conocimiento en Notion.\nHice un curso de JavaScript y React y publiqué 2 proyectos en GitHub.\nHoy gano Q6,500, o sea seis mil quinientos, y quiero dar el salto.\nMi jefe Mario Chen me recomienda para el puesto. Mi cel es 4455-6677.",
+    "oferta": ""
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "Q6,500",
+      "dificultad": "fácil",
+      "nota": "prefijo Q con comas"
+    },
+    {
+      "type": "salary",
+      "value": "seis mil quinientos",
+      "dificultad": "media",
+      "nota": "en palabras"
+    },
+    {
+      "type": "employer",
+      "value": "TIGO",
+      "dificultad": "difícil",
+      "nota": "marca de 4 letras en mayúsculas; el nombre declarado es \"Tigo Guatemala\""
+    },
+    {
+      "type": "person_name",
+      "value": "Mario Chen",
+      "dificultad": "fácil",
+      "nota": "\"mi jefe\" + nombre"
+    },
+    {
+      "type": "phone",
+      "value": "4455-6677",
+      "dificultad": "fácil",
+      "nota": "celular GT 4-4"
+    }
+  ],
+  "allowed": [
+    "Nearsure",
+    "Desarrollador web junior",
+    "JavaScript",
+    "React",
+    "60 tickets",
+    "Notion",
+    "GitHub"
+  ]
+}

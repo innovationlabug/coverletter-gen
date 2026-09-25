@@ -1,0 +1,71 @@
+{
+  "id": "02-analista-datos-bi",
+  "descripcion": "Semi-senior de datos en banca, oferta en español con rango, correo y teléfono del reclutador; salario en varias formas.",
+  "profile": {
+    "nombre": "Ana Lucía Pérez",
+    "puestoActual": "Analista de datos en Banco Industrial",
+    "empleadorActual": "Banco Industrial, S.A.",
+    "salarioActual": 15000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Data Engineer",
+    "empresaDestino": "Telus International",
+    "salarioDeseado": 19000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 5,
+    "logros": "- Automaticé en Python los reportes de cartera: ahorro de 20 horas al mes.\n- En el BI migramos 3 bases de datos a BigQuery con mi jefa Ana López.\n- Actualmente gano 15k (Q15,000 brutos) y quiero crecer.\n- Reduje en 30% los errores de conciliación.",
+    "oferta": "Data Engineer — Telus International\nRequisitos:\n- Python y SQL avanzado\n- BigQuery o Snowflake\n- Airflow\nSalario entre Q18,000 y Q22,000. Enviar CV a talento@telus.example.com o llamar al 2222-3333."
+  },
+  "canaries": [
+    {
+      "type": "salary",
+      "value": "15k",
+      "dificultad": "media",
+      "nota": "abreviatura k"
+    },
+    {
+      "type": "salary",
+      "value": "Q15,000",
+      "dificultad": "fácil",
+      "nota": "prefijo Q"
+    },
+    {
+      "type": "employer",
+      "value": "Banco Industrial",
+      "dificultad": "fácil",
+      "nota": "nombre completo en el puesto actual"
+    },
+    {
+      "type": "employer",
+      "value": "BI",
+      "dificultad": "media",
+      "nota": "acrónimo"
+    },
+    {
+      "type": "person_name",
+      "value": "Ana López",
+      "dificultad": "fácil",
+      "nota": "\"mi jefa\" + nombre"
+    },
+    {
+      "type": "email",
+      "value": "talento@telus.example.com",
+      "dificultad": "fácil",
+      "nota": "correo en la oferta"
+    },
+    {
+      "type": "phone",
+      "value": "2222-3333",
+      "dificultad": "fácil",
+      "nota": "teléfono fijo en la oferta"
+    }
+  ],
+  "allowed": [
+    "Telus International",
+    "Data Engineer",
+    "Python",
+    "BigQuery",
+    "Airflow",
+    "30%",
+    "20 horas"
+  ]
+}

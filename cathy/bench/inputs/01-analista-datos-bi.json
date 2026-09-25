@@ -1,0 +1,24 @@
+{
+  "id": "01-analista-datos-bi",
+  "description": "Analista → BI senior, oferta con rango que cubre, gap razonable",
+  "profile": {
+    "fullName": "María José Castillo",
+    "email": "majo.castillo@correo.gt",
+    "phone": "+502 5512-3344",
+    "currentRole": "Analista de datos",
+    "currentEmployer": "Banco Industrial",
+    "currentSalary": {
+      "amount": 15000,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Analista de BI Senior",
+    "desiredSalary": {
+      "amount": 17500,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Cervecería Centro Americana",
+    "yearsExperience": 5,
+    "achievements": "En Banco Industrial automaticé 40 reportes semanales con Power BI y SQL, ahorrando 12 horas por semana al equipo de riesgo. Lideré la migración del data mart de cartera a la nube.",
+    "jobOffer": "Analista de BI Senior\nCervecería Centro Americana busca analista para el área comercial.\nRequisitos:\n- 4 años de experiencia en inteligencia de negocios\n- SQL avanzado y Power BI\n- Experiencia con modelos de datos dimensionales\n- Inglés intermedio (deseable)\nOfrecemos: salario de Q16,000 - Q19,000 mensuales, prestaciones de ley y seguro médico."
+  }
+}

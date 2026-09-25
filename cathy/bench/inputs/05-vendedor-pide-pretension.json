@@ -1,0 +1,23 @@
+{
+  "id": "05-vendedor-pide-pretension",
+  "description": "Ejecutivo de ventas; la oferta pide pretensión salarial",
+  "profile": {
+    "fullName": "José Roberto Chen",
+    "phone": "5566-7788",
+    "currentRole": "Ejecutivo de ventas",
+    "currentEmployer": "Claro Guatemala",
+    "currentSalary": {
+      "amount": 7000,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Key Account Manager",
+    "desiredSalary": {
+      "amount": 9000,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Pollo Campero",
+    "yearsExperience": 4,
+    "achievements": "Superé la meta anual de ventas corporativas en 130%. Abrí 22 cuentas nuevas en el segmento pyme; mi salario actual de Q7,000 no refleja eso.",
+    "jobOffer": "Key Account Manager - Canal Moderno\nRequisitos:\n1. 3 años en ventas B2B o consumo masivo\n2. Manejo de cuentas clave\n3. Licencia de conducir y vehículo propio\nEnvía tu CV indicando pretensión salarial."
+  }
+}

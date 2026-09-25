@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cathy · Gemma vs Qwen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1100px; width: 100%; }
+    .eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+    h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 800px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Cathy · Benchmark · Calidad por tarea</p>
+    <h1>Cada modelo gana una tarea</h1>
+
+    <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cathy-benchmark-title cathy-benchmark-desc">
+      <title id="cathy-benchmark-title">Calidad compuesta por tarea: Gemma 4 E2B vs Qwen 3.5 2B</title>
+      <desc id="cathy-benchmark-desc">Barras agrupadas: en la nota de negociación Qwen obtiene 0.91 contra 0.81 de Gemma; en la extracción de requisitos Gemma obtiene 0.89 contra 0.77 de Qwen.</desc>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Axis title -->
+      <text transform="rotate(-90 24 240)" x="24" y="240" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" letter-spacing="0.14em" text-anchor="middle">CALIDAD COMPUESTA (0–1)</text>
+
+      <!-- Gridlines -->
+      <line x1="80" y1="348" x2="960" y2="348" stroke="rgba(45,49,66,0.08)" stroke-width="0.8"/>
+      <line x1="80" y1="276" x2="960" y2="276" stroke="rgba(45,49,66,0.08)" stroke-width="0.8"/>
+      <line x1="80" y1="204" x2="960" y2="204" stroke="rgba(45,49,66,0.08)" stroke-width="0.8"/>
+      <line x1="80" y1="132" x2="960" y2="132" stroke="rgba(45,49,66,0.08)" stroke-width="0.8"/>
+      <line x1="80" y1="60" x2="960" y2="60" stroke="rgba(45,49,66,0.08)" stroke-width="0.8"/>
+      <line x1="80" y1="420" x2="960" y2="420" stroke="rgba(45,49,66,0.25)" stroke-width="1"/>
+      <line x1="80" y1="40" x2="80" y2="420" stroke="rgba(45,49,66,0.25)" stroke-width="1"/>
+
+      <!-- Y labels -->
+      <text x="72" y="423" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">0</text>
+      <text x="72" y="351" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">0.2</text>
+      <text x="72" y="279" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">0.4</text>
+      <text x="72" y="207" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">0.6</text>
+      <text x="72" y="135" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">0.8</text>
+      <text x="72" y="63" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">1.0</text>
+
+      <!-- Group 1: Nota de negociación (center 330) -->
+      <rect x="250" y="128" width="72" height="292" fill="#f5f5f5"/>
+      <rect x="250" y="128" width="72" height="292" fill="rgba(235,108,54,0.12)" stroke="#eb6c36" stroke-width="1"/>
+      <text x="286" y="120" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" font-weight="600">0.81</text>
+      <rect x="338" y="92" width="72" height="328" fill="#f5f5f5"/>
+      <rect x="338" y="92" width="72" height="328" fill="rgba(124,143,111,0.18)" stroke="#7c8f6f" stroke-width="1"/>
+      <text x="374" y="84" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" font-weight="600">0.91</text>
+      <text x="330" y="444" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Nota de negociación</text>
+      <text x="330" y="458" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">12 perfiles · gana Qwen</text>
+
+      <!-- Group 2: Extracción de requisitos (center 730) -->
+      <rect x="650" y="100" width="72" height="320" fill="#f5f5f5"/>
+      <rect x="650" y="100" width="72" height="320" fill="rgba(235,108,54,0.12)" stroke="#eb6c36" stroke-width="1"/>
+      <text x="686" y="92" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" font-weight="600">0.89</text>
+      <rect x="738" y="144" width="72" height="276" fill="#f5f5f5"/>
+      <rect x="738" y="144" width="72" height="276" fill="rgba(124,143,111,0.18)" stroke="#7c8f6f" stroke-width="1"/>
+      <text x="774" y="136" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" font-weight="600">0.77</text>
+      <text x="730" y="444" fill="#2d3142" font-size="11" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Extracción de requisitos</text>
+      <text x="730" y="458" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">9 ofertas · gana Gemma</text>
+
+      <!-- Legend -->
+      <line x1="80" y1="472" x2="960" y2="472" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="80" y="482" width="14" height="10" rx="2" fill="rgba(235,108,54,0.12)" stroke="#eb6c36" stroke-width="1"/>
+      <text x="100" y="490" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">gemma4:e2b-it-qat (elegido)</text>
+      <rect x="280" y="482" width="14" height="10" rx="2" fill="rgba(124,143,111,0.18)" stroke="#7c8f6f" stroke-width="1"/>
+      <text x="300" y="490" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">qwen3.5:2b</text>
+      <text x="960" y="490" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="end">compuesto = chequeos deterministas + juez Gemini · Cloud Run CPU</text>
+    </svg>
+  </div>
+</body>
+</html>

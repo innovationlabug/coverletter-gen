@@ -1,0 +1,24 @@
+{
+  "id": "10-mercadologo-k",
+  "description": "Mercadólogo; oferta con rango en formato 'k' y dentro",
+  "profile": {
+    "fullName": "Pablo Andrés Rodas",
+    "email": "pablo.rodas@gmail.com",
+    "phone": "+50230304040",
+    "currentRole": "Coordinador de marketing digital",
+    "currentEmployer": "Farmacias Galeno",
+    "currentSalary": {
+      "amount": 11000,
+      "currency": "GTQ"
+    },
+    "desiredRole": "Jefe de marketing",
+    "desiredSalary": {
+      "amount": 14000,
+      "currency": "GTQ"
+    },
+    "targetCompany": "Walmart Centroamérica",
+    "yearsExperience": 6,
+    "achievements": "Duplicamos las ventas del e-commerce de Galeno en 14 meses. Gestioné un presupuesto de pauta de Q80,000 mensuales con ROAS de 6.",
+    "jobOffer": "Jefe de Marketing Digital\nRequisitos:\n- 5 años en marketing digital\n- Manejo de Meta Ads y Google Ads\n- Liderazgo de equipos\nRango: 13-16k + bono anual."
+  }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cathy · Arquitectura en tres niveles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+    h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Cathy · Modelos locales · Arquitectura</p>
+    <h1>Tres niveles de confianza: dispositivo, nube privada y tercero</h1>
+
+    <svg viewBox="0 40 960 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cathy-arquitectura-title cathy-arquitectura-desc">
+      <title id="cathy-arquitectura-title">Arquitectura en tres niveles de Cathy</title>
+      <desc id="cathy-arquitectura-desc">El navegador corre heurísticas y un router que manda el perfil completo a un Ollama privado en Cloud Run y solo un perfil redactado a Gemini en Vertex AI.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#f5f5f5" x="0" y="40"/>
+
+      <!-- Zones -->
+      <rect x="24" y="64" width="416" height="296" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="40" y="68" width="116" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="98" y="77" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">NIVEL 0 · DISPOSITIVO</text>
+
+      <rect x="488" y="224" width="256" height="240" rx="8" fill="rgba(235,108,54,0.03)" stroke="rgba(235,108,54,0.45)" stroke-width="1" stroke-dasharray="4,4"/>
+      <rect x="504" y="228" width="196" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="602" y="237" fill="rgba(235,108,54,0.80)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">NIVEL 1 · NUBE PRIVADA · CLOUD RUN</text>
+
+      <rect x="784" y="224" width="160" height="112" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="800" y="228" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="852" y="237" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">NIVEL 2 · TERCERO</text>
+
+      <!-- Arrows -->
+      <path d="M 168,196 H 184 Q 192,196 192,188 V 136 Q 192,128 200,128 H 216" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 168,220 H 184 Q 192,220 192,228 V 280 Q 192,288 200,288 H 216" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="416" y1="276" x2="502" y2="276" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <line x1="416" y1="300" x2="502" y2="300" stroke="#2e5aa8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrow-link)"/>
+      <line x1="576" y1="320" x2="576" y2="374" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+      <line x1="648" y1="288" x2="798" y2="288" stroke="#2e5aa8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrow-link)"/>
+
+      <!-- Arrow labels -->
+      <rect x="426" y="252" width="64" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="458" y="261" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">COMPLETO</text>
+      <rect x="422" y="308" width="72" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="458" y="317" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">REDACTADO</text>
+      <rect x="584" y="340" width="100" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="634" y="349" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ID TOKEN · IAM</text>
+      <rect x="680" y="264" width="96" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="728" y="273" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SA · REDACTADO</text>
+
+      <!-- Node: Persona -->
+      <rect x="40" y="176" width="128" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="40" y="176" width="128" height="64" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+      <rect x="48" y="184" width="32" height="12" rx="2" fill="transparent" stroke="rgba(122,131,153,0.40)" stroke-width="0.8"/>
+      <text x="64" y="193" fill="#7a8399" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+      <text x="104" y="214" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Persona usuaria</text>
+      <text x="104" y="230" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">perfil + salario</text>
+
+      <!-- Node: Heurísticas -->
+      <rect x="216" y="96" width="200" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="216" y="96" width="200" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="224" y="104" width="40" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="244" y="113" fill="#2d3142" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">RULES</text>
+      <text x="316" y="134" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Heurísticas</text>
+      <text x="316" y="150" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">brecha · rango · cuándo mencionar</text>
+
+      <!-- Node: Router (focal) -->
+      <rect x="216" y="256" width="200" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="216" y="256" width="200" height="64" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <rect x="224" y="264" width="36" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.50)" stroke-width="0.8"/>
+      <text x="242" y="273" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GATE</text>
+      <text x="316" y="294" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Router por nivel</text>
+      <text x="316" y="310" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">buildPayload(perfil, nivel)</text>
+
+      <!-- Node: App server -->
+      <rect x="504" y="256" width="144" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="504" y="256" width="144" height="64" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="512" y="264" width="28" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.40)" stroke-width="0.8"/>
+      <text x="526" y="273" fill="#2d3142" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">API</text>
+      <text x="576" y="294" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">App Next.js</text>
+      <text x="576" y="310" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">proxy · service account</text>
+
+      <!-- Node: Ollama (focal) -->
+      <rect x="504" y="376" width="144" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="504" y="376" width="144" height="64" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <rect x="512" y="384" width="28" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.50)" stroke-width="0.8"/>
+      <text x="526" y="393" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GPU</text>
+      <text x="576" y="414" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Ollama · L4</text>
+      <text x="576" y="430" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">gemma4 · qwen3.5</text>
+
+      <!-- Node: Gemini -->
+      <rect x="800" y="256" width="128" height="64" rx="6" fill="#f5f5f5"/>
+      <rect x="800" y="256" width="128" height="64" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <rect x="808" y="264" width="28" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.22)" stroke-width="0.8"/>
+      <text x="822" y="273" fill="#7a8399" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LLM</text>
+      <text x="864" y="294" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gemini</text>
+      <text x="864" y="310" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Vertex AI</text>
+
+      <!-- Editorial aside -->
+      <text x="40" y="344" fill="#4f5d75" font-size="14" font-style="italic" font-family="'Instrument Serif', serif">Sin conexión: heurísticas + carta plantilla.</text>
+
+      <!-- Legend -->
+      <line x1="24" y1="484" x2="936" y2="484" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <text x="24" y="500" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEYENDA</text>
+      <rect x="24" y="514" width="14" height="10" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+      <text x="44" y="522" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">Ve el salario</text>
+      <rect x="140" y="514" width="14" height="10" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="160" y="522" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">Código propio</text>
+      <rect x="264" y="514" width="14" height="10" rx="2" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="284" y="522" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">Tercero</text>
+      <rect x="360" y="514" width="14" height="10" rx="2" fill="rgba(235,108,54,0.03)" stroke="rgba(235,108,54,0.45)" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="380" y="522" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">Perímetro privado del dueño</text>
+      <line x1="540" y1="520" x2="568" y2="520" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="576" y="522" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">/api/ollama</text>
+      <line x1="660" y1="520" x2="688" y2="520" stroke="#2e5aa8" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrow-link)"/>
+      <text x="696" y="522" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif">/api/letter</text>
+    </svg>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2958 @@
+{
+  "meta": {
+    "timestamp": "2026-09-25T22:40:52.222Z",
+    "dry": false,
+    "ollamaHost": "ollama-coverletter-611681112050.us-central1.run.app",
+    "models": [
+      "gemma4:e2b-it-qat",
+      "qwen3.5:2b"
+    ],
+    "tasks": [
+      "negotiation",
+      "requirements"
+    ],
+    "runs": 1,
+    "inputs": [
+      {
+        "id": "01-analista-datos-bi",
+        "description": "Analista → BI senior, oferta con rango que cubre, gap razonable",
+        "hasOffer": true
+      },
+      {
+        "id": "02-dev-frontend-remoto-usd",
+        "description": "Dev frontend GT → remoto en USD, oferta en inglés, salto agresivo",
+        "hasOffer": true
+      },
+      {
+        "id": "03-contadora-sin-oferta",
+        "description": "Contadora sin oferta, gap conservador",
+        "hasOffer": false
+      },
+      {
+        "id": "04-enfermera-recorte",
+        "description": "Enfermera acepta recorte por horario, oferta sin rango",
+        "hasOffer": true
+      },
+      {
+        "id": "05-vendedor-pide-pretension",
+        "description": "Ejecutivo de ventas; la oferta pide pretensión salarial",
+        "hasOffer": true
+      },
+      {
+        "id": "06-ingeniera-civil-sobre-rango",
+        "description": "Ingeniera civil por encima del rango publicado",
+        "hasOffer": true
+      },
+      {
+        "id": "07-soporte-ti-junior",
+        "description": "Soporte TI junior, gap ambicioso, sin oferta",
+        "hasOffer": false
+      },
+      {
+        "id": "08-data-scientist-en",
+        "description": "Data scientist, oferta en inglés sin rango, desea USD",
+        "hasOffer": true
+      },
+      {
+        "id": "09-maestra-conservador",
+        "description": "Docente a coordinadora académica, gap conservador, oferta con 'hasta'",
+        "hasOffer": true
+      },
+      {
+        "id": "10-mercadologo-k",
+        "description": "Mercadólogo; oferta con rango en formato 'k' y dentro",
+        "hasOffer": true
+      },
+      {
+        "id": "11-abogado-agresivo",
+        "description": "Abogado junior pide salto agresivo, sin oferta",
+        "hasOffer": false
+      },
+      {
+        "id": "12-ux-anual-usd-en",
+        "description": "Diseñadora UX; oferta en inglés con salario anual en USD",
+        "hasOffer": true
+      }
+    ],
+    "promptVersion": "2026-09-v1",
+    "settings": {
+      "negotiation": {
+        "think": false,
+        "options": {
+          "temperature": 0.3,
+          "num_predict": 450
+        }
+      },
+      "requirements": {
+        "think": false,
+        "format": {
+          "type": "object",
+          "properties": {
+            "must": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nice": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "keywords": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "must",
+            "nice",
+            "keywords"
+          ]
+        },
+        "options": {
+          "temperature": 0,
+          "num_predict": 600
+        }
+      }
+    },
+    "temperature": 0,
+    "judge": "gemini-3.8-flash",
+    "gtqPerUsd": 7.7,
+    "durationMs": 1101001,
+    "rescoredAt": "2026-09-25T23:04:03.804Z"
+  },
+  "memory": [
+    {
+      "model": "gemma4:e2b-it-qat",
+      "size": 4051162888,
+      "sizeVram": 0,
+      "mode": "cpu",
+      "parameterSize": "4.6B",
+      "quantization": "Q4_0"
+    },
+    {
+      "model": "qwen3.5:2b",
+      "size": 2361424607,
+      "sizeVram": 0,
+      "mode": "cpu",
+      "parameterSize": "2.3B",
+      "quantization": "Q8_0"
+    }
+  ],
+  "calls": [
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "01-analista-datos-bi",
+      "task": "negotiation",
+      "run": 0,
+      "kind": "cold",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 15438.705167,
+        "totalMs": 26565.490333,
+        "evalCount": 214,
+        "promptEvalCount": 457,
+        "tokensPerSecond": 19.367581492266726,
+        "loadMs": 10249.464951,
+        "ollamaTotalMs": 26347.523097,
+        "doneReason": "stop"
+      },
+      "content": "Hola. Mira, para esta transición de Analista de datos en Banco Industrial a Analista de BI Senior en Cervecería Centro Americana, mi expectativa salarial es de Q17,500 mensuales. Sé que el rango publicado es de Q16,000 a Q19,000, y mi expectativa se ajusta justo ahí, lo cual es realista.\n\nPara justificar esto, quiero enfocarme en lo que aporto. En mi puesto actual, logré automatizar 40 reportes semanales usando Power BI y SQL, lo que le ahorró 12 horas semanales al equipo de riesgo. Además, lideré la migración del data mart de cartera a la nube, demostrando mi capacidad para manejar proyectos importantes.\n\nTe recomiendo mencionar esta cifra en la primera llamada con RR. HH. sin dudarlo. Como te dije, hablar de números temprano nos ahorra tiempo a ambos y nos permite empezar la conversación en terreno sólido. ¡Vamos a negociar esto con confianza!",
+      "quality": {
+        "spanish": true,
+        "words": 143,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "01-analista-datos-bi",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 272.8820839999971,
+        "totalMs": 12517.306208999998,
+        "evalCount": 233,
+        "promptEvalCount": 457,
+        "tokensPerSecond": 18.96039734482827,
+        "loadMs": 2.235256,
+        "ollamaTotalMs": 12398.680287,
+        "doneReason": "stop"
+      },
+      "content": "Hola. Mira, para esta transición de Analista de datos en Banco Industrial a Analista de BI Senior en Cervecería Centro Americana, mi expectativa salarial es de Q17,500 mensuales. Sé que el rango publicado es de Q16,000 a Q19,000, y mi cifra está justo en el medio, lo cual es realista considerando mi experiencia y lo que he logrado.\n\nCuando hable con Recursos Humanos, te recomiendo mencionarla en la primera llamada sin dudarlo. El truco es que al poner Q17,500, demuestras que investigaste y que tu valor se alinea con lo que el mercado está ofreciendo. No es solo un número, es el reflejo de cómo mis logros, como automatizar 40 reportes semanales con Power BI y SQL y liderar la migración del data mart a la nube, justifican ese nivel de compensación.\n\nAsí, al hablar de números temprano, evitas que perdamos tiempo y ambos salimos con una base sólida para negociar. ¡Vamos a conseguir ese puesto!",
+      "quality": {
+        "spanish": true,
+        "words": 156,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "01-analista-datos-bi",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 3152.566040999998,
+        "totalMs": 6623.664540999998,
+        "evalCount": 66,
+        "promptEvalCount": 247,
+        "tokensPerSecond": 18.99360376004287,
+        "loadMs": 3.145703,
+        "ollamaTotalMs": 6349.514616,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"4 años de experiencia en inteligencia de negocios\", \"SQL avanzado\", \"Power BI\", \"Experiencia con modelos de datos dimensionales\"], \"nice\": [\"Inglés intermedio\"], \"keywords\": [\"inteligencia de negocios\", \"SQL\", \"Power BI\", \"modelos de datos dimensionales\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 5,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "02-dev-frontend-remoto-usd",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5206.442792000002,
+        "totalMs": 16981.997917,
+        "evalCount": 224,
+        "promptEvalCount": 445,
+        "tokensPerSecond": 19.020464746375264,
+        "loadMs": 1.977653,
+        "ollamaTotalMs": 16717.518639,
+        "doneReason": "stop"
+      },
+      "content": "Hola. Mira, para este cambio a Senior Frontend Engineer en Nearshore Labs, mi expectativa salarial es de US$3,500 mensuales. Sé que mi salario actual es de Q14,000, pero mi valor en el mercado, considerando mis seis años de experiencia y haber logrado reducir el tiempo de carga de la app de autogestión de Tigo en un 45% migrando a Next.js, justifica esta cifra.\n\nEsta expectativa está dentro del rango publicado para el puesto, que va de US$3,000 a US$4,000. Te recomiendo mencionarla en la primera llamada con RR. HH. sin dudarlo. Es mejor hablar de números temprano para que ambos ahorremos tiempo y podamos enfocar la conversación en cómo mis logros impactan directamente en el valor que aportaré a Nearshore Labs.\n\nMi experiencia como mentor de cuatro desarrolladores junior también demuestra mi capacidad de liderazgo, algo que creo que es clave para un rol Senior. Estoy seguro de que podemos llegar a un acuerdo que sea justo para ambos.",
+      "quality": {
+        "spanish": true,
+        "words": 159,
+        "lengthOk": true,
+        "numbersChecked": 5,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "02-dev-frontend-remoto-usd",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2988.7067499999976,
+        "totalMs": 6326.416083999997,
+        "evalCount": 63,
+        "promptEvalCount": 239,
+        "tokensPerSecond": 19.046156394943516,
+        "loadMs": 2.103539,
+        "ollamaTotalMs": 6017.604833,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"5+ años de experiencia con React y TypeScript\", \"Experiencia con Next.js\", \"Habilidades de comunicación en inglés\"], \"nice\": [\"Experiencia con design systems\"], \"keywords\": [\"React\", \"TypeScript\", \"Next.js\", \"performance optimization\", \"English communication\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 4,
+        "grounding": 0.75,
+        "recall": 0.75,
+        "mentionsSalary": false,
+        "score": 0.9
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "03-contadora-sin-oferta",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5012.976708000002,
+        "totalMs": 15656.537083000003,
+        "evalCount": 203,
+        "promptEvalCount": 428,
+        "tokensPerSecond": 19.066117161759568,
+        "loadMs": 2.654646,
+        "ollamaTotalMs": 15356.424792,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para esta transición de Contadora General a Contadora Senior en Grupo Paiz, tu expectativa de Q10,200 es totalmente realista, especialmente considerando tu experiencia de ocho años y los logros que ya tienes. Lo importante es que no lo menciones en la nota que envías. Esa nota es para vender tu perfil, no para negociar el número.\n\nCuando te pregunten sobre tu expectativa salarial en la entrevista con RR. HH., ahí es donde entra el número. Te recomiendo usar tus logros, como cómo lograste cerrar los estados financieros en cinco días hábiles y la implementación de la facturación electrónica FEL para tres sucursales. Eso demuestra el valor que aportas.\n\nEn esa conversación, puedes mencionar tu expectativa de Q10,200, pero hazlo con calma. Recuerda que la carta vende tu capacidad, y el número se negocia cuando ya hay un interés mutuo de ambas partes. ¡Tú tienes el poder!",
+      "quality": {
+        "spanish": true,
+        "words": 147,
+        "lengthOk": true,
+        "numbersChecked": 2,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "04-enfermera-recorte",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5402.169165999992,
+        "totalMs": 18337.422999999995,
+        "evalCount": 240,
+        "promptEvalCount": 436,
+        "tokensPerSecond": 18.551702590235095,
+        "loadMs": 2.89212,
+        "ollamaTotalMs": 17991.046827,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para esta transición de Enfermera Jefe a Salud Ocupacional, tu expectativa de Q8,000 es bastante realista, aunque es menor a tu sueldo actual de Q8,800. Lo importante es que no lo presentes como una urgencia, sino como una decisión basada en el valor que aportas.\n\nCuando te pregunten por tu expectativa, te recomiendo enmarcarlo en el aprendizaje y la estabilidad que buscas en el nuevo rol. Puedes mencionar que, aunque tu salario actual es Q8,800, estás buscando un ajuste que refleje el nuevo enfoque en salud ocupacional. Por ejemplo, puedes decir que estás buscando un paquete que se alinee con el valor que ofreces, como coordinar turnos de 12 enfermeras sin incidentes graves durante dos años y el protocolo de triage que redujo el tiempo de espera en un 25%.\n\nMenciona estos logros cuando te pregunten directamente. Así, en lugar de solo pedir menos, demuestras cómo tu experiencia como líder y diseñadora de protocolos te posiciona para el puesto de salud ocupacional. ¡Mucha suerte con esa negociación!",
+      "quality": {
+        "spanish": true,
+        "words": 168,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "04-enfermera-recorte",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2704.9619169999933,
+        "totalMs": 4989.299041999999,
+        "evalCount": 49,
+        "promptEvalCount": 214,
+        "tokensPerSecond": 21.432111163549315,
+        "loadMs": 2.072701,
+        "ollamaTotalMs": 4712.195079,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"Licenciatura en enfermería\", \"Colegiado activo\"], \"nice\": [\"Experiencia en salud ocupacional\"], \"keywords\": [\"enfermera\", \"clínica empresarial\", \"salud ocupacional\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 3,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "05-vendedor-pide-pretension",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5243.101332999999,
+        "totalMs": 17203.427624999997,
+        "evalCount": 213,
+        "promptEvalCount": 436,
+        "tokensPerSecond": 17.8081093448012,
+        "loadMs": 2.080717,
+        "ollamaTotalMs": 16854.474662,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para este cambio a Key Account Manager en Pollo Campero, mi expectativa salarial es de Q9,000 mensuales. Sé que la oferta no pone un rango, pero te comento que mi experiencia como ejecutivo de ventas en Claro, donde superé la meta anual de ventas corporativas en 130% y abrí 22 cuentas nuevas en el segmento pyme, justifica este número. Mi salario actual de Q7,000 no refleja ese nivel de impacto y crecimiento que puedo aportar a tu equipo.\n\nTe recomiendo mencionar esta cifra en el formulario o correo de postulación, como un rango. Esto es clave porque la oferta lo pide y así te aseguras de que te consideren. Mi argumento es que mis logros demuestran que estoy listo para asumir un rol de mayor responsabilidad y que mi valor real está en ese nivel.\n\nSé directo y enfocado en cómo mis resultados anteriores se traducen en el éxito que esperas en Pollo Campero. ¡Vamos a negociar ese valor!",
+      "quality": {
+        "spanish": true,
+        "words": 160,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "05-vendedor-pide-pretension",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2774.636249999996,
+        "totalMs": 6074.362916999991,
+        "evalCount": 63,
+        "promptEvalCount": 209,
+        "tokensPerSecond": 19.04731958862627,
+        "loadMs": 2.499571,
+        "ollamaTotalMs": 5791.038532,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"3 años en ventas B2B o consumo masivo\", \"Manejo de cuentas clave\", \"Licencia de conducir\", \"Vehículo propio\"], \"nice\": [], \"keywords\": [\"ventas B2B\", \"consumo masivo\", \"manejo de cuentas clave\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 4,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "06-ingeniera-civil-sobre-rango",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5420.160875000001,
+        "totalMs": 16997.85495800001,
+        "evalCount": 202,
+        "promptEvalCount": 444,
+        "tokensPerSecond": 17.441921208624976,
+        "loadMs": 2.069473,
+        "ollamaTotalMs": 16726.510596,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para este cambio a Gerente de Proyectos en Spectrum, mi expectativa salarial es de Q24,000 mensuales. Sé que el rango publicado es de Q18,000 a Q21,000, pero mi experiencia como ingeniera residente con nueve años y mis logros, como entregar tres torres residenciales a tiempo y mantener el presupuesto un 4% bajo, demuestran un valor superior al tope.\n\nTe recomiendo mencionar esta cifra después de la entrevista técnica, cuando ya sientas que te están considerando para el puesto. Es clave mostrar primero mi capacidad para aportar resultados concretos. Si me preguntan sobre mis expectativas, puedo justificar ese número con mi desempeño y el impacto que he tenido en proyectos anteriores.\n\nAdemás, si el tema del salario se pone difícil, podemos negociar otros puntos como un bono o la posibilidad de una revisión a los seis meses. Así aseguramos que el paquete total sea justo para este rol de liderazgo.",
+      "quality": {
+        "spanish": true,
+        "words": 150,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "06-ingeniera-civil-sobre-rango",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2868.5782089999993,
+        "totalMs": 6177.664250000002,
+        "evalCount": 67,
+        "promptEvalCount": 218,
+        "tokensPerSecond": 20.224833741301435,
+        "loadMs": 2.140254,
+        "ollamaTotalMs": 5897.833386,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"Ingeniería civil colegiada\", \"7 años de experiencia en edificación vertical\", \"Manejo de MS Project\", \"Control de costos\"], \"nice\": [\"Bonificación por desempeño\"], \"keywords\": [\"Ingeniería civil\", \"MS Project\", \"Control de costos\", \"Edificación vertical\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 5,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "07-soporte-ti-junior",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 4999.587834000005,
+        "totalMs": 16513.886834000004,
+        "evalCount": 216,
+        "promptEvalCount": 420,
+        "tokensPerSecond": 18.744635324421473,
+        "loadMs": 2.060941,
+        "ollamaTotalMs": 16237.584339,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para esta transición de Técnico de soporte a Administrador de sistemas Jr en Tecnoglass, tu expectativa de Q5,800 mensuales es ambiciosa, lo cual está bien porque tus logros son sólidos. Tienes dos años de experiencia y has demostrado ser muy eficiente atendiendo más de 1500 tickets con un 96% de satisfacción, además de haber automatizado respaldos con scripts de PowerShell. Eso te da un valor real en el mercado.\n\nSobre cuándo mencionarlo, te digo algo clave: no lo pongas en la nota que envías. La carta es para vender tu perfil, no para negociar el sueldo. Lo ideal es esperar a la entrevista con RR. HH. cuando te pregunten directamente sobre tus expectativas. Ahí es cuando puedes usar tus logros como argumento concreto para justificar esa cifra.\n\nEn resumen, sé firme pero flexible. Usa tu experiencia y esos resultados para justificar tu valor, y deja que la conversación fluya en el momento justo. ¡Tú puedes lograr esa meta!",
+      "quality": {
+        "spanish": true,
+        "words": 159,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "08-data-scientist-en",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5087.930791999999,
+        "totalMs": 16686.223999999987,
+        "evalCount": 206,
+        "promptEvalCount": 428,
+        "tokensPerSecond": 17.765117209241517,
+        "loadMs": 2.26674,
+        "ollamaTotalMs": 16409.130814,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para esta transición a Senior Data Scientist en Crowdbotics, mi expectativa salarial es de US$4,200 mensuales. Sé que la oferta no pone un rango, pero te comento que este número está alineado con mi experiencia y el valor que aporto. En mi rol actual en Grupo Pantaleon, logré mejorar la precisión de la planificación de cosecha en un 18% con un modelo de pronóstico de rendimiento de caña de azúcar, además de haber desplegado seis modelos de Machine Learning en producción en GCP.\n\nEste cambio representa un salto significativo, y mi expectativa es agresiva, lo cual es justo dado mi perfil senior y los resultados concretos que he entregado. Te recomiendo mencionar este rango de US$4,200 en el formulario o correo de postulación, tal como pide la vacante. Así aseguras que mi perfil sea considerado desde el inicio. Estoy seguro de que podemos llegar a un acuerdo que refleje este nivel de contribución.",
+      "quality": {
+        "spanish": true,
+        "words": 154,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "08-data-scientist-en",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2830.060415999993,
+        "totalMs": 6712.4463749999995,
+        "evalCount": 80,
+        "promptEvalCount": 216,
+        "tokensPerSecond": 20.578815190149538,
+        "loadMs": 1.994875,
+        "ollamaTotalMs": 6439.886376,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"5+ años de experiencia en ciencia de datos\", \"Python\", \"SQL\", \"plataformas ML en la nube\", \"Experiencia desplegando modelos en producción\", \"Excelente inglés\"], \"nice\": [\"Construir modelos de pronóstico y optimización\"], \"keywords\": [\"Data Science\", \"Python\", \"SQL\", \"Cloud ML\", \"Model Deployment\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 7,
+        "grounding": 0.14285714285714285,
+        "recall": 0.25,
+        "mentionsSalary": false,
+        "score": 0.6785714285714286
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "09-maestra-conservador",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5176.379083000007,
+        "totalMs": 15723.917667000002,
+        "evalCount": 195,
+        "promptEvalCount": 431,
+        "tokensPerSecond": 18.495612413913598,
+        "loadMs": 2.066428,
+        "ollamaTotalMs": 15442.761296,
+        "doneReason": "stop"
+      },
+      "content": "Hola. Mira, para esta transición a Coordinadora Académica en el Colegio Monte María, mi expectativa salarial es de Q7,000 mensuales. Sé que mi salario actual es de Q6,500, pero mi experiencia de once años como maestra senior y mis logros, como diseñar el programa de lectura que mejoró el promedio de comprensión lectora en 20 puntos y capacitar a quince docentes en herramientas digitales, justifican este ajuste.\n\nRespecto a si es realista, sí lo es. La oferta tiene un rango que va hasta Q8,500, y mi solicitud de Q7,000 está justo dentro de ese marco, lo cual es un punto clave. Te recomiendo mencionarlo en la primera llamada con RR. HH. sin dudarlo. Es mejor hablar de números temprano para que ambos ahorremos tiempo y podamos enfocar la conversación en cómo mis resultados impactarán positivamente en el nuevo rol.",
+      "quality": {
+        "spanish": true,
+        "words": 139,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "09-maestra-conservador",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2662.972167,
+        "totalMs": 4651.287707999989,
+        "evalCount": 43,
+        "promptEvalCount": 201,
+        "tokensPerSecond": 21.564823860524736,
+        "loadMs": 2.887343,
+        "ollamaTotalMs": 4369.697117,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"Licenciatura en educación\", \"8 años de experiencia docente\", \"Experiencia coordinando equipos\"], \"nice\": [], \"keywords\": [\"Coordinadora Académica\", \"Primaria\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 3,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "10-mercadologo-k",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5370.358042000007,
+        "totalMs": 16859.503874999995,
+        "evalCount": 215,
+        "promptEvalCount": 449,
+        "tokensPerSecond": 18.712042295830077,
+        "loadMs": 2.196534,
+        "ollamaTotalMs": 16586.972378,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para este cambio a Jefe de Marketing en Walmart Centroamérica, tu expectativa salarial es muy realista. Tienes seis años de experiencia y logros sólidos, como duplicar las ventas del e-commerce de Galeno en solo 14 meses y manejar un presupuesto de pauta de Q80,000 mensuales con un ROAS de 6. Eso te posiciona fuerte.\n\nTu expectativa de Q14,000 mensuales está justo dentro del rango que publicaron, que va de Q13,000 a Q16,000. Te recomiendo mencionarla en la primera llamada con RR. HH. sin dudarlo. Es mejor hablar de números temprano para que ambos ahorremos tiempo y no nos compliquemos después.\n\nCuando hables, enfócate en cómo tus resultados anteriores demuestran que puedes aportar ese valor. No solo digas lo que quieres, sino explica cómo tus logros, como el crecimiento que lograste, justifican esa cifra. ¡Confía en tu valor!",
+      "quality": {
+        "spanish": true,
+        "words": 138,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "10-mercadologo-k",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2657.010083000001,
+        "totalMs": 5713.42079199999,
+        "evalCount": 60,
+        "promptEvalCount": 202,
+        "tokensPerSecond": 19.622425292521303,
+        "loadMs": 2.181892,
+        "ollamaTotalMs": 5363.581381,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"5 años en marketing digital\", \"Manejo de Meta Ads\", \"Manejo de Google Ads\", \"Liderazgo de equipos\"], \"nice\": [], \"keywords\": [\"marketing digital\", \"Meta Ads\", \"Google Ads\", \"liderazgo de equipos\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 4,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "11-abogado-agresivo",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5024.122499999998,
+        "totalMs": 17663.105584000004,
+        "evalCount": 242,
+        "promptEvalCount": 422,
+        "tokensPerSecond": 19.149852581744348,
+        "loadMs": 1.986919,
+        "ollamaTotalMs": 17370.945714,
+        "doneReason": "stop"
+      },
+      "content": "Hola. Mira, para esta transición de abogado y notario a asesor legal corporativo en Banrural, mi expectativa salarial es de Q18,500 mensuales. Entiendo que la oferta no publica un rango, y por eso, te recomiendo que dejes que ellos propongan la primera cifra. Esto es clave porque un salto tan grande, como el que estamos buscando, sin un rango definido, puede hacer que te descartes antes de que demuestres todo el valor que aportas.\n\nMi valor radica en mi experiencia, especialmente en la due diligence de dos adquisiciones corporativas y en haber redactado 120 contratos mercantiles el último año. Estos logros demuestran que puedo manejar responsabilidades de alto nivel. Cuando hable de mi expectativa, enfócate en cómo estos resultados justifican ese nivel de compensación.\n\nAsí que, cuando te pregunten, sé firme pero estratégico. Deja que ellos hablen primero para establecer el punto de partida. Luego, usa esos logros como el puente para justificar por qué Q18,500 es lo justo para el rol que quiero asumir. ¡Vamos a negociar esto con confianza!",
+      "quality": {
+        "spanish": true,
+        "words": 171,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": false,
+        "score": 0.8333333333333334
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "12-ux-anual-usd-en",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 5064.751584000012,
+        "totalMs": 19399.491875000007,
+        "evalCount": 271,
+        "promptEvalCount": 438,
+        "tokensPerSecond": 18.951143044136792,
+        "loadMs": 2.988874,
+        "ollamaTotalMs": 19117.338528,
+        "doneReason": "stop"
+      },
+      "content": "Mira, para este cambio de UX Designer a Product Designer en Applaudo, tu expectativa salarial de US$2,400 mensuales es totalmente realista, y de hecho, está bien posicionada. Tienes cinco años de experiencia y logros sólidos como rediseñar el flujo de solicitud de crédito en Unicomer, lo cual redujo el abandono en un 30% y has liderado más de 40 pruebas de usabilidad con clientes reales. Eso te da un valor muy claro en el mercado.\n\nEl rango publicado en la oferta va de US$26,000 a US$32,000 anuales, y tu expectativa se ajusta perfectamente a esa banda agresiva. Te recomiendo mencionarla en la primera llamada con RR. HH. sin dudarlo. Es mejor hablar de números temprano para que ambos ahorremos tiempo y podamos enfocar la conversación en cómo tus logros se traducen en ese valor.\n\nCuando hables, enfócate en cómo tu capacidad para mejorar procesos, como lo hiciste con el flujo de crédito, es lo que justifica esa cifra. No es solo pedir un sueldo, es presentar el valor concreto que ya aportas y que el mercado está dispuesto a pagar por tu nivel de senioridad. ¡Confía en lo que has logrado!",
+      "quality": {
+        "spanish": true,
+        "words": 191,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "gemma4:e2b-it-qat",
+      "inputId": "12-ux-anual-usd-en",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "gemma4:e2b-it-qat",
+        "ttftMs": 2830.185750000004,
+        "totalMs": 5210.678541000001,
+        "evalCount": 46,
+        "promptEvalCount": 221,
+        "tokensPerSecond": 19.298718145577784,
+        "loadMs": 2.399515,
+        "ollamaTotalMs": 4922.97804,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"4+ años de experiencia en diseño de producto\"], \"nice\": [\"Habilidades de investigación de usuarios\"], \"keywords\": [\"Product Designer\", \"Figma\", \"prototipado\", \"User research\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 2,
+        "grounding": 0,
+        "recall": 0,
+        "mentionsSalary": false,
+        "score": 0.6
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "01-analista-datos-bi",
+      "task": "negotiation",
+      "run": 0,
+      "kind": "cold",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 14531.356042,
+        "totalMs": 26764.47445800004,
+        "evalCount": 196,
+        "promptEvalCount": 469,
+        "tokensPerSecond": 16.00565228177722,
+        "loadMs": 8402.435673,
+        "ollamaTotalMs": 26614.832636,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de Q17,500 mensuales es totalmente realista y se sitúa dentro del rango publicado de tu oferta (Q16,000 a Q19,000). Al ser un rol Senior con 5 años de experiencia, mereces una compensación acorde a tu impacto directo.\n\nTu valor principal radica en haber automatizado 40 reportes semanales con Power BI y SQL, ahorrando 12 horas al equipo de riesgo, además de liderar la migración del data mart a la nube. Estos logros demuestran que puedes generar ahorros significativos para el negocio, justificando un aumento salarial.\n\nNo tengas miedo de mencionar esta cifra en tu primera llamada con RR. HH., ya que caer dentro del rango oficial te da seguridad y evita complicaciones futuras. Hablar de números temprano demuestra profesionalismo y claridad, permitiendo negociar desde la base sin perder tiempo.",
+      "quality": {
+        "spanish": true,
+        "words": 131,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "01-analista-datos-bi",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 229.06204200000502,
+        "totalMs": 12787.96074999997,
+        "evalCount": 196,
+        "promptEvalCount": 469,
+        "tokensPerSecond": 15.610199927635573,
+        "loadMs": 2.194356,
+        "ollamaTotalMs": 12641.313946,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de Q17,500 mensuales es totalmente realista y se sitúa dentro del rango publicado de tu oferta (Q16,000 a Q19,000). Al ser un rol Senior con 5 años de experiencia, mereces una compensación acorde a tu impacto directo.\n\nTu valor principal radica en haber automatizado 40 reportes semanales con Power BI y SQL, ahorrando 12 horas al equipo de riesgo, además de liderar la migración del data mart a la nube. Estos logros demuestran que puedes generar ahorros significativos para el negocio, justificando un aumento salarial.\n\nNo tengas miedo de mencionar esta cifra en tu primera llamada con RR. HH., ya que caer dentro del rango oficial te da seguridad y evita complicaciones futuras. Hablar de números temprano demuestra profesionalismo y claridad, permitiendo negociar desde la base sin perder tiempo.",
+      "quality": {
+        "spanish": true,
+        "words": 131,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "01-analista-datos-bi",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 3518.247417000006,
+        "totalMs": 7776.4987919999985,
+        "evalCount": 71,
+        "promptEvalCount": 257,
+        "tokensPerSecond": 16.661539140574707,
+        "loadMs": 2.242796,
+        "ollamaTotalMs": 7461.042519,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"4 años experiencia inteligencia negocios\", \"SQL avanzado\", \"Power BI\", \"modelos datos dimensionales\", \"Inglés intermedio\"], \"nice\": [\"salario Q16,000 - Q19,000 mensuales\", \"prestaciones de ley y seguro médico\"], \"keywords\": []}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 7,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": true,
+        "score": 0.8
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "02-dev-frontend-remoto-usd",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 5943.086208000022,
+        "totalMs": 17624.194583000033,
+        "evalCount": 186,
+        "promptEvalCount": 457,
+        "tokensPerSecond": 15.92822911233264,
+        "loadMs": 2.0913,
+        "ollamaTotalMs": 17356.653091,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de US$3,500 mensuales está perfectamente dentro del rango publicado por Nearshore Labs (US$3,000 a US$4,000). Al ser Senior Frontend Engineer con 6 años de experiencia y haber optimizado el rendimiento de la app de Tigo en un 45% mediante Next.js, tu valor es tangible.\n\nEsta cifra no es una imposición, sino una proyección lógica basada en tu capacidad para entregar resultados medibles que superan lo estándar del mercado local. No necesitas justificar cada centavo; simplemente demuestra que tu trabajo genera ahorros y eficiencia reales para el cliente.\n\nMenciona este número solo en la primera llamada con RR. HH., sin miedo ni resistencia. Al hacerlo temprano, evitas diluir tu propuesta con discusiones innecesarias y te posicionas como una opción estratégica desde el inicio del proceso.",
+      "quality": {
+        "spanish": true,
+        "words": 126,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "02-dev-frontend-remoto-usd",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 3622.897457999992,
+        "totalMs": 13606.888541999971,
+        "evalCount": 154,
+        "promptEvalCount": 248,
+        "tokensPerSecond": 15.418162595537543,
+        "loadMs": 2.100758,
+        "ollamaTotalMs": 13256.004832,
+        "doneReason": "stop"
+      },
+      "content": "{\n  \"must\": [\n    \"React\",\n    \"TypeScript\",\n    \"Next.js\",\n    \"Performance optimization\",\n    \"English communication skills\",\n    \"$3,000 - $4,000 USD per month\",\n    \"Remote\",\n    \"Product team\"\n  ],\n  \"nice\": [\n    \"Design systems experience\"\n  ],\n  \"keywords\": [\n    \"Senior Frontend Engineer\",\n    \"React\",\n    \"TypeScript\",\n    \"Next.js\",\n    \"Performance optimization\",\n    \"English communication skills\",\n    \"Remote work\",\n    \"Product team\",\n    \"Design systems\"\n  ]\n}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 9,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": true,
+        "score": 0.8
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "03-contadora-sin-oferta",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 5952.310999999987,
+        "totalMs": 16293.963208000001,
+        "evalCount": 170,
+        "promptEvalCount": 437,
+        "tokensPerSecond": 16.437080932995787,
+        "loadMs": 2.160796,
+        "ollamaTotalMs": 16013.244608,
+        "doneReason": "stop"
+      },
+      "content": "Tu perfil actual en La Económica te permite cerrar estados financieros en solo cinco días hábiles, un logro que demuestra tu capacidad operativa superior a la media. En Grupo Paiz, esta eficiencia será vital para mantener el ritmo de trabajo bajo presión sin sacrificar calidad.\n\nLa brecha salarial de 7,4% es conservadora y muy realista considerando tu experiencia de ocho años y tu rol senior actual. No necesitas subirte de categoría inmediatamente; puedes negociar este incremento como un reconocimiento directo a tus resultados medibles.\n\nSolo menciona el número Q10,200 durante la entrevista con RR. HH cuando ya hay interés mutuo y no antes. La carta debe vender tu perfil y tu capacidad de gestión, dejando que el salario se ajuste al momento en que el reclutador demuestre su compromiso contigo.",
+      "quality": {
+        "spanish": true,
+        "words": 130,
+        "lengthOk": true,
+        "numbersChecked": 2,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "04-enfermera-recorte",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 5820.024458000029,
+        "totalMs": 22062.29554100003,
+        "evalCount": 260,
+        "promptEvalCount": 449,
+        "tokensPerSecond": 15.99096633409557,
+        "loadMs": 2.220382,
+        "ollamaTotalMs": 21774.789582,
+        "doneReason": "stop"
+      },
+      "content": "Tu propuesta de Q8,000 representa una reducción del 9% respecto a tu salario actual en el Hospital Herrera Llerandi. Esta diferencia no se debe a un error, sino a la necesidad de ajustar tus expectativas para garantizar estabilidad y seguridad laboral en Maquiladora Textiles del Sur. Como enfermera jefe con 10 años de experiencia liderando turnos críticos, tu valor reside en tu capacidad para mantener la calma bajo presión y optimizar procesos sin incidentes graves.\n\nEl cambio de rol es estratégico: pasar a salud ocupacional te permite aplicar tus logros de gestión de equipos y protocolos de triage directamente en el sector textil, donde la eficiencia es vital. No es necesario que aceptes menos dinero por menos responsabilidad; tu experiencia como líder demuestra que puedes aportar valor inmediato sin necesidad de un aumento salarial.\n\nSolo debes mencionar esta brecha si alguien te pregunta sobre tus expectativas o si se hace una oferta menor a tu salario actual. En ese momento, explica que la estabilidad y el crecimiento profesional en este nuevo entorno son prioridades más importantes que un incremento monetario inmediato. Mantén firme: tu valor como líder senior justifica mantener tu nivel de vida actual mientras construyes una carrera más segura y exitosa en Maquiladora Textiles del Sur.",
+      "quality": {
+        "spanish": true,
+        "words": 208,
+        "lengthOk": true,
+        "numbersChecked": 2,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "04-enfermera-recorte",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 3125.093583000009,
+        "totalMs": 11949.197165999969,
+        "evalCount": 142,
+        "promptEvalCount": 223,
+        "tokensPerSecond": 16.185879552663327,
+        "loadMs": 2.016603,
+        "ollamaTotalMs": 11617.252264,
+        "doneReason": "stop"
+      },
+      "content": "{\n  \"must\": [\n    \"Licenciatura en enfermería\",\n    \"Colegiado activo\",\n    \"Experiencia en salud ocupacional\"\n  ],\n  \"nice\": [\n    \"Horario de lunes a viernes\",\n    \"7:00 a 16:00\"\n  ],\n  \"keywords\": [\n    \"enfermera profesional\",\n    \"clínica empresarial\",\n    \"salud ocupacional\",\n    \"licenciatura en enfermería\",\n    \"colegiado activo\",\n    \"horario laboral\",\n    \"experiencia clínica\"\n  ]\n}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 5,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "05-vendedor-pide-pretension",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 6468.77887499996,
+        "totalMs": 25187.38633399998,
+        "evalCount": 265,
+        "promptEvalCount": 445,
+        "tokensPerSecond": 15.769153868857767,
+        "loadMs": 2.020436,
+        "ollamaTotalMs": 22778.603692,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de Q9,000 mensuales es muy realista considerando tu rol actual en Claro y tus logros recientes. Como Ejecutivo de ventas con 4 años de experiencia liderando equipos, has demostrado capacidad para escalar resultados significativamente, superando la meta anual en un 130% y abriendo 22 cuentas nuevas en el segmento pyme. Este crecimiento demuestra que tu valor profesional ha aumentado considerablemente desde tu salario actual de Q7,000.\n\nPara esta transición a Key Account Manager en Pollo Campero, es crucial mencionar este rango al momento de postular o enviar el correo, ya que la oferta exige explícitamente un número para pasar el filtro inicial. Al hacerlo, no estás negociando por dinero, sino presentando tu mérito actual como justificación lógica para una compensación acorde a tu nivel senior y capacidad de generación de ingresos corporativos.\n\nEs importante entender que este dato es parte de tu perfil profesional válido; al incluirlo en la comunicación formal, refuerzas tu posición sin generar ambigüedades sobre tus expectativas futuras. Mantén el enfoque en cómo tu experiencia actual respalda esta cifra, asegurando que el reclutador vea una propuesta justa basada en hechos verificables y no en suposiciones.",
+      "quality": {
+        "spanish": true,
+        "words": 190,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "05-vendedor-pide-pretension",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 7712.6621249999735,
+        "totalMs": 15331.160166000016,
+        "evalCount": 77,
+        "promptEvalCount": 216,
+        "tokensPerSecond": 15.892895916805436,
+        "loadMs": 1.925608,
+        "ollamaTotalMs": 7713.031787,
+        "doneReason": "stop"
+      },
+      "content": "{\n  \"must\": [\n    \"ventas B2B\",\n    \"consumo masivo\",\n    \"manejo de cuentas clave\",\n    \"licencia de conducir\",\n    \"vehículo propio\",\n    \"CV\",\n    \"pretensión salarial\"\n  ],\n  \"nice\": [],\n  \"keywords\": []\n}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 7,
+        "grounding": 0.8571428571428571,
+        "recall": 1,
+        "mentionsSalary": true,
+        "score": 0.7714285714285715
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "06-ingeniera-civil-sobre-rango",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 9125.617583000043,
+        "totalMs": 24700.74137500004,
+        "evalCount": 220,
+        "promptEvalCount": 457,
+        "tokensPerSecond": 14.838032088458414,
+        "loadMs": 1.853265,
+        "ollamaTotalMs": 20998.583948,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de Q24,000 mensuales es muy alta respecto a tu salario actual de Q16,000, lo que representa un incremento del 50%. Sin embargo, el rango publicado por Spectrum oscila entre Q18,000 y Q21,000. Dado que eres ingeniera residente con 9 años de experiencia y logros comprobables como la entrega de tres torres a tiempo bajo presupuesto, tu valor actual supera ampliamente lo que la oferta ofrece.\n\nEs fundamental no mencionar este número inmediatamente después de la entrevista técnica. Primero debes demostrar tu capacidad real mediante un desempeño sólido durante el proceso de selección para generar confianza. Solo cuando tengas una base sólida y los candidatos estén dispuestos a escuchar, es momento de presentar tu expectativa o negociar componentes adicionales como bonos por resultados o revisión del contrato a 6 meses.\n\nTu estrategia debe ser: primero validar tu valor con acciones concretas, luego usar la brecha salarial como argumento de valor para cerrar el trato, evitando que parezca una demanda inicial.",
+      "quality": {
+        "spanish": true,
+        "words": 161,
+        "lengthOk": true,
+        "numbersChecked": 5,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "06-ingeniera-civil-sobre-rango",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 4670.674750000006,
+        "totalMs": 14647.902709000045,
+        "evalCount": 151,
+        "promptEvalCount": 227,
+        "tokensPerSecond": 15.048601501571383,
+        "loadMs": 2.037173,
+        "ollamaTotalMs": 13076.329172,
+        "doneReason": "stop"
+      },
+      "content": "{\n  \"must\": [\n    \"Ingeniería civil colegiada\",\n    \"7 años de experiencia en edificación vertical\",\n    \"Manejo de MS Project\",\n    \"Control de costos\"\n  ],\n  \"nice\": [\n    \"Bonificación por desempeño\",\n    \"Gerencia de proyectos\",\n    \"Edificación vertical\"\n  ],\n  \"keywords\": [\n    \"Ingeniería civil\",\n    \"MS Project\",\n    \"Control de costos\",\n    \"Edificación vertical\",\n    \"Gerencia de proyectos\",\n    \"Bonificación por desempeño\",\n    \"Experiencia laboral\",\n    \"Salario\"\n  ]\n}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 7,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "07-soporte-ti-junior",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 6110.184833000007,
+        "totalMs": 22358.60237499996,
+        "evalCount": 218,
+        "promptEvalCount": 430,
+        "tokensPerSecond": 15.40293803270849,
+        "loadMs": 2.018128,
+        "ollamaTotalMs": 19840.679478,
+        "doneReason": "stop"
+      },
+      "content": "Tu perfil en Almacenes Tropigas demuestra un dominio técnico sólido, pero el salto a Administrador de Sistemas Jr requiere una evolución clara. Tu experiencia con 1500 tickets y la automatización mediante PowerShell son logros tangibles que demuestran capacidad de resolución de problemas complejos, no solo ejecución básica.\n\nLa brecha salarial del +28.9% es realista si tu objetivo es pasar de un rol operativo a uno de gestión técnica. Sin embargo, al ser una oferta privada y sin rango público, debes mantener la discreción hasta el momento de la entrevista con RRHH. No menciones el número en la carta; usa tus logros para vender tu valor actual. Solo cuando te pregunten por tu expectativa, puedes justificar la cifra basándote en la necesidad de cubrir funciones de supervisión y soporte avanzado que ya has desarrollado.\n\nTu estrategia debe ser: presentar tu experiencia como un activo valioso y esperar a que el interés mutuo abra las puertas para negociar la diferencia salarial necesaria para alcanzar ese nivel de responsabilidad.",
+      "quality": {
+        "spanish": true,
+        "words": 166,
+        "lengthOk": true,
+        "numbersChecked": 2,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "08-data-scientist-en",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 9866.644833000028,
+        "totalMs": 22669.640375000017,
+        "evalCount": 209,
+        "promptEvalCount": 437,
+        "tokensPerSecond": 16.65745326189597,
+        "loadMs": 2.083711,
+        "ollamaTotalMs": 18119.182571,
+        "doneReason": "stop"
+      },
+      "content": "Tu nueva oferta de US$4,200 mensuales representa un incremento del 47% respecto a tu salario actual en Guatemala. Este salto es totalmente viable dado que has demostrado capacidad técnica con modelos de predicción de cosecha y despliegue en GCP. Sin embargo, el mercado local en Guatemala suele operar en rangos más bajos para roles Senior, por lo que esta cifra puede ser un desafío inicial.\n\nNo debes mencionar este monto en tu carta ni en el correo de postulación; hacerlo te expulsa del filtro automático. En su lugar, enfócate en los logros concretos: la mejora del 18% en la planificación de cosecha y la experiencia acumulada de siete años como Senior Data Scientist.\n\nCuando recibas la oferta formal, usa esa cifra exacta para negociar el piso salarial inicial. Explica que tu valor real es mucho mayor por la experiencia global y los proyectos exitosos, pero acepta un rango que respete su estándar local mientras mantienes tus expectativas profesionales.",
+      "quality": {
+        "spanish": true,
+        "words": 158,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "08-data-scientist-en",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 4531.209499999997,
+        "totalMs": 9053.876416999963,
+        "evalCount": 86,
+        "promptEvalCount": 224,
+        "tokensPerSecond": 15.31048415667539,
+        "loadMs": 1.835545,
+        "ollamaTotalMs": 8436.728375,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"5+ years experience\", \"data science\", \"Python\", \"SQL\", \"cloud ML platforms\", \"model deployment\", \"forecasting\", \"optimization\"], \"nice\": [\"client-facing work\", \"production deployment\", \"excellent English\"], \"keywords\": [\"forecasting models\", \"optimization algorithms\", \"production deployment\", \"cloud ML platforms\", \"data science\", \"Python\", \"SQL\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 11,
+        "grounding": 0.7272727272727273,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 0.9454545454545455
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "09-maestra-conservador",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 7534.235541000031,
+        "totalMs": 19108.928833000013,
+        "evalCount": 188,
+        "promptEvalCount": 443,
+        "tokensPerSecond": 16.276227669102216,
+        "loadMs": 1.953999,
+        "ollamaTotalMs": 17020.752941,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de Q7,000 mensuales es totalmente realista y está perfectamente dentro del rango publicado de hasta Q8,500. Como maestra con 11 años de experiencia liderando equipos, tu valor no reside solo en enseñar, sino en diseñar programas que elevaron el promedio de comprensión lectora en 20 puntos y capacitaste a 15 docentes. Este logro demuestra un impacto tangible que justifica una compensación acorde a tu rol senior.\n\nHablar de este número temprano en la primera llamada con RR. HH. es estratégico: al situarte dentro del rango oficial desde el inicio, evitas dilaciones innecesarias y proyectas profesionalidad inmediata. No necesitas justificar cada centavo; solo debes presentar tu experiencia como un activo que agrega valor inmediato a su equipo. Mantén este enfoque directo y cálido para cerrar la negociación con confianza y claridad.",
+      "quality": {
+        "spanish": true,
+        "words": 132,
+        "lengthOk": true,
+        "numbersChecked": 2,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "09-maestra-conservador",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 3485.462582999957,
+        "totalMs": 6340.173375000013,
+        "evalCount": 53,
+        "promptEvalCount": 209,
+        "tokensPerSecond": 17.27444464290138,
+        "loadMs": 2.505706,
+        "ollamaTotalMs": 5687.771892,
+        "doneReason": "stop"
+      },
+      "content": "{\n  \"must\": [\n    \"Licenciatura en educación\",\n    \"8 años de experiencia docente\",\n    \"Experiencia coordinando equipos\"\n  ],\n  \"nice\": [],\n  \"keywords\": []\n}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 3,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "10-mercadologo-k",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 6182.833832999924,
+        "totalMs": 17269.454374999972,
+        "evalCount": 181,
+        "promptEvalCount": 462,
+        "tokensPerSecond": 16.024396745648644,
+        "loadMs": 1.874561,
+        "ollamaTotalMs": 16987.106441,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de Q14,000 mensuales es totalmente realista y está perfectamente dentro del rango de oferta de Q13,000 a Q16,000. Como coordinador senior con 6 años de experiencia liderando equipos, tu rol actual en Galeno demuestra que puedes duplicar las ventas e-commerce en solo 14 meses. Esa capacidad de escalar presupuestos y generar un ROAS de 6 es el argumento clave para justificar un salto a Walmart Centroamérica.\n\nNo tengas miedo de mencionar este número en la primera llamada con RR. HH., ya que tu expectativa cae dentro del rango publicado, lo cual ahorra tiempo a ambos al evitar negociaciones paralizantes. Al presentar tus logros concretos como duplicar ventas y optimizar el presupuesto, conviertes tu experiencia actual en una ventaja competitiva clara para esta nueva oportunidad.",
+      "quality": {
+        "spanish": true,
+        "words": 126,
+        "lengthOk": true,
+        "numbersChecked": 3,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "10-mercadologo-k",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 3085.0109999999404,
+        "totalMs": 7114.705958999926,
+        "evalCount": 58,
+        "promptEvalCount": 211,
+        "tokensPerSecond": 16.07121877473028,
+        "loadMs": 1.933599,
+        "ollamaTotalMs": 6413.220654,
+        "doneReason": "stop"
+      },
+      "content": "{\n  \"must\": [\n    \"5 años en marketing digital\",\n    \"Manejo de Meta Ads\",\n    \"Google Ads\",\n    \"Liderazgo de equipos\"\n  ],\n  \"nice\": [],\n  \"keywords\": []\n}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 4,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": false,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "11-abogado-agresivo",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 6120.144084000029,
+        "totalMs": 17170.9601250001,
+        "evalCount": 183,
+        "promptEvalCount": 436,
+        "tokensPerSecond": 16.25267058909625,
+        "loadMs": 1.787876,
+        "ollamaTotalMs": 16806.538877,
+        "doneReason": "stop"
+      },
+      "content": "Tu nueva oferta de Q18,500 representa un salto del 54% respecto a tu actual salario, lo cual es muy alto pero no necesariamente inviable sin contexto. Como asesor legal corporativo en Banrural, el rol requiere una visión estratégica que excede la gestión burocrática de tus contratos mercantiles actuales.\n\nDebes dejar claro que tu experiencia como asociado con 3 años de trayectoria y la capacidad de liderar due diligence en adquisiciones son competencias críticas para este puesto. No presentes el número primero; demuestra primero cómo valoras cada contrato redactado o cada caso de estudio, construyendo así un argumento sólido para justificar ese incremento.\n\nMenciona la brecha salarial solo cuando hayas demostrado que tu perfil actual es indispensable y que no puedes ser reemplazado fácilmente por otros candidatos con menos experiencia en el sector corporativo.",
+      "quality": {
+        "spanish": true,
+        "words": 133,
+        "lengthOk": true,
+        "numbersChecked": 2,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "12-ux-anual-usd-en",
+      "task": "negotiation",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 5802.96245900006,
+        "totalMs": 18203.18550000002,
+        "evalCount": 198,
+        "promptEvalCount": 444,
+        "tokensPerSecond": 15.950133759593946,
+        "loadMs": 2.064958,
+        "ollamaTotalMs": 17848.929464,
+        "doneReason": "stop"
+      },
+      "content": "Tu expectativa de US$2,400 mensuales es totalmente realista y está perfectamente dentro del rango publicado por Applaudo ($26k-$32k anuales). Al ser Senior UX Designer con 5 años de experiencia, tu valor no reside solo en tareas técnicas, sino en la capacidad de optimizar procesos críticos como el flujo de crédito de Unicomer, donde redujiste el abandono en un 30%. Este logro demuestra que puedes entregar resultados tangibles y medibles.\n\nEs crucial mencionar esta cifra al reclutador en la primera llamada con RR. HH., sin miedo ni vergüenza. Al situar tu expectativa dentro del rango oficial desde el inicio, evitas dilaciones innecesarias y te posicionas como una profesional seria que entiende los valores de mercado. No es un ataque, sino una estrategia para acelerar la decisión de contratación y asegurar que ambos lados estén alineados en cuanto a lo que realmente aportan al equipo.",
+      "quality": {
+        "spanish": true,
+        "words": 143,
+        "lengthOk": true,
+        "numbersChecked": 4,
+        "inventedNumbers": 0,
+        "numbersConsistent": true,
+        "onTopic": true,
+        "offTopicHits": [],
+        "noMarkdown": true,
+        "secondPerson": true,
+        "score": 1
+      }
+    },
+    {
+      "model": "qwen3.5:2b",
+      "inputId": "12-ux-anual-usd-en",
+      "task": "requirements",
+      "run": 1,
+      "kind": "warm",
+      "ok": true,
+      "stats": {
+        "model": "qwen3.5:2b",
+        "ttftMs": 3221.7466249999125,
+        "totalMs": 8833.61249999993,
+        "evalCount": 92,
+        "promptEvalCount": 228,
+        "tokensPerSecond": 16.388253398736715,
+        "loadMs": 2.136851,
+        "ollamaTotalMs": 8454.975515,
+        "doneReason": "stop"
+      },
+      "content": "{\"must\": [\"Product Designer\", \"Remote\", \"Figma\", \"Prototyping\", \"User Research\", \"4+ years experience\", \"End-to-end flows\"], \"nice\": [\"Salary range\", \"US$26,000 - US$32,000 per year\"], \"keywords\": [\"product design\", \"remote work\", \"user research\", \"prototyping\", \"Figma\", \"end-to-end flows\"]}",
+      "quality": {
+        "jsonValid": true,
+        "schemaValid": true,
+        "items": 9,
+        "grounding": 1,
+        "recall": 1,
+        "mentionsSalary": true,
+        "score": 0.8
+      }
+    }
+  ],
+  "judge": [
+    {
+      "inputId": "01-analista-datos-bi",
+      "task": "negotiation",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3,
+          "precision": 3,
+          "tono": 2,
+          "fidelidad": 4.5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        }
+      },
+      "comment": "La respuesta B cumple a la perfección con todas las instrucciones: se mantiene sólidamente en segunda persona, respeta el límite de palabras (139 palabras), abarca los tres puntos solicitados y utiliza los datos con precisión. La respuesta A comete un error grave de registro al mezclar primera y segunda persona ('mi expectativa', 'te recomiendo', 'mis logros', 'evitas que perdamos tiempo'), además de exceder ligeramente el límite superior de palabras.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "La respuesta B cumple a la perfección con todas las instrucciones: se mantiene sólidamente en segunda persona, respeta el límite de palabras (139 palabras), abarca los tres puntos solicitados y utiliza los datos con precisión. La respuesta A comete un error grave de registro al mezclar primera y segunda persona ('mi expectativa', 'te recomiendo', 'mis logros', 'evitas que perdamos tiempo'), además de exceder ligeramente el límite superior de palabras."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La respuesta A cumple perfectamente con todas las instrucciones: está redactada en segunda persona, se apega a los datos provistos y mantiene una longitud y tono adecuados. La respuesta B falla de forma importante en el punto de vista, mezclando erráticamente la primera persona ('mi expectativa', 'mis logros', 'cuando hable') con la segunda persona ('te recomiendo', 'demuestras'), lo que arruina la coherencia y tono de la nota."
+        }
+      ]
+    },
+    {
+      "inputId": "01-analista-datos-bi",
+      "task": "requirements",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 2,
+          "precision": 1.5,
+          "tono": 4.5,
+          "fidelidad": 2
+        }
+      },
+      "comment": "El sistema A cumplió a la perfección con todas las instrucciones: clasificó 'Inglés intermedio' como deseable (nice), extrajo keywords relevantes y omitió el salario y los beneficios. En cambio, el sistema B incluyó el inglés en 'must', colocó la compensación y beneficios en 'nice' violando la instrucción negativa explícita, y dejó 'keywords' vacío.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 4,
+              "fidelidad": 2
+            }
+          },
+          "comment": "El sistema A cumplió a la perfección con todas las instrucciones: clasificó 'Inglés intermedio' como deseable (nice), extrajo keywords relevantes y omitió el salario y los beneficios. En cambio, el sistema B incluyó el inglés en 'must', colocó la compensación y beneficios en 'nice' violando la instrucción negativa explícita, y dejó 'keywords' vacío."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 1,
+              "tono": 5,
+              "fidelidad": 2
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "El sistema A falló gravemente en seguir las instrucciones: incluyó salario y prestaciones en 'nice' a pesar de la prohibición explícita, clasificó un requisito deseable como obligatorio ('must') y dejó vacía la lista de 'keywords'. El sistema B siguió todas las instrucciones al pie de la letra, clasificó correctamente los requisitos y extrajo keywords adecuadas."
+        }
+      ]
+    },
+    {
+      "inputId": "02-dev-frontend-remoto-usd",
+      "task": "negotiation",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3,
+          "precision": 3,
+          "tono": 2,
+          "fidelidad": 4.5
+        }
+      },
+      "comment": "La Respuesta A cumple rigurosamente con todas las directivas: se redactó en segunda persona, respeta el rango de longitud (147 palabras), mantiene un tono directo y de asesoría, y usa con fidelidad los datos provistos. La Respuesta B confunde la voz narrativa mezclando primera y segunda persona (redactando partes como un guion y otras como consejo), y supera el límite máximo de palabras establecido (181 palabras frente al máximo de 170).",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La Respuesta A cumple rigurosamente con todas las directivas: se redactó en segunda persona, respeta el rango de longitud (147 palabras), mantiene un tono directo y de asesoría, y usa con fidelidad los datos provistos. La Respuesta B confunde la voz narrativa mezclando primera y segunda persona (redactando partes como un guion y otras como consejo), y supera el límite máximo de palabras establecido (181 palabras frente al máximo de 170)."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "El sistema A falló en la persona gramatical, mezclando primera y segunda persona como si fuera a la vez un guion y una recomendación, además de pasarse del límite de 170 palabras (177 palabras). El sistema B cumplió a la perfección la perspectiva en segunda persona, la extensión (139 palabras), el tono de asesoría y todos los datos solicitados."
+        }
+      ]
+    },
+    {
+      "inputId": "02-dev-frontend-remoto-usd",
+      "task": "requirements",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3.5,
+          "precision": 3,
+          "tono": 5,
+          "fidelidad": 3.5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 2,
+          "precision": 2,
+          "tono": 5,
+          "fidelidad": 2
+        }
+      },
+      "comment": "El sistema A respetó la exclusión de salario y beneficios y extrajo adecuadamente las secciones, pero falló en la instrucción de mantener el idioma original de la oferta (traduciendo al español) y omitió 'performance optimization' del listado 'must'. Por su parte, el sistema B mantuvo el idioma en inglés, pero violó la restricción negativa explícita al incluir el salario y la modalidad remota dentro de 'must', además de atomizar los requisitos en palabras sueltas en lugar de reflejar los requisitos reales.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 4
+            },
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            }
+          },
+          "comment": "El sistema A respetó la exclusión de salario y beneficios y extrajo adecuadamente las secciones, pero falló en la instrucción de mantener el idioma original de la oferta (traduciendo al español) y omitió 'performance optimization' del listado 'must'. Por su parte, el sistema B mantuvo el idioma en inglés, pero violó la restricción negativa explícita al incluir el salario y la modalidad remota dentro de 'must', además de atomizar los requisitos en palabras sueltas en lugar de reflejar los requisitos reales."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 3
+            }
+          },
+          "comment": "Ambos sistemas incumplieron restricciones clave. El sistema A incluyó explícitamente el salario ($3,000 - $4,000 USD) y la modalidad remota dentro de 'must', violando la instrucción negativa de no incluir salario ni beneficios, además de simplificar en exceso los requisitos al omitir la antigüedad de 5+ años. El sistema B tradujo el contenido al español a pesar de solicitarse 'en el idioma de la oferta' (inglés) y omitió 'performance optimization' del campo 'must', aunque sí respetó la exclusión del salario."
+        }
+      ]
+    },
+    {
+      "inputId": "03-contadora-sin-oferta",
+      "task": "negotiation",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 4.5,
+          "precision": 3.5,
+          "tono": 4.5,
+          "fidelidad": 4
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 4.5,
+          "precision": 4,
+          "tono": 4.5,
+          "fidelidad": 5
+        }
+      },
+      "comment": "Ambas respuestas cumplen con el conteo de palabras (90-170) y las restricciones de datos. La Respuesta A es más articulada y concisa, aunque tiene una leve imprecisión al referirse a su 'rol senior actual' (su rol actual es Contadora General con seniority senior). La Respuesta B es redundante (repite varias veces la cifra y la regla de no mencionarlo) y confunde 'la nota que envías' con la carta de presentación, además de cerrar con un tono algo cliché.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 4,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 4,
+              "precision": 4,
+              "tono": 4,
+              "fidelidad": 5
+            }
+          },
+          "comment": "Ambas respuestas cumplen con el conteo de palabras (90-170) y las restricciones de datos. La Respuesta A es más articulada y concisa, aunque tiene una leve imprecisión al referirse a su 'rol senior actual' (su rol actual es Contadora General con seniority senior). La Respuesta B es redundante (repite varias veces la cifra y la regla de no mencionarlo) y confunde 'la nota que envías' con la carta de presentación, además de cerrar con un tono algo cliché."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 4,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A cumple adecuadamente con todos los requisitos: longitud, tono directo y cálido, y fidelidad a los datos provistos (incluyendo la condición explícita de esperar a que pregunten). Tuvo un pequeño desliz léxico al llamar 'nota' a la carta en una frase, pero luego lo corrigió. La respuesta B comete un error de precisión y fidelidad al afirmar que su puesto actual ya es senior ('tu rol senior actual'), además de omitir la condición clave de esperar a que pregunten en la entrevista antes de dar la cifra."
+        }
+      ]
+    },
+    {
+      "inputId": "04-enfermera-recorte",
+      "task": "negotiation",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 3,
+          "precision": 2.5,
+          "tono": 4,
+          "fidelidad": 4
+        }
+      },
+      "comment": "La respuesta A cumple a cabalidad con todos los requisitos: respeta la extensión estipulada (168 palabras), aplica de forma coherente la regla de cuándo y cómo justificar una expectativa menor a su salario actual y mantiene un tono cálido y directo. En contraste, la respuesta B excede ampliamente el límite de palabras (supera las 230) y ofrece consejos contradictorios respecto a pedir menos o no aceptar menos dinero.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La respuesta A cumple a cabalidad con todos los requisitos: respeta la extensión estipulada (168 palabras), aplica de forma coherente la regla de cuándo y cómo justificar una expectativa menor a su salario actual y mantiene un tono cálido y directo. En contraste, la respuesta B excede ampliamente el límite de palabras (supera las 230) y ofrece consejos contradictorios respecto a pedir menos o no aceptar menos dinero."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 4,
+              "fidelidad": 4
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "La respuesta B cumple de forma exacta con la restricción de longitud (167 palabras vs el límite de 170), aborda con claridad qué tan realista es la cifra, el argumento sugerido y el momento oportuno para mencionarla con un tono cálido y profesional. La respuesta A sobrepasa por mucho el límite de palabras (alrededor de 230 palabras) y presenta contradicciones lógicas en su argumentación respecto a aceptar menos salario o mantener el nivel de vida actual."
+        }
+      ]
+    },
+    {
+      "inputId": "04-enfermera-recorte",
+      "task": "requirements",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 2,
+          "precision": 2,
+          "tono": 5,
+          "fidelidad": 2
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        }
+      },
+      "comment": "El sistema B clasificó con total precisión los requisitos obligatorios ('must') y el deseable ('nice'), además de generar palabras clave pertinentes y fieles. El sistema A confundió el requisito deseable poniéndolo como obligatorio, e interpretó erróneamente el horario laboral como un requisito deseable ('nice').",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "El sistema B clasificó con total precisión los requisitos obligatorios ('must') y el deseable ('nice'), además de generar palabras clave pertinentes y fieles. El sistema A confundió el requisito deseable poniéndolo como obligatorio, e interpretó erróneamente el horario laboral como un requisito deseable ('nice')."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            }
+          },
+          "comment": "La respuesta A clasifica a la perfección los requisitos obligatorios (must) y deseables (nice) y extrae palabras clave precisas. La respuesta B comete errores graves de fidelidad y precisión: clasifica un requisito explícitamente deseable en 'must', categoriza el horario laboral como un requisito deseable en 'nice' e inventa conceptos en 'keywords'."
+        }
+      ]
+    },
+    {
+      "inputId": "05-vendedor-pide-pretension",
+      "task": "negotiation",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 4,
+          "precision": 3,
+          "tono": 4,
+          "fidelidad": 3
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 2,
+          "precision": 2,
+          "tono": 2,
+          "fidelidad": 3.5
+        }
+      },
+      "comment": "La respuesta A mantiene la perspectiva correcta (asesoría en segunda persona), aunque supera el límite máximo de palabras (204 vs. 170) y califica la pretensión como 'muy realista' cuando los datos la definen como 'Ambicioso' (+28.6%), además de asumir que lidera equipos. La respuesta B respeta el rango de extensión, pero fracasa por completo en la perspectiva: mezcla primera persona fingiendo hablarle al reclutador ('a tu equipo') con consejos de asesor ('te recomiendo mencionar...'), volviéndose incoherente e inservible como nota privada.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 3
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 2,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A mantiene la perspectiva correcta (asesoría en segunda persona), aunque supera el límite máximo de palabras (204 vs. 170) y califica la pretensión como 'muy realista' cuando los datos la definen como 'Ambicioso' (+28.6%), además de asumir que lidera equipos. La respuesta B respeta el rango de extensión, pero fracasa por completo en la perspectiva: mezcla primera persona fingiendo hablarle al reclutador ('a tu equipo') con consejos de asesor ('te recomiendo mencionar...'), volviéndose incoherente e inservible como nota privada."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 2,
+              "fidelidad": 4
+            },
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A falla gravemente en la perspectiva: mezcla primera persona (como si le hablara al reclutador) con consejos en segunda persona, además de omitir la evaluación de qué tan realista es la meta (banda 'Ambicioso'). La respuesta B mantiene el formato de nota de asesoría en segunda persona y aborda los puntos solicitados, pero supera el límite máximo de extensión (190 palabras frente al tope de 170), califica la pretensión de 'muy realista' cuando los datos indican que es un salto ambicioso (+28.6%) e inventa el dato de 'liderando equipos'."
+        }
+      ]
+    },
+    {
+      "inputId": "05-vendedor-pide-pretension",
+      "task": "requirements",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 3,
+          "precision": 2,
+          "tono": 5,
+          "fidelidad": 2.5
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        }
+      },
+      "comment": "El sistema B cumplió con todas las instrucciones de forma precisa: mantuvo los requisitos completos (incluyendo los años de experiencia), omitió las instrucciones de postulación y salario tal como se pidió, y extrajo palabras clave relevantes. El sistema A fragmentó los requisitos omitiendo los 3 años de experiencia, incluyó 'pretensión salarial' a pesar de la instrucción explícita de excluir salario, y dejó vacías las keywords.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "El sistema B cumplió con todas las instrucciones de forma precisa: mantuvo los requisitos completos (incluyendo los años de experiencia), omitió las instrucciones de postulación y salario tal como se pidió, y extrajo palabras clave relevantes. El sistema A fragmentó los requisitos omitiendo los 3 años de experiencia, incluyó 'pretensión salarial' a pesar de la instrucción explícita de excluir salario, y dejó vacías las keywords."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 3
+            }
+          },
+          "comment": "El sistema A extrae fielmente los requisitos manteniendo los años de experiencia, separa las palabras clave y omite el proceso de postulación/salario según lo solicitado. El sistema B omite los años de experiencia requeridos, deja 'keywords' vacío e incluye 'CV' y 'pretensión salarial' como requisitos indispensables, desobedeciendo la instrucción de excluir temas salariales."
+        }
+      ]
+    },
+    {
+      "inputId": "06-ingeniera-civil-sobre-rango",
+      "task": "negotiation",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 3.5,
+          "precision": 2.5,
+          "tono": 4,
+          "fidelidad": 3.5
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 2.5,
+          "precision": 2.5,
+          "tono": 2,
+          "fidelidad": 4.5
+        }
+      },
+      "comment": "La respuesta A cumple con la persona gramatical solicitada (segunda persona) y ofrece una guía estructurada, aunque confunde 'candidatos' en lugar de 'entrevistadores/reclutadores' y matiza negativamente el momento exacto indicado en los datos. La respuesta B falla gravemente en la instrucción de usar la segunda persona, mezclando la primera persona del candidato con consejos en segunda persona y primera del plural, lo que la vuelve incoherente.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 4
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 2,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La respuesta A cumple con la persona gramatical solicitada (segunda persona) y ofrece una guía estructurada, aunque confunde 'candidatos' en lugar de 'entrevistadores/reclutadores' y matiza negativamente el momento exacto indicado en los datos. La respuesta B falla gravemente en la instrucción de usar la segunda persona, mezclando la primera persona del candidato con consejos en segunda persona y primera del plural, lo que la vuelve incoherente."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 4,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A respeta fielmente los datos y la recomendación temporal, pero falla gravemente en la consigna de persona gramatical, mezclando primera persona ('mi expectativa', 'mis logros') con segunda persona. La respuesta B mantiene la segunda persona requerida, pero contradice la regla de cuándo mencionarlo (indica no hacerlo después de la entrevista técnica) y comete un error de precisión conceptual al referirse a 'cuando los candidatos estén dispuestos a escuchar' en vez de los evaluadores."
+        }
+      ]
+    },
+    {
+      "inputId": "06-ingeniera-civil-sobre-rango",
+      "task": "requirements",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 2.5,
+          "precision": 2,
+          "tono": 5,
+          "fidelidad": 3
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 4,
+          "precision": 3,
+          "tono": 5,
+          "fidelidad": 4
+        }
+      },
+      "comment": "Ambos sistemas fallaron en seguir la instrucción negativa explícita de 'sin salario ni beneficios', clasificando la 'Bonificación por desempeño' dentro de 'nice' cuando ni siquiera es un requisito deseable sino una compensación (debió quedar vacío). No obstante, la Respuesta B es notablemente superior porque la Respuesta A además duplicó requisitos en 'nice' e incluyó 'Salario' y 'Bonificación por desempeño' en las palabras clave, ignorando por completo la restricción.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 3
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 4
+            }
+          },
+          "comment": "Ambos sistemas fallaron en seguir la instrucción negativa explícita de 'sin salario ni beneficios', clasificando la 'Bonificación por desempeño' dentro de 'nice' cuando ni siquiera es un requisito deseable sino una compensación (debió quedar vacío). No obstante, la Respuesta B es notablemente superior porque la Respuesta A además duplicó requisitos en 'nice' e incluyó 'Salario' y 'Bonificación por desempeño' en las palabras clave, ignorando por completo la restricción."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 4
+            },
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 3
+            }
+          },
+          "comment": "Ambos sistemas fallaron al incluir la 'bonificación por desempeño' dentro de 'nice', violando la instrucción explícita de excluir salario y beneficios, además de clasificar un beneficio como requisito deseable. No obstante, el Sistema A es mucho más limpio y preciso en 'keywords' y 'must'. El Sistema B comete errores graves adicionales: duplica requisitos obligatorios en 'nice' e incluye 'Salario' y 'Bonificación por desempeño' en las palabras clave."
+        }
+      ]
+    },
+    {
+      "inputId": "07-soporte-ti-junior",
+      "task": "negotiation",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 4,
+          "precision": 3,
+          "tono": 3.5,
+          "fidelidad": 3
+        }
+      },
+      "comment": "La respuesta A cumple a la perfección con todas las instrucciones y restricciones de longitud (163 palabras). Refleja fielmente la banda salarial calculada ('ambiciosa') y mantiene un tono cálido, directo y motivador sin inventar detalles. La respuesta B califica la pretensión de 'realista' a pesar de que los datos estipulan la banda 'Ambicioso', e inventa que el candidato ha desarrollado 'funciones de supervisión', lo cual degrada su fidelidad y precisión.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A cumple a la perfección con todas las instrucciones y restricciones de longitud (163 palabras). Refleja fielmente la banda salarial calculada ('ambiciosa') y mantiene un tono cálido, directo y motivador sin inventar detalles. La respuesta B califica la pretensión de 'realista' a pesar de que los datos estipulan la banda 'Ambicioso', e inventa que el candidato ha desarrollado 'funciones de supervisión', lo cual degrada su fidelidad y precisión."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 3,
+              "fidelidad": 3
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "La Respuesta B cumple con todos los requisitos de extensión (169 palabras frente al límite de 170), adopta un tono cálido y directo perfecto para la nota y se apega estrictamente a los datos provistos clasificando la brecha como ambiciosa. La Respuesta A excede el límite de palabras (184 palabras), usa un tono más distante, contradice la etiqueta de los datos diciendo que es 'realista' en vez de 'ambicioso' e inventa que el candidato ha desarrollado funciones de supervisión."
+        }
+      ]
+    },
+    {
+      "inputId": "08-data-scientist-en",
+      "task": "negotiation",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3,
+          "precision": 3,
+          "tono": 2,
+          "fidelidad": 4.5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 2,
+          "precision": 2,
+          "tono": 4,
+          "fidelidad": 1.5
+        }
+      },
+      "comment": "La respuesta A respeta fielmente los datos y la instrucción de cuándo mencionar la expectativa, pero falla gravemente en el tono y perspectiva al redactar en primera persona mezclada con segunda persona. La respuesta B adopta bien la segunda persona, pero comete una falta crítica de fidelidad y utilidad al contradecir directamente los datos: aconseja no poner el monto en el formulario/correo cuando la instrucción explícita indicaba que la oferta lo pide obligatoriamente y que omitirlo causaría la descalificación.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 4,
+              "fidelidad": 1
+            }
+          },
+          "comment": "La respuesta A respeta fielmente los datos y la instrucción de cuándo mencionar la expectativa, pero falla gravemente en el tono y perspectiva al redactar en primera persona mezclada con segunda persona. La respuesta B adopta bien la segunda persona, pero comete una falta crítica de fidelidad y utilidad al contradecir directamente los datos: aconseja no poner el monto en el formulario/correo cuando la instrucción explícita indicaba que la oferta lo pide obligatoriamente y que omitirlo causaría la descalificación."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 4,
+              "fidelidad": 2
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La respuesta A respeta el formato de nota de asesoría en segunda persona y la extensión, pero contradice directamente las instrucciones de los DATOS sobre cuándo mencionar la expectativa salarial (afirma falsamente que incluirla en el correo te saca del filtro, cuando la indicación era ponerla ahí porque la vacante lo exige). La respuesta B sigue mejor las instrucciones de cuándo y dónde mencionarlo, pero falla gravemente en la voz narrativa: en lugar de ser una nota privada dirigida al candidato en segunda persona, mezcla primera persona como si fuera una carta de presentación redactada para el reclutador y consejos de asesoría."
+        }
+      ]
+    },
+    {
+      "inputId": "08-data-scientist-en",
+      "task": "requirements",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 2.5,
+          "precision": 2.5,
+          "tono": 5,
+          "fidelidad": 3
+        },
+        "qwen3.5:2b": {
+          "utilidad": 3,
+          "precision": 2.5,
+          "tono": 5,
+          "fidelidad": 3
+        }
+      },
+      "comment": "Ninguno de los dos sistemas cumplió a la perfección las instrucciones. El sistema A clasificó los requisitos con mayor coherencia y fidelidad respecto a lo que era obligatorio (Requirements), pero violó la restricción explícita de mantener el idioma de la oferta traduciendo los campos al español. Por su parte, el sistema B respetó el idioma inglés, pero clasificó erróneamente requisitos obligatorios del texto (como 'Excellent English' o el despliegue a producción) en 'nice', duplicó conceptos e infirió términos no textuales como 'client-facing work'.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 3
+            },
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 3
+            }
+          },
+          "comment": "Ninguno de los dos sistemas cumplió a la perfección las instrucciones. El sistema A clasificó los requisitos con mayor coherencia y fidelidad respecto a lo que era obligatorio (Requirements), pero violó la restricción explícita de mantener el idioma de la oferta traduciendo los campos al español. Por su parte, el sistema B respetó el idioma inglés, pero clasificó erróneamente requisitos obligatorios del texto (como 'Excellent English' o el despliegue a producción) en 'nice', duplicó conceptos e infirió términos no textuales como 'client-facing work'."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 3
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A respeta el idioma de la oferta (inglés), pero clasifica arbitrariamente requisitos obligatorios ('Excellent English', 'production deployment') en 'nice' e inventa 'client-facing work'. La respuesta B falla en una instrucción clave al traducir todo al español en vez de mantener el idioma original, además de clasificar las responsabilidades del rol como 'nice'."
+        }
+      ]
+    },
+    {
+      "inputId": "09-maestra-conservador",
+      "task": "negotiation",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3,
+          "precision": 3,
+          "tono": 2.5,
+          "fidelidad": 5
+        }
+      },
+      "comment": "La Respuesta A cumple a la perfección con todas las instrucciones: se mantiene consistentemente en segunda persona, aborda qué tan realista es la cifra, los argumentos y el momento de plantearla. La Respuesta B confunde la perspectiva gramatical, mezclando una propuesta en primera persona ('mi expectativa') con consejos en segunda persona ('Te recomiendo'), lo que afecta su claridad y utilidad.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 3,
+              "fidelidad": 5
+            }
+          },
+          "comment": "La Respuesta A cumple a la perfección con todas las instrucciones: se mantiene consistentemente en segunda persona, aborda qué tan realista es la cifra, los argumentos y el momento de plantearla. La Respuesta B confunde la perspectiva gramatical, mezclando una propuesta en primera persona ('mi expectativa') con consejos en segunda persona ('Te recomiendo'), lo que afecta su claridad y utilidad."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 2,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "La respuesta B cumple a la perfección con todas las instrucciones: está redactada completamente en segunda persona, cubre los tres puntos pedidos (realismo, argumento y momento), respeta el rango de palabras y mantiene un tono cálido y directo. La respuesta A confunde el formato de nota de asesoría con un guion en primera persona y luego cambia abruptamente a aconsejar en segunda persona, restándole coherencia y utilidad."
+        }
+      ]
+    },
+    {
+      "inputId": "09-maestra-conservador",
+      "task": "requirements",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 4,
+          "precision": 4.5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        }
+      },
+      "comment": "Ambas respuestas cumplen con el formato solicitado, respetan las exclusiones (salario) y son fieles al texto. La respuesta B es ligeramente más útil y completa al poblar el campo 'keywords' con términos clave del título del puesto, mientras que A lo dejó vacío.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "Ambas respuestas cumplen con el formato solicitado, respetan las exclusiones (salario) y son fieles al texto. La respuesta B es ligeramente más útil y completa al poblar el campo 'keywords' con términos clave del título del puesto, mientras que A lo dejó vacío."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 4,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "Ambas respuestas identifican correctamente los requisitos indispensables (must) y omiten el salario según lo solicitado. La respuesta A es superior porque sí extrae palabras clave relevantes del título del puesto, mientras que la respuesta B deja la lista de keywords vacía."
+        }
+      ]
+    },
+    {
+      "inputId": "10-mercadologo-k",
+      "task": "negotiation",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 4,
+          "tono": 4,
+          "fidelidad": 5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 5,
+          "precision": 4.5,
+          "tono": 5,
+          "fidelidad": 4.5
+        }
+      },
+      "comment": "Ambas respuestas cumplen con el límite de palabras y abordan los tres puntos requeridos (viabilidad, argumento y momento de mencionarlo). La Respuesta A se apega fielmente a los datos sin agregar información no provista, aunque tiene un ligero desliz en el punto de vista al redactar 'ahorremos tiempo'. La Respuesta B tiene una redacción algo más fluida y natural, pero extrapola atribuciones no explícitas en los datos al afirmar que el usuario tiene experiencia 'liderando equipos'.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 4,
+              "tono": 4,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 4,
+              "tono": 5,
+              "fidelidad": 4
+            }
+          },
+          "comment": "Ambas respuestas cumplen con el límite de palabras y abordan los tres puntos requeridos (viabilidad, argumento y momento de mencionarlo). La Respuesta A se apega fielmente a los datos sin agregar información no provista, aunque tiene un ligero desliz en el punto de vista al redactar 'ahorremos tiempo'. La Respuesta B tiene una redacción algo más fluida y natural, pero extrapola atribuciones no explícitas en los datos al afirmar que el usuario tiene experiencia 'liderando equipos'."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 4,
+              "tono": 4,
+              "fidelidad": 5
+            }
+          },
+          "comment": "Ambas respuestas cumplen con el límite de palabras y abordan los tres puntos requeridos sin inventar cifras. La Respuesta A es más precisa y concisa en su articulación. La Respuesta B comete un desliz gramatical/de perspectiva en 'para que ambos ahorremos tiempo y no nos compliquemos', confundiendo la voz del asesor con las partes de la negociación."
+        }
+      ]
+    },
+    {
+      "inputId": "10-mercadologo-k",
+      "task": "requirements",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "qwen3.5:2b": {
+          "utilidad": 3,
+          "precision": 3,
+          "tono": 5,
+          "fidelidad": 4.5
+        }
+      },
+      "comment": "El sistema A cumplió perfectamente con todos los campos pedidos, extrayendo las palabras clave de forma pertinente y desglosando los requisitos con coherencia gramatical. El sistema B dejó el campo keywords vacío y desglosó de manera asimétrica los requisitos ('Manejo de Meta Ads' frente a solo 'Google Ads').",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 4
+            }
+          },
+          "comment": "El sistema A cumplió perfectamente con todos los campos pedidos, extrayendo las palabras clave de forma pertinente y desglosando los requisitos con coherencia gramatical. El sistema B dejó el campo keywords vacío y desglosó de manera asimétrica los requisitos ('Manejo de Meta Ads' frente a solo 'Google Ads')."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "El sistema B cumple a la perfección con todas las instrucciones, incluyendo la extracción de keywords relevantes y desglosando limpiamente los requisitos. El sistema A dejó el campo 'keywords' vacío y dejó 'Google Ads' sin el contexto de 'Manejo de', restando utilidad."
+        }
+      ]
+    },
+    {
+      "inputId": "11-abogado-agresivo",
+      "task": "negotiation",
+      "order": [
+        "gemma4:e2b-it-qat",
+        "qwen3.5:2b"
+      ],
+      "scores": {
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3,
+          "precision": 2,
+          "tono": 2,
+          "fidelidad": 4
+        },
+        "qwen3.5:2b": {
+          "utilidad": 4,
+          "precision": 3.5,
+          "tono": 4,
+          "fidelidad": 3.5
+        }
+      },
+      "comment": "La respuesta A incumple el límite de extensión (197 palabras vs. 170 máx.) y mezcla erráticamente la primera y la segunda persona ('mi expectativa salarial', 'te recomiendo', 'el rol que quiero asumir'). La respuesta B cumple la longitud y mantiene la segunda persona, pero comete un error conceptual relevante al referirse a la pretensión del candidato como 'tu nueva oferta de Q18,500'.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 2,
+              "fidelidad": 4
+            },
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 3
+            }
+          },
+          "comment": "La respuesta A incumple el límite de extensión (197 palabras vs. 170 máx.) y mezcla erráticamente la primera y la segunda persona ('mi expectativa salarial', 'te recomiendo', 'el rol que quiero asumir'). La respuesta B cumple la longitud y mantiene la segunda persona, pero comete un error conceptual relevante al referirse a la pretensión del candidato como 'tu nueva oferta de Q18,500'."
+        },
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 4,
+              "precision": 4,
+              "tono": 4,
+              "fidelidad": 4
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 2,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La respuesta A cumple con el límite de palabras (139 palabras) y mantiene adecuadamente la segunda persona, aunque confunde ligeramente la expectativa con una 'oferta'. La respuesta B falla en la restricción de longitud (187 palabras, cuando el máximo era 170) y comete un error severo de perspectiva gramatical al mezclar la primera persona ('mi expectativa', 'el rol que quiero') con consejos en segunda persona ('te recomiendo', 'enfócate')."
+        }
+      ]
+    },
+    {
+      "inputId": "12-ux-anual-usd-en",
+      "task": "negotiation",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 5,
+          "precision": 5,
+          "tono": 5,
+          "fidelidad": 5
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 4,
+          "precision": 3,
+          "tono": 4,
+          "fidelidad": 4
+        }
+      },
+      "comment": "La respuesta A cumple con todos los requisitos, incluyendo el límite de extensión (alrededor de 147 palabras), un tono directo y un uso preciso de los datos. La respuesta B sobrepasa el límite máximo establecido de 170 palabras (llega a casi 200), confunde la etiqueta de brecha 'Agresivo' atribuyéndola erróneamente al rango de la oferta ('a esa banda agresiva') e introduce una inconsistencia gramatical en primera persona ('ambos ahorremos tiempo').",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 4
+            }
+          },
+          "comment": "La respuesta A cumple con todos los requisitos, incluyendo el límite de extensión (alrededor de 147 palabras), un tono directo y un uso preciso de los datos. La respuesta B sobrepasa el límite máximo establecido de 170 palabras (llega a casi 200), confunde la etiqueta de brecha 'Agresivo' atribuyéndola erróneamente al rango de la oferta ('a esa banda agresiva') e introduce una inconsistencia gramatical en primera persona ('ambos ahorremos tiempo')."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 4,
+              "precision": 3,
+              "tono": 4,
+              "fidelidad": 4
+            },
+            "qwen3.5:2b": {
+              "utilidad": 5,
+              "precision": 5,
+              "tono": 5,
+              "fidelidad": 5
+            }
+          },
+          "comment": "La Respuesta B cumplió con todos los requisitos, incluido el límite de extensión (147 palabras vs. 90-170 solicitadas) y mantuvo la coherencia y tono en todo momento. La Respuesta A se excedió de palabras (~186), confundió el concepto de la brecha respecto al sueldo anterior al llamarla 'banda agresiva' de la oferta, y tuvo un desliz en la perspectiva al decir 'ahorremos tiempo' en lugar de 'ahorren tiempo'."
+        }
+      ]
+    },
+    {
+      "inputId": "12-ux-anual-usd-en",
+      "task": "requirements",
+      "order": [
+        "qwen3.5:2b",
+        "gemma4:e2b-it-qat"
+      ],
+      "scores": {
+        "qwen3.5:2b": {
+          "utilidad": 2.5,
+          "precision": 2,
+          "tono": 5,
+          "fidelidad": 2
+        },
+        "gemma4:e2b-it-qat": {
+          "utilidad": 3,
+          "precision": 2.5,
+          "tono": 5,
+          "fidelidad": 3
+        }
+      },
+      "comment": "Ambas respuestas incumplen instrucciones explícitas. El sistema A incluyó el salario en 'nice', violando la restricción negativa directa ('sin salario ni beneficios'). El sistema B tradujo los requisitos al español, violando la regla de mantenerlos 'en el idioma de la oferta', además de relegar 'Figma and prototyping' solo a palabras clave y categorizar arbitrariamente los requisitos entre 'must' y 'nice' cuando en el texto todos figuraban bajo 'Requirements'.",
+      "judge": "gemini-3.8-flash",
+      "passes": [
+        {
+          "order": [
+            "qwen3.5:2b",
+            "gemma4:e2b-it-qat"
+          ],
+          "scores": {
+            "qwen3.5:2b": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            },
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 3
+            }
+          },
+          "comment": "Ambas respuestas incumplen instrucciones explícitas. El sistema A incluyó el salario en 'nice', violando la restricción negativa directa ('sin salario ni beneficios'). El sistema B tradujo los requisitos al español, violando la regla de mantenerlos 'en el idioma de la oferta', además de relegar 'Figma and prototyping' solo a palabras clave y categorizar arbitrariamente los requisitos entre 'must' y 'nice' cuando en el texto todos figuraban bajo 'Requirements'."
+        },
+        {
+          "order": [
+            "gemma4:e2b-it-qat",
+            "qwen3.5:2b"
+          ],
+          "scores": {
+            "gemma4:e2b-it-qat": {
+              "utilidad": 3,
+              "precision": 3,
+              "tono": 5,
+              "fidelidad": 3
+            },
+            "qwen3.5:2b": {
+              "utilidad": 2,
+              "precision": 2,
+              "tono": 5,
+              "fidelidad": 2
+            }
+          },
+          "comment": "El sistema A tradujo los requisitos al espanol a pesar de que se solicito mantener el idioma de la oferta (ingles), e invento una distincion entre must y nice no explicita en el texto, pero respeto no incluir el salario. El sistema B mantuvo el idioma original, pero incluyo explicitamente el salario en la categoria nice violando una instruccion directa ('sin salario ni beneficios') y mezclo elementos del puesto/titulo dentro de must."
+        }
+      ]
+    }
+  ]
+}

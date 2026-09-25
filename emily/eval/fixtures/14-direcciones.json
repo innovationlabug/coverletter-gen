@@ -1,0 +1,70 @@
+{
+  "id": "14-direcciones",
+  "descripcion": "Direcciones guatemaltecas en varias formas, incluida una colonia sin palabra clave.",
+  "profile": {
+    "nombre": "Mario Gálvez",
+    "puestoActual": "Coordinador de logística",
+    "empleadorActual": "Cervecería Centro Americana",
+    "salarioActual": 13000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Gerente de logística",
+    "empresaDestino": "Grupo Siman",
+    "salarioDeseado": 17000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 10,
+    "logros": "Coordino 3 centros de distribución y 45 rutas.\nEn la Cerve reduje los costos de flete 12%.\nOficina en 12 calle 1-25 zona 10; bodega en km 16.5 carretera a El Salvador.\nVivo en Vista Hermosa III, cerca de Residenciales Los Álamos.\nGano 13,000.",
+    "oferta": "Gerente de logística. Requisitos: gestión de flota, centros de distribución y WMS."
+  },
+  "canaries": [
+    {
+      "type": "employer",
+      "value": "Cerve",
+      "dificultad": "difícil",
+      "nota": "apodo del empleador"
+    },
+    {
+      "type": "address",
+      "value": "12 calle 1-25",
+      "dificultad": "fácil",
+      "nota": "calle numerada"
+    },
+    {
+      "type": "address",
+      "value": "zona 10",
+      "dificultad": "fácil",
+      "nota": "zona"
+    },
+    {
+      "type": "address",
+      "value": "km 16.5",
+      "dificultad": "fácil",
+      "nota": "kilómetro"
+    },
+    {
+      "type": "address",
+      "value": "Vista Hermosa III",
+      "dificultad": "difícil",
+      "nota": "colonia sin palabra clave"
+    },
+    {
+      "type": "address",
+      "value": "Residenciales Los Álamos",
+      "dificultad": "fácil",
+      "nota": "residenciales"
+    },
+    {
+      "type": "salary",
+      "value": "13,000",
+      "dificultad": "fácil",
+      "nota": "número sin moneda"
+    }
+  ],
+  "allowed": [
+    "Grupo Siman",
+    "Gerente de logística",
+    "45 rutas",
+    "12%",
+    "WMS",
+    "3 centros de distribución"
+  ]
+}

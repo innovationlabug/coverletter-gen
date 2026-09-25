@@ -1,0 +1,58 @@
+{
+  "id": "13-personas-variadas",
+  "descripcion": "Varios patrones de nombres de personas: título, inglés, compañera, y nombre sin cargo.",
+  "profile": {
+    "nombre": "Paola Chacón",
+    "puestoActual": "Scrum Master",
+    "empleadorActual": "Grupo Tecun",
+    "salarioActual": 16000,
+    "monedaActual": "GTQ",
+    "puestoDeseado": "Agile Coach",
+    "empresaDestino": "Globant",
+    "salarioDeseado": 21000,
+    "monedaDeseada": "GTQ",
+    "aniosExperiencia": 7,
+    "logros": "La Inga. Paola Rodas y yo implementamos Scrum en 5 equipos.\nMy manager Tom Becker nominated me for the leadership program.\nCon mi compañera de equipo, Andrea Sical, redujimos el lead time 40%.\nTrabajé con Luis Fernando Ajú en la transformación ágil.\nGano 16 mil.",
+    "oferta": "Agile Coach — Globant. Buscamos experiencia en Scrum, Kanban y SAFe, facilitación y coaching de equipos."
+  },
+  "canaries": [
+    {
+      "type": "person_name",
+      "value": "Inga. Paola Rodas",
+      "dificultad": "fácil",
+      "nota": "título"
+    },
+    {
+      "type": "person_name",
+      "value": "Tom Becker",
+      "dificultad": "fácil",
+      "nota": "\"my manager\" en inglés"
+    },
+    {
+      "type": "person_name",
+      "value": "Andrea Sical",
+      "dificultad": "media",
+      "nota": "\"compañera de equipo,\" + nombre"
+    },
+    {
+      "type": "person_name",
+      "value": "Luis Fernando Ajú",
+      "dificultad": "difícil",
+      "nota": "sin cargo"
+    },
+    {
+      "type": "salary",
+      "value": "16 mil",
+      "dificultad": "fácil",
+      "nota": "número + mil"
+    }
+  ],
+  "allowed": [
+    "Globant",
+    "Agile Coach",
+    "Scrum",
+    "5 equipos",
+    "40%",
+    "SAFe"
+  ]
+}
