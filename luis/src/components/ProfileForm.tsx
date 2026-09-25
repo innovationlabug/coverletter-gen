@@ -3,27 +3,12 @@
 import type { FormErrors, ProfileForm as Form } from "@/lib/profile";
 import type { Currency } from "@/lib/types";
 
-type Tag = "local" | "cleaned" | null;
-
-function TagBadge({ tag }: { tag: Tag }) {
-  if (tag === "local")
-    return (
-      <span className="tag tag-local" title="Este dato solo se usa en tu dispositivo">
-        <LockIcon /> se queda aquí
-      </span>
-    );
-  if (tag === "cleaned")
-    return (
-      <span className="tag tag-clean" title="Montos, correos, teléfonos, DPI, NIT y tu empleador se borran antes de enviarlo">
-        se limpia antes de salir
-      </span>
-    );
-  return null;
-}
+/** Fields that live inside the "más detalles" disclosure. */
+export const DETAIL_FIELDS: (keyof Form)[] = ["achievements", "jobOffer", "currentRole", "currentEmployer", "location"];
 
 export function LockIcon() {
   return (
-    <svg aria-hidden="true" width="11" height="12" viewBox="0 0 11 12" className="lock">
+    <svg aria-hidden="true" width="12" height="13" viewBox="0 0 11 12" className="lock">
       <rect x="1" y="5" width="9" height="6.5" rx="1.5" fill="currentColor" />
       <path d="M3 5V3.6a2.5 2.5 0 0 1 5 0V5" fill="none" stroke="currentColor" strokeWidth="1.4" />
     </svg>
@@ -36,35 +21,44 @@ interface FieldProps {
   value: string;
   onChange: (v: string) => void;
   error?: string;
-  tag?: Tag;
+  optional?: boolean;
   hint?: string;
   placeholder?: string;
   inputMode?: "numeric" | "text" | "decimal";
   autoComplete?: string;
+  multiline?: number;
 }
 
-function Field({ id, label, value, onChange, error, tag = null, hint, placeholder, inputMode, autoComplete }: FieldProps) {
+function Field({ id, label, value, onChange, error, optional, hint, placeholder, inputMode, autoComplete, multiline }: FieldProps) {
+  const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-err` : null].filter(Boolean).join(" ") || undefined;
+  const common = {
+    id,
+    name: id,
+    value,
+    placeholder,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": describedBy,
+  } as const;
   return (
     <div className="field">
-      <div className="field-head">
-        <label htmlFor={id}>{label}</label>
-        <TagBadge tag={tag} />
-      </div>
-      <input
-        id={id}
-        name={id}
-        value={value}
-        placeholder={placeholder}
-        inputMode={inputMode}
-        autoComplete={autoComplete ?? "off"}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? `${id}-err` : hint ? `${id}-hint` : undefined}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      {hint && !error && (
+      <label htmlFor={id}>
+        {label}
+        {optional && <span className="optional"> (opcional)</span>}
+      </label>
+      {hint && (
         <p className="hint" id={`${id}-hint`}>
           {hint}
         </p>
+      )}
+      {multiline ? (
+        <textarea {...common} rows={multiline} onChange={(e) => onChange(e.target.value)} />
+      ) : (
+        <input
+          {...common}
+          inputMode={inputMode}
+          autoComplete={autoComplete ?? "off"}
+          onChange={(e) => onChange(e.target.value)}
+        />
       )}
       {error && (
         <p className="error" id={`${id}-err`}>
@@ -84,7 +78,6 @@ function MoneyField({
   onValue,
   onCurrency,
   error,
-  hint,
 }: {
   id: "currentSalary" | "desiredSalary";
   currencyId: "currentCurrency" | "desiredCurrency";
@@ -94,24 +87,20 @@ function MoneyField({
   onValue: (v: string) => void;
   onCurrency: (c: Currency) => void;
   error?: string;
-  hint?: string;
 }) {
   return (
     <div className="field">
-      <div className="field-head">
-        <label htmlFor={id}>{label}</label>
-        <TagBadge tag="local" />
-      </div>
-      <div className="money">
+      <label htmlFor={id}>{label}</label>
+      <div className={`money${error ? " money-invalid" : ""}`}>
         <select
           id={currencyId}
           name={currencyId}
-          aria-label={`Moneda de ${label.toLowerCase()}`}
+          aria-label={`Moneda: ${label.toLowerCase()}`}
           value={currency}
           onChange={(e) => onCurrency(e.target.value as Currency)}
         >
-          <option value="GTQ">GTQ</option>
-          <option value="USD">USD</option>
+          <option value="GTQ">Q</option>
+          <option value="USD">US$</option>
         </select>
         <input
           id={id}
@@ -119,13 +108,11 @@ function MoneyField({
           inputMode="decimal"
           autoComplete="off"
           value={value}
-          placeholder="mensual"
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? `${id}-err` : undefined}
+          aria-describedby={error ? `${id}-err salary-note` : "salary-note"}
           onChange={(e) => onValue(e.target.value)}
         />
       </div>
-      {hint && !error && <p className="hint">{hint}</p>}
       {error && (
         <p className="error" id={`${id}-err`}>
           {error}
@@ -139,76 +126,93 @@ export function ProfileForm({
   form,
   errors,
   busy,
+  detailsOpen,
+  onDetailsOpen,
   onChange,
   onSubmit,
-  onExample,
-  onClear,
 }: {
   form: Form;
   errors: FormErrors;
   busy: boolean;
+  detailsOpen: boolean;
+  onDetailsOpen: (open: boolean) => void;
   onChange: <K extends keyof Form>(key: K, value: Form[K]) => void;
   onSubmit: () => void;
-  onExample: () => void;
-  onClear: () => void;
 }) {
   const set = (k: keyof Form) => (v: string) => onChange(k, v as never);
   return (
     <form
       className="profile"
       noValidate
+      aria-label="Tus datos"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit();
       }}
     >
-      <div className="form-tools">
-        <button type="button" className="link" onClick={onExample}>
-          Llenar con un ejemplo
-        </button>
-        <button type="button" className="link" onClick={onClear}>
-          Borrar todo
-        </button>
-      </div>
+      <fieldset>
+        <legend>El puesto</legend>
+        <div className="row">
+          <Field
+            id="desiredRole"
+            label="Puesto al que aplicas"
+            value={form.desiredRole}
+            onChange={set("desiredRole")}
+            error={errors.desiredRole}
+            placeholder="Ej. Software Engineer"
+          />
+          <Field
+            id="targetCompany"
+            label="Empresa"
+            value={form.targetCompany}
+            onChange={set("targetCompany")}
+            error={errors.targetCompany}
+            placeholder="Ej. Tigo Guatemala"
+          />
+        </div>
+      </fieldset>
 
       <fieldset>
         <legend>Sobre ti</legend>
-        <div className="grid-2">
-          <Field id="name" label="Tu nombre" value={form.name} onChange={set("name")} tag="local" autoComplete="name" hint="Firma la carta en tu dispositivo; no se envía." />
-          <Field id="yearsExperience" label="Años de experiencia" value={form.yearsExperience} onChange={set("yearsExperience")} inputMode="numeric" error={errors.yearsExperience} />
+        <div className="row">
+          <Field
+            id="name"
+            label="Tu nombre"
+            value={form.name}
+            onChange={set("name")}
+            optional
+            autoComplete="name"
+            placeholder="Para firmar la carta"
+          />
+          <Field
+            id="yearsExperience"
+            label="Años de experiencia"
+            value={form.yearsExperience}
+            onChange={set("yearsExperience")}
+            inputMode="numeric"
+            error={errors.yearsExperience}
+            placeholder="Ej. 5"
+          />
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>Tu trabajo actual</legend>
-        <div className="grid-2">
-          <Field id="currentRole" label="Puesto actual" value={form.currentRole} onChange={set("currentRole")} tag="local" placeholder="Desarrolladora backend" />
-          <Field id="currentEmployer" label="Empleador actual" value={form.currentEmployer} onChange={set("currentEmployer")} tag="local" placeholder="Nombre de la empresa" />
-        </div>
-        <MoneyField
-          id="currentSalary"
-          currencyId="currentCurrency"
-          label="Salario actual mensual"
-          value={form.currentSalary}
-          currency={form.currentCurrency}
-          onValue={set("currentSalary")}
-          onCurrency={(c) => onChange("currentCurrency", c)}
-          error={errors.currentSalary}
-        />
-      </fieldset>
-
-      <fieldset>
-        <legend>El puesto que buscas</legend>
-        <div className="grid-2">
-          <Field id="desiredRole" label="Puesto deseado" value={form.desiredRole} onChange={set("desiredRole")} error={errors.desiredRole} placeholder="Software Engineer" />
-          <Field id="targetCompany" label="Empresa destino" value={form.targetCompany} onChange={set("targetCompany")} error={errors.targetCompany} placeholder="Tigo Guatemala" />
-        </div>
-        <div className="grid-2">
-          <Field id="location" label="Ubicación" value={form.location} onChange={set("location")} error={errors.location} placeholder="Ciudad de Guatemala, Guatemala" />
+        <legend>Tu salario</legend>
+        <div className="row">
+          <MoneyField
+            id="currentSalary"
+            currencyId="currentCurrency"
+            label="Salario mensual actual"
+            value={form.currentSalary}
+            currency={form.currentCurrency}
+            onValue={set("currentSalary")}
+            onCurrency={(c) => onChange("currentCurrency", c)}
+            error={errors.currentSalary}
+          />
           <MoneyField
             id="desiredSalary"
             currencyId="desiredCurrency"
-            label="Salario deseado"
+            label="Salario mensual que buscas"
             value={form.desiredSalary}
             currency={form.desiredCurrency}
             onValue={set("desiredSalary")}
@@ -216,42 +220,66 @@ export function ProfileForm({
             error={errors.desiredSalary}
           />
         </div>
+        <p className="private-line" id="salary-note">
+          <LockIcon /> Tu salario no sale de tu dispositivo: solo se usa para tu nota privada.
+        </p>
       </fieldset>
 
-      <fieldset>
-        <legend>Contexto para la carta</legend>
-        <div className="field">
-          <div className="field-head">
-            <label htmlFor="achievements">Logros y fortalezas</label>
-            <TagBadge tag="cleaned" />
-          </div>
-          <textarea
+      <details
+        className="more"
+        open={detailsOpen}
+        onToggle={(e) => onDetailsOpen((e.currentTarget as HTMLDetailsElement).open)}
+      >
+        <summary>
+          <span className="more-title">Agrega detalles para una mejor carta</span>
+          <span className="more-sub">Tus logros, la oferta de trabajo y tu puesto actual. Todo opcional.</span>
+        </summary>
+        <div className="more-body">
+          <Field
             id="achievements"
-            name="achievements"
-            rows={4}
+            label="Logros y fortalezas"
             value={form.achievements}
-            placeholder="Qué lograste, con números de impacto (porcentajes, equipos, proyectos)."
-            onChange={(e) => onChange("achievements", e.target.value)}
+            onChange={set("achievements")}
+            hint="Qué lograste y con qué impacto: proyectos, equipos, mejoras."
+            multiline={4}
           />
-        </div>
-        <div className="field">
-          <div className="field-head">
-            <label htmlFor="jobOffer">Oferta de trabajo (opcional)</label>
-            <TagBadge tag="cleaned" />
-          </div>
-          <textarea
+          <Field
             id="jobOffer"
-            name="jobOffer"
-            rows={4}
+            label="Oferta de trabajo"
             value={form.jobOffer}
-            placeholder="Pega aquí el anuncio. Si publica un rango salarial, tu nota lo usará."
-            onChange={(e) => onChange("jobOffer", e.target.value)}
+            onChange={set("jobOffer")}
+            hint="Pega el anuncio. Si publica un rango salarial, tu nota lo toma en cuenta."
+            multiline={4}
+          />
+          <div className="row">
+            <Field
+              id="currentRole"
+              label="Puesto actual"
+              value={form.currentRole}
+              onChange={set("currentRole")}
+              placeholder="Ej. Desarrolladora backend"
+            />
+            <Field
+              id="currentEmployer"
+              label="Empleador actual"
+              value={form.currentEmployer}
+              onChange={set("currentEmployer")}
+              placeholder="Nombre de la empresa"
+            />
+          </div>
+          <Field
+            id="location"
+            label="Ubicación"
+            value={form.location}
+            onChange={set("location")}
+            error={errors.location}
+            placeholder="Ciudad o país"
           />
         </div>
-      </fieldset>
+      </details>
 
       <button type="submit" className="primary" disabled={busy}>
-        {busy ? "Generando…" : "Generar carta y nota"}
+        {busy ? "Creando tu carta…" : "Crear carta y nota"}
       </button>
     </form>
   );

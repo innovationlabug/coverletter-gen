@@ -16,12 +16,12 @@ export default defineConfig({
         name: 'Emily — Carta de interés',
         short_name: 'Carta Emily',
         description:
-          'Generador de cartas de interés con nota privada de negociación. Tu salario nunca sale del dispositivo.',
+          'Tu carta de interés lista para enviar, y una nota privada para negociar tu salario.',
         lang: 'es-GT',
         start_url: '/',
         display: 'standalone',
-        background_color: '#f4efe4',
-        theme_color: '#1f3a2e',
+        background_color: '#eceee8',
+        theme_color: '#1c2940',
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },

@@ -1,15 +1,32 @@
 # Carta y copia — generador de cartas de interés "split-brain" (Luis · APIs)
 
+- **Demo:** [coverletter-luis.vercel.app](https://coverletter-luis.vercel.app)
+- **Artículo:** [Tres APIs y un secreto: cómo armé un generador de cartas de interés con split brain](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit)
+
 PWA en Next.js (App Router, runtime Node) que, a partir de tu situación real —incluido tu salario actual—, genera:
 
 1. **La carta de interés** (el "original"): lista para enviar junto al CV. La escribe Gemini con datos limpios y cita 1–2 hechos verificables de la empresa (con la URL de la fuente visible).
 2. **La copia privada** (la "copia al carbón"): una nota de negociación que dice qué tan realista es tu expectativa frente a tu salario actual, frente al mercado (JSearch) y frente al rango de la oferta, y **cuándo** mencionarla. Se calcula en el navegador y **nunca sale de tu dispositivo**.
 
-Además, la interfaz muestra el estado de cada API (ok, lento, falló, sin conexión, desde caché, bloqueado) y un panel **"Qué salió a la nube"** con el JSON exacto que tu navegador envió y lo que el servidor reenvió a cada proveedor. Es una app para enseñar, así que lo que viaja se ve.
+La interfaz está pensada para quien busca trabajo, no para ingenieros: no muestra proveedores, estados de API ni payloads. Lo que viaja y lo que se queda se explica aquí (y se prueba en `tests/leak.test.ts` y en el e2e con intercepción de red), no en la pantalla. En la app queda una sola línea de tranquilidad junto al salario: *"Tu salario no sale de tu dispositivo"*.
+
+## Cómo se ve
+
+| Formulario | Carta y nota privada |
+|---|---|
+| ![Formulario vacío](docs/screenshots/ui-desktop-1-form.png) | ![Carta y nota en producción (Tavily y JSearch reales, modo oscuro)](docs/screenshots/produccion-carta-y-nota.jpg) |
+
+Móvil (390 px): [formulario](docs/screenshots/ui-mobile-1-form.png), [formulario con ejemplo](docs/screenshots/ui-mobile-1-form-filled.png), [carta](docs/screenshots/ui-mobile-2-letter.png), [nota privada](docs/screenshots/ui-mobile-3-note.png). Escritorio: [formulario con ejemplo](docs/screenshots/ui-desktop-1-form-filled.png), [nota privada](docs/screenshots/ui-desktop-3-note.png), [modo oscuro](docs/screenshots/ui-desktop-2-letter-dark.png).
+
+- **Formulario corto**: puesto, empresa, nombre (opcional), años de experiencia y los dos salarios (GTQ por defecto). Logros, oferta pegada, puesto y empleador actual y ubicación (por defecto "Guatemala") van en un desplegable opcional. "Llenar con un ejemplo" es un enlace discreto.
+- **Un solo estado de carga** ("Investigando la empresa…" → "Escribiendo tu carta…").
+- **Resultados**: primero la carta (editable, botón *Copiar*, fuentes de la empresa como notas al pie), luego la nota privada en papel "carbón": veredicto, barra del rango de mercado si hay datos, el rango para decir en voz alta y 2–4 consejos de cuándo mencionarlo; el resto va en "Más detalles".
+- **Fallas en lenguaje simple**: si la IA no responde, "No pudimos contactar al servicio; te dejamos una versión base que puedes editar". Sin conexión, un único aviso pequeño arriba.
+- Tema claro con modo oscuro por `prefers-color-scheme`, móvil primero, sin scroll horizontal a 375 px.
 
 ## Qué hace
 
-- Formulario: nombre, puesto actual, empleador actual, salario actual (GTQ/USD), puesto deseado, empresa destino, ubicación, salario deseado, años de experiencia, logros y oferta pegada (opcional).
+- Formulario: puesto deseado, empresa destino, nombre, años de experiencia, salario actual y deseado (GTQ/USD); opcionales en un desplegable: logros, oferta pegada, puesto actual, empleador actual y ubicación.
 - En paralelo consulta **Tavily** (investigación de la empresa) y **JSearch** (salario de mercado), luego pide la carta a **Gemini** con los hechos de Tavily ya limpios.
 - La nota de negociación, el redactor, el cálculo de brecha salarial y la carta de respaldo corren **localmente**.
 - **Sin conexión**: la app carga desde el service worker y entrega la nota (con el benchmark en caché, si lo hay) y una carta de plantilla.
@@ -83,6 +100,8 @@ const result = await generate(profile, {
   onOutgoing: (rec) => console.log("salió:", rec.route, rec.body),
 });
 result.letter.source; // "gemini" | "template"
+result.statuses;      // estado por API (para pruebas y depuración; la UI no lo muestra)
+result.outgoing;      // cada cuerpo que salió del navegador (ídem)
 ```
 
 Reglas del validador (`findSensitive`): montos en todas sus formas (`Q15,000`, `Q 15 000`, `15000`, `15,000.00`, `15.000`, `$2,000`, `USD 2000`, `15 mil`, `15k`, `quince mil`, `2 millones`), el salario actual y el deseado **exactos** en cualquier formato (incluido un salario de 3 dígitos o dígitos pegados a otro texto), correos, teléfonos de Guatemala (8 dígitos, `+502`), DPI (13 dígitos, 4-5-4), NIT, el empleador actual (sin distinguir mayúsculas ni tildes, ignorando "S.A.") y tu nombre completo. Los años 1900–2099 no se consideran montos.
@@ -96,7 +115,7 @@ Códigos que devuelven nuestras rutas: `400` cuerpo inválido o con campos desco
 ### Gemini (`POST /api/letter` → `gemini-3.8-flash`)
 
 - **Autenticación**: API key `GEMINI_API_KEY` en el entorno del servidor (Vercel / `.env.local`). El SDK `@google/genai` la envía en el header `x-goog-api-key`. Nunca llega al navegador.
-- **Si falla o tarda**: timeout de 20 s en el cliente (18 s en el servidor). 429 o 5xx → un reintento. Si aun así falla, o no hay conexión → **carta de plantilla local**; la nota no se ve afectada. El chip muestra "falló", "lento, sin respuesta" o "sin conexión".
+- **Si falla o tarda**: timeout de 20 s en el cliente (18 s en el servidor). 429 o 5xx → un reintento. Si aun así falla, o no hay conexión → **carta de plantilla local**; la nota no se ve afectada. La interfaz solo muestra un aviso simple ("te dejamos una versión base que puedes editar"); el detalle técnico queda en `result.statuses`.
 - **Costo**: tier gratuito disponible. En pago, `gemini-3.8-flash` cuesta US$0.75 por millón de tokens de entrada y US$3.75 por millón de salida hasta el 31 de diciembre de 2026 (US$1.50 / US$7.50 desde el 1 de enero de 2027). Una carta usa del orden de 1,500 tokens de entrada y ~1,000 de salida (incluido el razonamiento en nivel bajo): ≈ US$0.005 por carta. Precios verificados el 25 de septiembre de 2026 en <https://ai.google.dev/gemini-api/docs/pricing>.
 - **Qué datos le envías** (exactamente): `desiredRole`, `targetCompany`, `yearsExperience`, `achievements` (redactado), `jobOffer` (redactado), `companyFacts[]` (`id`, `title`, `snippet` de Tavily, también redactados; **sin URLs**). No se envían: nombre (la firma `[[FIRMA]]` se reemplaza en el navegador), puesto actual, empleador actual, salario actual ni deseado.
 
@@ -110,7 +129,7 @@ Códigos que devuelven nuestras rutas: `400` cuerpo inválido o con campos desco
 ### JSearch (`POST /api/salary` → `GET https://api.openwebninja.com/jsearch/estimated-salary`)
 
 - **Autenticación**: header `x-api-key: $JSEARCH_API_KEY`, variable de entorno del servidor.
-- **Si falla o tarda**: timeout de 6 s (5 s en el servidor), un reintento en 429/5xx/red. Un 403 ("You are not subscribed to this API") se traduce a `424 not_subscribed` y **no se reintenta**. Si falla → la nota se genera **sin benchmark de mercado** y dice por qué. Los resultados se guardan 7 días en `localStorage` y se usan primero (también offline): el chip muestra "desde caché" y no se gasta cuota.
+- **Si falla o tarda**: timeout de 6 s (5 s en el servidor), un reintento en 429/5xx/red. Un 403 ("You are not subscribed to this API") se traduce a `424 not_subscribed` y **no se reintenta**. Si falla → la nota se genera **sin benchmark de mercado** y dice por qué. Los resultados se guardan 7 días en `localStorage` y se usan primero (también offline): la nota dice "Datos guardados de tu consulta anterior" y no se gasta cuota.
 - **Costo**: plan gratuito de 200 solicitudes al mes (límite duro); Pro US$25 por 10,000 solicitudes.
 - **Qué datos le envías**: del navegador, `{ jobTitle, location, yearsBucket }`. La ruta llama con `job_title`, `location`, `location_type=ANY` y `years_of_experience` (uno de `LESS_THAN_ONE`, `ONE_TO_THREE`, `FOUR_TO_SIX`, `SEVEN_TO_NINE`, `TEN_TO_FOURTEEN`, `ABOVE_FIFTEEN`, calculado de tus años). La respuesta se normaliza a mensual (`YEAR`/12, `HOUR`×173.3, …) y a GTQ con el tipo de cambio fijo de `src/config/constants.ts` (7.75 GTQ/USD). En la nota se muestran fuente, cantidad de salarios, confianza y fecha de actualización.
 
@@ -131,7 +150,7 @@ Pruebas:
 - `tests/router.test.ts`: allowlist exacta por destino, redacción en texto libre y bloqueo de residuos en campos estructurados.
 - `tests/leak.test.ts`: **la prueba de la condición 2.** Mockea `fetch` global, ejecuta `generate()` con las **rutas reales** en el medio y captura cada solicitud en los dos saltos (navegador → ruta y ruta → Tavily/JSearch/Gemini). Busca el salario actual y el deseado en todas sus formas escritas, el empleador (sin tildes) y el nombre. Incluye un perfil con el salario pegado en "logros" (se redacta) y uno con empresa destino = empleador (se bloquea). Se verificó que la prueba **falla** si se desactiva la redacción del router.
 - `tests/apis-failure.test.ts`: timeouts, 429 → reintento → éxito, 500 dos veces → plantilla, 403 de JSearch → nota sin benchmark, offline → plantilla, caché de 7 días y `localStorage` que lanza excepciones.
-- `e2e/app.spec.ts` (Playwright contra `next build && next start`): formulario → carta + nota con las rutas mockeadas; `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota + plantilla; benchmark desde caché offline; JSearch 403 → chip "falló".
+- `e2e/app.spec.ts` (Playwright contra `next build && next start`): validación; formulario → carta + nota con las rutas mockeadas, revisando **por intercepción de red** que ningún cuerpo enviado contenga salarios, empleador ni nombre; `context.setOffline(true)` + recarga → la app carga desde el service worker, entrega nota + carta base y no sale ninguna petición; benchmark desde caché offline; JSearch 403 → nota sin mercado con mensaje simple; Gemini falla → carta base con aviso simple. Todas verifican además que la UI no muestre nombres de proveedores, códigos HTTP ni payloads.
 
 ## Cómo correr la app
 

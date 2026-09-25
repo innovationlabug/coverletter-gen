@@ -1,21 +1,23 @@
 "use client";
 
-import type { GenerateResult } from "@/lib/orchestrator";
+import type { NegotiationFacts } from "@/lib/facts";
+import type { HeuristicNote } from "@/lib/note";
 import { GAP_BANDS } from "@/lib/heuristics/gap";
+import { formatMoney } from "@/lib/heuristics/currency";
 
-/** Posición del pin en el medidor de bandas (escala por tramos, no lineal). */
-function meterPosition(pct: number): number {
-  const segs: Array<[number, number, number, number]> = [
-    [-20, 0, 0, 1],
-    [0, 10, 1, 2],
-    [10, 20, 2, 3],
-    [20, 35, 3, 4.5],
-    [35, 60, 4.5, 6],
-  ];
-  const p = Math.max(-20, Math.min(60, pct));
-  const [a, b, x0, x1] = segs.find(([a, b]) => p >= a && p <= b) ?? segs[4];
-  return ((x0 + ((p - a) / (b - a)) * (x1 - x0)) / 6) * 100;
-}
+/** El texto redactado de la nota: en camino, listo o no disponible. */
+export type DraftView =
+  | { kind: "pending"; live: string }
+  | { kind: "ready"; text: string; flagged: string[]; offTopic: boolean }
+  | { kind: "missing"; offline: boolean };
+
+const BAND_NAMES: Record<string, string> = {
+  recorte: "Menos que hoy",
+  conservador: "Conservador",
+  razonable: "Razonable",
+  ambicioso: "Ambicioso",
+  agresivo: "Agresivo",
+};
 
 function escapeRe(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -27,109 +29,106 @@ function Highlighted({ text, flagged }: { text: string; flagged: string[] }) {
   return (
     <>
       {text.split(re).map((part, i) =>
-        flagged.includes(part) ? (
-          <mark key={i} title="Cifra que la app no calculó: no la uses sin verificar">
-            {part}
-          </mark>
-        ) : (
-          <span key={i}>{part}</span>
-        ),
+        flagged.includes(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>,
       )}
     </>
   );
 }
 
-export function NoteCard({ result }: { result: GenerateResult }) {
-  const { note, facts, draft, draftError } = result;
-  const flagged = draft?.consistency.flagged ?? [];
+function quoteList(items: string[]): string {
+  const q = items.map((s) => `“${s}”`);
+  return q.length <= 1 ? q.join("") : `${q.slice(0, -1).join(", ")} y ${q[q.length - 1]}`;
+}
+
+export function NoteCard({ note, facts, draft }: { note: HeuristicNote; facts: NegotiationFacts; draft: DraftView }) {
+  const sign = facts.deltaGTQ >= 0 ? "+" : "−";
+  const figures = [
+    { label: "Hoy ganas", value: formatMoney(facts.current.amount, facts.current.currency) },
+    { label: "Quieres pedir", value: formatMoney(facts.desired.amount, facts.desired.currency) },
+    { label: "Diferencia", value: `${sign}${formatMoney(Math.abs(facts.deltaGTQ), "GTQ")}` },
+  ];
+  const mixedCurrency = facts.current.currency !== facts.desired.currency;
+  const flagged = draft.kind === "ready" ? [...new Set(draft.flagged)] : [];
+
   return (
-    <section className="sheet" data-testid="note">
-      <div className="sheet-head">
-        <div>
-          <div className="eyebrow">Nota privada de negociación</div>
-          <h2>Solo para ti</h2>
-        </div>
-        <span className="stamp">no sale del perímetro</span>
+    <section className="note" data-testid="note" aria-labelledby="note-title">
+      <div className="card-head">
+        <h2 id="note-title">Tu nota privada</h2>
       </div>
 
-      <p className="headline" data-testid="note-headline">
+      <p className="verdict" data-testid="note-headline">
         {note.headline}
       </p>
 
-      <div className="figures">
-        {note.figures.map((f) => (
-          <div className="figure" key={f.label}>
-            <div className="k">{f.label}</div>
-            <div className="v">{f.value}</div>
+      <div className="bands" role="img" aria-label={`Tu expectativa es: ${note.bandLabel}`}>
+        {GAP_BANDS.map((b) => (
+          <div key={b.band} className={b.band === facts.band ? "band on" : "band"}>
+            <span className="bar" />
+            <span className="band-name">{BAND_NAMES[b.band]}</span>
           </div>
         ))}
       </div>
 
-      <div className="meter" aria-label={`Banda: ${note.bandLabel}`}>
-        <div className="meter-track">
-          {GAP_BANDS.map((b) => (
-            <div key={b.band} className={b.band === facts.band ? "on" : ""}>
-              {b.label.replace("Pides menos que hoy", "recorte").toLowerCase()}
+      <dl className="figures">
+        {figures.map((f) => (
+          <div key={f.label}>
+            <dt>{f.label}</dt>
+            <dd>
+              {f.value}
+              <small>al mes</small>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      {mixedCurrency && <p className="fineprint">Para comparar usamos Q{facts.gtqPerUsd} por US$1.</p>}
+
+      <ul className="points">
+        <li>{note.advice}</li>
+        {note.rangeNote && <li>{note.rangeNote}</li>}
+        <li data-testid="timing">
+          <strong>Cuándo decirlo:</strong> {note.timing.moment} {note.timing.why}
+        </li>
+      </ul>
+
+      <div className="advice" data-testid="draft" aria-live="polite">
+        <h3>Cómo plantearlo</h3>
+        {draft.kind === "pending" &&
+          (draft.live ? (
+            <p className="advice-text streaming">{draft.live}</p>
+          ) : (
+            <div className="lines light" aria-hidden>
+              <span />
+              <span style={{ width: "86%" }} />
+              <span style={{ width: "58%" }} />
             </div>
           ))}
-          <span className="meter-pin" style={{ left: `calc(${meterPosition(facts.gapPct)}% - 1px)` }} />
-        </div>
-        <div className="meter-scale">
-          <span>&lt;0 %</span>
-          <span>0–10</span>
-          <span>10–20</span>
-          <span>20–35</span>
-          <span>35 %+</span>
-        </div>
-      </div>
-
-      {note.rangeNote && (
-        <div className="callout">
-          <div className="eyebrow">Rango publicado · regex sobre la oferta</div>
-          <p>{note.rangeNote}</p>
-        </div>
-      )}
-      <div className="callout">
-        <div className="eyebrow">Lectura de la banda</div>
-        <p>{note.advice}</p>
-      </div>
-      <div className="callout" data-testid="timing">
-        <div className="eyebrow">Cuándo mencionarlo · regla “{facts.timing.id}”</div>
-        <p>
-          <strong>{note.timing.moment}</strong> {note.timing.why}
-        </p>
-      </div>
-
-      <div className="draft" data-testid="draft">
-        <div className="sheet-head" style={{ marginBottom: 8 }}>
-          <span className="eyebrow" style={{ color: "var(--t1)" }}>
-            Borrador del modelo local · T1
-          </span>
-          {draft && (
-            <span style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {draft.consistency.ok ? (
-                <span className="badge ok">✓ cifras consistentes ({draft.consistency.checked})</span>
-              ) : (
-                <span className="badge warn" data-testid="flagged">
-                  ⚠ {flagged.length} cifra{flagged.length > 1 ? "s" : ""} no calculada{flagged.length > 1 ? "s" : ""} por la app
-                </span>
-              )}
-              {!draft.topic.onTopic && <span className="badge warn">⚠ posible respuesta fuera de tema</span>}
-            </span>
-          )}
-        </div>
-        {draft ? (
+        {draft.kind === "ready" && (
           <>
-            <div className="draft-text">
-              <Highlighted text={draft.text} flagged={flagged.map((f) => f.raw)} />
-            </div>
-            <p className="note-small">
-              El modelo redacta; los números de arriba vienen de heurísticas. Lo marcado en rojo no coincide con ningún dato calculado.
-            </p>
+            {flagged.length > 0 && (
+              <p className="check" data-testid="flagged">
+                Ojo: este texto menciona {quoteList(flagged)}, {flagged.length > 1 ? "cifras que no salen" : "una cifra que no sale"} de tus datos. Guíate por los números de arriba.
+              </p>
+            )}
+            {draft.offTopic && (
+              <p className="check" data-testid="off-topic">
+                Este texto podría no responder bien a tu caso. Guíate por los puntos de arriba.
+              </p>
+            )}
+            {draft.text
+              .split(/\n\s*\n/)
+              .filter((p) => p.trim())
+              .map((p, i) => (
+                <p key={i} className="advice-text">
+                  <Highlighted text={p.trim()} flagged={flagged} />
+                </p>
+              ))}
           </>
-        ) : (
-          <p className="note-small" data-testid="draft-fallback">
-            {draftError ?? "Sin borrador."} Las cifras, la banda y la regla de momento de arriba siguen siendo válidas.
+        )}
+        {draft.kind === "missing" && (
+          <p className="advice-text muted" data-testid="draft-fallback">
+            {draft.offline
+              ? "Sin conexión solo podemos darte los números y los puntos de arriba. Vuelve a generar cuando tengas internet para recibir el consejo completo."
+              : "Esta vez no pudimos preparar este texto. Los números y los puntos de arriba siguen siendo válidos."}
           </p>
         )}
       </div>

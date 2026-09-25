@@ -9,9 +9,9 @@ cumplen las mismas condiciones mínimas y cada una profundiza en un área distin
 
 | Carpeta | Persona · área | Qué hace distinto | Demo | Artículo |
 |---|---|---|---|---|
-| [`luis/`](luis/) | Luis · **APIs** | Gemini + **Tavily** (investiga la empresa destino) + **JSearch** (salario de mercado). Documenta autenticación, fallas, costo y datos enviados de cada API. | _pendiente_ | _pendiente_ |
-| [`cathy/`](cathy/) | Cathy · **modelos locales** | **Ollama privado en Cloud Run** + heurísticas. Compara **Gemma 4 E2B vs Qwen 3.5 2B** en calidad, latencia y memoria. | _pendiente_ | _pendiente_ |
-| [`emily/`](emily/) | Emily · **aprendizajes** | Modelo **en el navegador** (transformers.js) + Gemini vía Firebase. **18 casos de validación** de fugas y calidad, prueba didáctica del README y 3 temas de artículo. | _pendiente_ | _pendiente_ |
+| [`luis/`](luis/) | Luis · **APIs** | Gemini + **Tavily** (investiga la empresa destino) + **JSearch** (salario de mercado). Documenta autenticación, fallas, costo y datos enviados de cada API. | [coverletter-luis.vercel.app](https://coverletter-luis.vercel.app) | [Tres APIs y un secreto](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit) |
+| [`cathy/`](cathy/) | Cathy · **modelos locales** | **Ollama privado en Cloud Run con GPU L4** + heurísticas. Compara **Gemma 4 E2B vs Qwen 3.5 2B** en calidad, latencia y memoria (CPU y GPU). | [cathy-coverletter…run.app](https://cathy-coverletter-611681112050.us-central1.run.app) | CATHY_ARTICLE |
+| [`emily/`](emily/) | Emily · **aprendizajes** | **Gemma 4 E2B en el navegador** (transformers.js) + Gemini vía Firebase AI Logic con App Check. **18 casos de validación** de fugas y calidad, prueba didáctica del README y 3 temas de artículo. | [coverletter-emily.vercel.app](https://coverletter-emily.vercel.app) | [¿Cómo sé que mi app no filtra tu salario?](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit) |
 
 ## El reto (resumen)
 
@@ -42,9 +42,21 @@ Además de su área, cada implementación usa un patrón de autenticación disti
 ## Estructura
 
 ```
-luis/    Next.js PWA (Vercel)            — README, ARTICULO, pruebas, docs/diagrams
-cathy/   Next.js (Cloud Run) + ollama/   — README, BENCHMARK, pruebas, bench/
-emily/   Vite PWA (Vercel) + eval/       — README, VALIDACION, DIDACTICA, TEMAS, pruebas
+luis/    Next.js PWA (Vercel)                      — README, pruebas, docs/diagrams, docs/screenshots
+cathy/   Next.js (Cloud Run) + ollama/ (GPU L4)    — README, BENCHMARK, pruebas, bench/
+emily/   Vite PWA (Vercel) + eval/                 — README, VALIDACION, DIDACTICA, TEMAS, pruebas
 ```
+
+Los artículos viven como Google Docs (enlazados arriba y desde el README de cada carpeta). Todos los diagramas
+están hechos con *diagram-design* (`docs/diagrams/*.html` + `.png`).
+
+## Infraestructura
+
+| Pieza | Dónde |
+|---|---|
+| Luis y Emily | Vercel (`coverletter-luis`, `coverletter-emily`) |
+| App de Cathy | Cloud Run `cathy-coverletter` (`us-central1`, proyecto `ai-experiments-487722`), cuenta de servicio propia |
+| Ollama privado | Cloud Run `ollama-coverletter` con **GPU L4** en `europe-west4` (solo invocable por IAM), modelos horneados en la imagen, escala a cero |
+| Gemini | `gemini-3.8-flash`: API key (Luis), Vertex AI (Cathy), Firebase AI Logic + App Check (Emily) |
 
 Ninguna key vive en el repositorio: cada carpeta trae un `.env.example` y su README explica de dónde sale cada valor.

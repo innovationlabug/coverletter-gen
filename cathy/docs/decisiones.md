@@ -20,7 +20,7 @@ El despliegue con GPU falló: el proyecto no tenía cuota de L4 en Cloud Run. Pe
 Consecuencias en el diseño:
 - El timeout del proxy subió de 120 s a **300 s** (`OLLAMA_TIMEOUT_MS`), el del cliente a 310 s y el `--timeout` del servicio de la app a 600 s.
 - La UI dice la verdad: "Despertando la GPU (~30–60 s)… si el servicio corre en modo CPU puede tardar hasta ~2 min". Aparece si no hay respuesta en 3.5 s.
-- El modo **no se adivina**: después de cada respuesta, el proxy llama `GET /api/ps` y reporta `size_vram`. `size_vram = 0` ⇒ CPU. El instrumento de la UI y el benchmark muestran "CPU · 4.05 GB RAM" o "GPU · x GB VRAM".
+- El modo **no se adivina**: después de cada respuesta, el proxy llama `GET /api/ps` y reporta `size_vram`. `size_vram = 0` ⇒ CPU. El benchmark muestra "CPU · 4.05 GB RAM" o "GPU · x GB VRAM" (la UI ya no muestra métricas del modelo: no le sirven a quien busca trabajo).
 - Las heurísticas se muestran primero, así que la espera larga no deja la pantalla vacía: el borrador del modelo es un extra.
 
 ## 3. "Carta de interés" confundió a un modelo de 2B
@@ -39,7 +39,7 @@ Los consideramos comparables por **presupuesto de despliegue**, no por conteo de
 
 ## 5. Los números nunca vienen del modelo
 
-El LLM redacta; la brecha, las bandas, el rango y la regla de "cuándo mencionarlo" salen de `src/lib/heuristics/`. El prompt pide copiar cifras solo de DATOS, pero no confiamos: `checkNumberConsistency` extrae cada monto y porcentaje del texto del modelo y lo compara con la lista de números calculados (tolerancia 2 % para montos, ±1 punto para porcentajes). Lo que no cuadra se resalta en rojo en la UI y cuenta como "cifra inventada" en el benchmark.
+El LLM redacta; la brecha, las bandas, el rango y la regla de "cuándo mencionarlo" salen de `src/lib/heuristics/`. El prompt pide copiar cifras solo de DATOS, pero no confiamos: `checkNumberConsistency` extrae cada monto y porcentaje del texto del modelo y lo compara con la lista de números calculados (tolerancia 2 % para montos, ±1 punto para porcentajes). Lo que no cuadra se subraya en la UI, con un aviso en lenguaje llano solo cuando ocurre, y cuenta como "cifra inventada" en el benchmark.
 
 ## 6. Errores reales que atraparon las pruebas
 

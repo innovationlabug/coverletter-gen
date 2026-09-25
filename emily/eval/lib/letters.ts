@@ -19,7 +19,12 @@ import { buildCloudPayload } from '../../src/lib/router';
 import { buildTemplateLetter } from '../../src/lib/template';
 import type { Profile } from '../../src/lib/types';
 
-export const VERTEX = { project: 'ai-experiments-487722', location: 'global', model: 'gemini-3.8-flash' } as const;
+/** Vertex AI project for the eval's cloud letters and judge. Override with VERTEX_PROJECT=<id>. */
+export const VERTEX = {
+  project: process.env.VERTEX_PROJECT || 'ai-experiments-487722',
+  location: 'global',
+  model: 'gemini-3.8-flash',
+} as const;
 const ROOT = path.resolve(import.meta.dirname, '../..');
 const CACHE = path.join(ROOT, '.cache/eval-letters');
 

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Courier_Prime, Hanken_Grotesk, Newsreader } from "next/font/google";
+import { Hanken_Grotesk, Newsreader } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import "./globals.css";
 
@@ -9,12 +9,6 @@ const serif = Newsreader({
   variable: "--font-serif",
   style: ["normal", "italic"],
   axes: ["opsz"],
-  display: "swap",
-});
-const typewriter = Courier_Prime({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "700"],
-  variable: "--font-type",
   display: "swap",
 });
 
@@ -29,14 +23,14 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#e9edf2" },
-    { media: "(prefers-color-scheme: dark)", color: "#141a24" },
+    { media: "(prefers-color-scheme: light)", color: "#eef2f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#121a1d" },
   ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es-GT" className={`${sans.variable} ${serif.variable} ${typewriter.variable}`}>
+    <html lang="es-GT" className={`${sans.variable} ${serif.variable}`}>
       <body>
         {children}
         <ServiceWorkerRegister />

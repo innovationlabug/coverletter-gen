@@ -1,14 +1,28 @@
 # Emily · carta de interés sin contar lo que ganás
 
+- **Demo:** [coverletter-emily.vercel.app](https://coverletter-emily.vercel.app)
+- **Artículo:** [¿Cómo sé que mi app no filtra tu salario? Validar un split brain con 78 canarios](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit)
+- **Validación:** [VALIDACION.md](VALIDACION.md) · **Prueba didáctica:** [DIDACTICA.md](DIDACTICA.md) · **Temas para próximos artículos:** [TEMAS.md](TEMAS.md)
+
 Generador de **cartas de interés** con una **nota privada de negociación**, construido como PWA
 (Vite + TypeScript). Contás tu situación con franqueza, incluido tu salario actual, y la app:
 
-1. escribe la carta (tres versiones para comparar: **borrador local**, **carta de la nube** y **plantilla**);
-2. arma una **nota privada** que dice qué tan realista es tu expectativa y cuándo mencionarla;
-3. muestra en un panel **"Qué salió a la nube"** el texto exacto que se envió, con lo que se tachó.
+1. te muestra **una** carta: la mejor disponible. Si hay conexión, la versión **en línea** (Gemini);
+   si no, la que se escribe **en tu dispositivo** (si descargaste el modelo local), y si no, la versión
+   **base** (plantilla). Un selector discreto, *Versión*, permite cambiar cuando hay más de una;
+2. arma una **nota privada** que dice qué tan realista es tu expectativa y cuándo mencionarla.
 
 **Tu salario actual nunca sale del dispositivo**, y eso lo prueba una prueba automática
 (`tests/leak.test.ts`). La evaluación de 18 casos está en [`VALIDACION.md`](VALIDACION.md).
+
+La interfaz es deliberadamente simple: **no** detalla qué se envió a la nube ni qué se tachó. Esa
+explicación vive aquí (secciones [1](#1-qué-corre-dónde-y-por-qué) y [8](#8-qué-es-sensible-y-cómo-se-demuestra))
+y en las pruebas; en la sección 3.3 se explica cómo verlo con las herramientas del navegador.
+
+![La carta y la nota privada](docs/screenshots/ui-desktop-letter.png)
+
+Otros documentos: [`DIDACTICA.md`](DIDACTICA.md) (prueba de este README con alguien que no conocía el
+proyecto, y qué se corrigió) y [`TEMAS.md`](TEMAS.md) (tres temas que merecen su propio artículo).
 
 > Esta es la versión de **Emily** (enfoque: validación y didáctica) de un ejercicio con tres
 > implementaciones independientes (`../luis`, `../cathy`). Nada de esta carpeta depende de las otras.
@@ -18,6 +32,7 @@ Generador de **cartas de interés** con una **nota privada de negociación**, co
 ## Índice
 
 1. [Qué corre dónde y por qué](#1-qué-corre-dónde-y-por-qué)
+- [Quién puede seguir este README](#quién-puede-seguir-este-readme)
 2. [Requisitos previos](#2-requisitos-previos-versiones-exactas)
 3. [Correr la app paso a paso](#3-correr-la-app-paso-a-paso)
 4. [Pruebas](#4-pruebas)
@@ -39,8 +54,8 @@ Generador de **cartas de interés** con una **nota privada de negociación**, co
 | Componente | Dónde corre | Tecnología | Por qué ahí |
 |---|---|---|---|
 | Formulario, **redactor** de datos sensibles, **router** (qué sale a la nube), **nota de negociación**, **carta plantilla** | Navegador (hilo principal) | TypeScript puro (`src/lib/`) | **Privacidad**: el salario y el empleador no necesitan salir para calcular la nota. **Disponibilidad**: funciona sin internet. **Costo**: cero. |
-| **Borrador local** de la carta | Navegador, dentro de un **Web Worker** | [transformers.js](https://huggingface.co/docs/transformers.js) 4.3.0 con `onnx-community/gemma-4-E2B-it-qat-mobile-ONNX` (q2f16), WebGPU con respaldo WASM | **Privacidad**: recibe el perfil completo porque nada sale del equipo. **Disponibilidad**: una vez descargado funciona offline. **Costo**: cero por carta. |
-| **Carta de la nube** | Google (Gemini) | `gemini-3.8-flash` vía **Firebase AI Logic** (`firebase/ai`, `GoogleAIBackend`), sin servidor propio | **Calidad**: el modelo grande escribe mejor (ver [`VALIDACION.md`](VALIDACION.md)). Recibe **solo** lo que decide el router, ya tachado. |
+| Versión **en tu dispositivo** (borrador local) de la carta | Navegador, dentro de un **Web Worker** | [transformers.js](https://huggingface.co/docs/transformers.js) 4.3.0 con `onnx-community/gemma-4-E2B-it-qat-mobile-ONNX` (q2f16), WebGPU con respaldo WASM | **Privacidad**: recibe el perfil completo porque nada sale del equipo. **Disponibilidad**: una vez descargado funciona offline. **Costo**: cero por carta. |
+| Versión **en línea** (carta de la nube) | Google (Gemini) | `gemini-3.8-flash` vía **Firebase AI Logic** (`firebase/ai`, `GoogleAIBackend`), sin servidor propio | **Calidad**: el modelo grande escribe mejor (ver [`VALIDACION.md`](VALIDACION.md)). Recibe **solo** lo que decide el router, ya tachado. |
 
 Criterios del ejercicio que cubre esta división: **privacidad**, **disponibilidad**, **costo** y **calidad**.
 
@@ -50,6 +65,24 @@ El flujo de un clic en **"Preparar carta y nota"** (`src/lib/orchestrator.ts`):
 2. **Router** (`src/lib/router.ts` → `buildCloudPayload(profile)`): lista blanca de campos → redactor → compuerta final.
 3. Si la compuerta no encontró nada y hay conexión: **nube** (`src/lib/cloud.ts`) → la carta vuelve con `{{NOMBRE}}` y el nombre se pone **en el dispositivo**.
 4. **Borrador local** (si el modelo está descargado): el worker escribe la carta con el perfil completo.
+   Se escribe solo cuando no hay versión en línea (sin conexión, error o bloqueo); si la hay, se escribe
+   cuando elegís *Versión → En tu dispositivo*.
+
+La UI (`src/main.ts`) muestra una sola carta, en este orden de preferencia: **en línea → en tu
+dispositivo → base**. Los errores se traducen a lenguaje simple (por ejemplo, un `401` de App Check
+se ve como *"No pudimos generar la versión en línea; te dejamos la versión base."*); el detalle
+técnico queda en la consola del navegador con el prefijo `[emily]`.
+
+## Quién puede seguir este README
+
+- **App, nota, plantilla, modelo local, modo sin conexión y pruebas:** cualquiera con acceso de lectura
+  al repositorio privado **`ykro/coverletter-gen`**. No hace falta ninguna cuenta.
+- **Versión en línea (carta de la nube):** además, ser miembro del proyecto de Firebase
+  **`viaticos-spending-mngmt`** (para leer la configuración web y la clave de App Check).
+- **Evaluación completa (`npm run eval`):** además, acceso a un proyecto de Vertex AI (ver [§5](#5-evaluación-18-casos)).
+
+Si no tenés acceso a Firebase, **saltate los pasos 3.1 y 3.2**: la app arranca igual y muestra la
+versión base, la nota privada y la opción de descargar el modelo local; también funciona sin conexión.
 
 ## 2. Requisitos previos (versiones exactas)
 
@@ -59,14 +92,14 @@ Probado con estas versiones en macOS 26 (Apple Silicon). Versiones más nuevas p
 |---|---|---|---|
 | Node.js | **24.21.0** (mínimo 20.19) | todo | `node -v` |
 | npm | **12.0.2** | instalar dependencias | `npm -v` |
-| Chromium de Playwright | build **1243** (viene con `@playwright/test` 1.63.0) | pruebas e2e | `npx playwright install chromium` |
+| Chromium de Playwright | build **1243** (viene con `@playwright/test` 1.63.0; la primera descarga pesa ~150 MB) | pruebas e2e | `npx playwright install chromium` |
 | Firebase CLI | 15.6.0 (opcional) | obtener la configuración web | `firebase --version` |
-| Google Cloud CLI | 548.0.0 (solo para `npm run eval` completo) | credenciales ADC para Vertex AI | `gcloud --version` |
+| Google Cloud CLI | 586.0.0 (para `npm run eval` completo y, opcionalmente, para leer la clave de reCAPTCHA) | credenciales ADC para Vertex AI | `gcloud --version` |
 | Navegador para usar la app | Chrome/Edge 113+ (WebGPU) | borrador local rápido | `chrome://gpu` → "WebGPU: Hardware accelerated" |
 
 Dependencias principales (fijadas en `package-lock.json`): `@huggingface/transformers` 4.3.0 · `firebase` 12.19.0 · `vite` 8.3.1 · `vite-plugin-pwa` 1.3.0 · `vitest` 5.0.2 · `@playwright/test` 1.63.0 · `@google/genai` 2.24.0 · `typescript` 7.0.2 · `tsx` 4.23.15.
 
-Espacio en disco: ~700 MB para `node_modules`; **2.3 GB** adicionales si descargás el modelo local (en el navegador y, aparte, en `.cache/transformers` si corrés la evaluación completa).
+Espacio en disco: ~850 MB para `node_modules`; **2.3 GB** adicionales si descargás el modelo local (en el navegador y, aparte, en `.cache/transformers` si corrés la evaluación completa).
 
 ## 3. Correr la app paso a paso
 
@@ -77,6 +110,10 @@ cd emily
 npm ci                     # instala exactamente lo del package-lock.json
 cp .env.example .env.local # crea tu archivo de configuración local (no se sube a git)
 ```
+
+Con npm 12, `npm ci` avisa que bloqueó los *install scripts* de 6 paquetes: `@firebase/util`,
+`@google/genai`, `esbuild`, `fsevents`, `onnxruntime-node` y `protobufjs`. Es lo esperado y **no hace
+falta aprobarlos**: todo funciona sin ellos.
 
 ### 3.1 Configurar Firebase (para la carta de la nube)
 
@@ -89,7 +126,8 @@ firebase apps:list WEB --project viaticos-spending-mngmt    # copiá el App ID d
 firebase apps:sdkconfig WEB <APP_ID> --project viaticos-spending-mngmt
 ```
 
-El último comando imprime un objeto `firebaseConfig`. Copiá cada valor a `.env.local`:
+El último comando imprime un JSON con 9 campos. Copiá **estos 7** a `.env.local` (ignorá
+`projectNumber` y `version`, que la app no usa):
 
 | Campo de `firebaseConfig` | Variable en `.env.local` |
 |---|---|
@@ -101,26 +139,47 @@ El último comando imprime un objeto `firebaseConfig`. Copiá cada valor a `.env
 | `appId` | `VITE_FIREBASE_APP_ID` |
 | `measurementId` | `VITE_FIREBASE_MEASUREMENT_ID` |
 
+Atajo opcional: este comando imprime las 7 líneas listas para pegar en `.env.local` (reemplazá `<APP_ID>`):
+
+```bash
+firebase apps:sdkconfig WEB <APP_ID> --project viaticos-spending-mngmt | node -e '
+let s = ""; process.stdin.on("data", (d) => (s += d)).on("end", () => {
+  const c = JSON.parse(s.slice(s.indexOf("{"), s.lastIndexOf("}") + 1));
+  const keys = { apiKey: "API_KEY", authDomain: "AUTH_DOMAIN", projectId: "PROJECT_ID", storageBucket: "STORAGE_BUCKET",
+    messagingSenderId: "MESSAGING_SENDER_ID", appId: "APP_ID", measurementId: "MEASUREMENT_ID" };
+  for (const [k, v] of Object.entries(keys)) console.log(`VITE_FIREBASE_${v}=${c[k] ?? ""}`);
+});'
+```
+
 > La `apiKey` de Firebase web identifica la app, no autoriza nada por sí sola; aun así, por regla
 > del proyecto no se commitea. La protección contra abuso es **App Check** (siguiente paso).
 
-### 3.2 App Check (obligatorio para la carta de la nube en este proyecto)
+### 3.2 App Check (obligatorio para la versión en línea en este proyecto)
 
 El proyecto de Firebase tiene **App Check en modo obligatorio** para Firebase AI Logic. Sin App Check
-la carta de la nube falla con `401 Firebase App Check token is invalid` (el resto de la app funciona igual).
-Hay dos opciones:
+la carta de la nube falla con `401 Firebase App Check token is invalid`: la app muestra *"No pudimos
+generar la versión en línea; te dejamos la versión base."* y el resto funciona igual. Hay dos opciones:
 
-- **Desarrollo local (token de depuración):**
+- **Clave de reCAPTCHA Enterprise (recomendada, sirve en desarrollo y en producción):** ya existe una
+  clave de sitio para la app web **`coverletter-emily`**, que acepta los dominios
+  `coverletter-emily.vercel.app` y `localhost`. No está en el repositorio; obtenela así (o pedísela a la dueña del proyecto):
+
+  ```bash
+  gcloud recaptcha keys list --project viaticos-spending-mngmt
+  # buscá la clave con displayName "coverletter-emily"; su id (el final de "name") es la clave de sitio
+  ```
+
+  y ponela en `.env.local`: `VITE_RECAPTCHA_ENTERPRISE_KEY=<clave de sitio>`. Con eso, la versión en
+  línea funciona en `npm run dev` sin token de depuración. En Vercel va la misma variable.
+- **Token de depuración (alternativa para desarrollo):**
   1. Consola de Firebase → *App Check* → pestaña *Apps* → `coverletter-emily` → menú ⋮ → *Administrar tokens de depuración* → *Agregar token de depuración* → *Generar* y copiarlo.
   2. En `.env.local`: `VITE_APPCHECK_DEBUG_TOKEN=<el token>`.
-  3. Solo lo usa `npm run dev`; un build de producción lo ignora.
-- **Producción (reCAPTCHA Enterprise, recomendado):**
-  1. Habilitar la API *reCAPTCHA Enterprise* en el proyecto de Google Cloud de Firebase y crear una clave de sitio web con los dominios de la app (p. ej. `*.vercel.app` y `localhost`).
-  2. Firebase → *App Check* → `coverletter-emily` → registrar el proveedor *reCAPTCHA Enterprise* con esa clave.
-  3. `VITE_RECAPTCHA_ENTERPRISE_KEY=<clave de sitio>` en `.env.local` y en las variables de entorno de Vercel.
-  4. Dejar la **aplicación obligatoria** de App Check activada para *Firebase AI Logic*: sin ella cualquiera podría usar tu cuota de Gemini con la configuración pública de la app.
+  3. Solo lo usa `npm run dev`; un build de producción lo ignora. Si están las dos variables, gana el token de depuración.
 
-La franja de estado de la app muestra el modo: *Nube: Gemini (sin App Check)*, *(App Check de desarrollo)* o *con App Check*.
+Dejá la **aplicación obligatoria** de App Check activada para *Firebase AI Logic*: sin ella cualquiera
+podría usar tu cuota de Gemini con la configuración pública de la app. Para crear una clave nueva en otro
+proyecto: habilitar la API *reCAPTCHA Enterprise*, crear una clave de sitio web con tus dominios y
+registrarla en Firebase → *App Check* → tu app → proveedor *reCAPTCHA Enterprise*.
 
 ### 3.3 Arrancar
 
@@ -131,18 +190,24 @@ npm run dev
 Abrí **http://localhost:5173**. Probá así:
 
 1. Tocá **"Usar un ejemplo"** (perfil ficticio) y luego **"Preparar carta y nota"**.
-2. Verás la **plantilla** y la **nota privada** al instante, y la **carta de la nube** si configuraste Firebase + App Check.
-3. En **"Qué salió a la nube"** abrí *Texto exacto enviado*: no aparece `Q15,000`, ni "Banco Industrial", ni "Ana López".
-4. En **"Modelo en tu dispositivo"** tocá **"Descargar modelo (2.32 GB)"**. La primera vez tarda (depende de tu conexión); después queda en caché y el borrador local se escribe solo.
+2. Verás **una carta** y, al lado (abajo en el celular), tu **nota privada**. Si configuraste Firebase +
+   App Check, la carta es la versión *En línea*; si no, la versión *Base*. La nota aparece al instante.
+3. Con el selector **Versión** pasá de *En línea* a *Base* y de vuelta; **"Copiar carta"** copia la que estás viendo.
+4. *(Para ver qué salió del dispositivo)* abrí las herramientas del navegador → *Network*, filtrá por
+   `firebasevertexai` y volvé a preparar la carta: en el cuerpo de la petición no aparece `Q15,000`, ni
+   "Banco Industrial", ni "Ana López", y tu nombre viaja como `{{NOMBRE}}`.
+5. *(Opcional)* En la tarjeta **"Usar sin internet"** tocá **"Descargar (2.3 GB)"**. La primera vez tarda
+   (depende de tu conexión); después queda en caché, aparece la versión *En tu dispositivo* y funciona sin conexión.
 
-Sin `.env.local` la app arranca igual: dice *"Nube sin configurar"* y ofrece plantilla, nota y borrador local.
+Sin `.env.local` la app arranca igual: muestra la versión base, la nota y la opción de descargar el modelo local.
+Si preferís no usar internet para la carta, en el formulario abrí **Opciones** → *No usar internet para escribir la carta*.
 
 ## 4. Pruebas
 
 ```bash
 npm test                         # vitest: unitarias + prueba de fugas (≈2 s, sin red)
 npx playwright install chromium  # solo la primera vez
-npm run test:e2e                 # Playwright contra `vite build && vite preview` (≈30 s)
+npm run e2e                      # Playwright contra `vite build && vite preview` (≈5 s de pruebas + el build); alias de `npm run test:e2e`
 npm run typecheck                # TypeScript estricto
 ```
 
@@ -153,7 +218,7 @@ npm run typecheck                # TypeScript estricto
 | `tests/unit/negotiation.test.ts` | brecha %, bandas, conversión USD↔GTQ, rango de la oferta (regex), reglas de cuándo mencionarlo |
 | `tests/unit/template.test.ts` | carta plantilla (250–400 palabras, sin datos sensibles) y verificaciones de carta |
 | `tests/leak.test.ts` | **orquestador completo** para 4 perfiles, con (A) el límite de la nube espiado y (B) el SDK real de Firebase con `fetch` simulado: el salario en todas sus formas y el empleador nunca aparecen en lo que sale |
-| `tests/e2e/app.spec.ts` | flujo completo en desktop y móvil (nube interceptada, modelo local simulado), bloqueo por la compuerta, y **`context.setOffline(true)` + recarga** → nota y plantilla siguen funcionando |
+| `tests/e2e/app.spec.ts` | en desktop y móvil: flujo completo (una sola carta visible, selector de versión, nota privada, descarga opcional del modelo simulado; la nube interceptada no recibe salario, empleador ni nombres), bloqueo por la compuerta, error `401` de la nube explicado en lenguaje simple, formulario incompleto, y **`context.setOffline(true)` + recarga** → nota y carta base siguen funcionando |
 
 Las e2e usan un build especial (`VITE_TEST_MODE=1`) donde el modelo local es un sustituto instantáneo
 (no descarga 2.3 GB) y el endpoint de Firebase AI Logic se intercepta con `page.route`, de modo que corre
@@ -167,12 +232,25 @@ gcloud auth application-default login   # una vez, para Vertex AI
 npm run eval                   # completa: fugas + cartas local/nube/plantilla + juez (≈35 min la primera vez)
 ```
 
+Salida esperada de `npm run eval -- --leaks-only` (termina con esta línea):
+
+```
+Recall redactor 84.6 % · recall final 84.6 % · FP 0/101 · salario actual en payload: 0 casos
+```
+
+- **12 fugas** en la lista de casos: es lo esperado, no un fallo. Son canarios *difíciles* plantados a propósito
+  (apodos como "don Beto", "doce y medio", correos deletreados) y están explicados en [`VALIDACION.md`](VALIDACION.md) §2.4.
+- **0 falsos positivos** de 101 textos que no deben tacharse.
+- **`salario actual en payload: 0 casos`** es el número que **nunca** debe cambiar: si alguna vez es mayor que 0,
+  hay una fuga real del salario actual.
+- Escribe `eval/results/<fecha>-leaks.json` y `.md` (ignorados por git); no toca `VALIDACION.md`.
+
 - Casos: `eval/fixtures/*.json` (perfil + `canaries` con tipo y dificultad + `allowed`).
 - Criterios de calidad y sesgos del juez: [`eval/CRITERIOS.md`](eval/CRITERIOS.md).
 - Resultados crudos: `eval/results/<fecha>.json`. Reporte: **[`VALIDACION.md`](VALIDACION.md)** (se regenera solo; también con `npm run eval:report`).
 - Opciones: `--only=01,07` · `--device=cpu` · `--fresh` (ignora la caché de cartas en `.cache/eval-letters`) · `--skip-local` · `--skip-cloud` · `--skip-judge`.
 - La primera corrida completa descarga el modelo local a `.cache/transformers` (2.3 GB).
-- La nube de la evaluación usa **Vertex AI** (`@google/genai`, proyecto `ai-experiments-487722`, región `global`) con el **mismo modelo y el mismo prompt** que la app, porque Firebase AI Logic es un SDK de navegador protegido con App Check. Si tu cuenta no tiene acceso a ese proyecto, cambiá `VERTEX.project` en `eval/lib/letters.ts`.
+- La nube de la evaluación usa **Vertex AI** (`@google/genai`, región `global`) con el **mismo modelo y el mismo prompt** que la app, porque Firebase AI Logic es un SDK de navegador protegido con App Check. El proyecto sale de la variable **`VERTEX_PROJECT`** (por defecto `ai-experiments-487722`); si tu cuenta no tiene acceso a ese, usá uno tuyo con Vertex AI habilitado: `VERTEX_PROJECT=mi-proyecto npm run eval`.
 
 ## 6. Cómo se llama al modelo local
 
@@ -251,8 +329,10 @@ No hay servidor propio ni llave en el código: la petición va del navegador a
 
 Lo que decide qué sale es **código explícito y probado** (`buildCloudPayload`), no un modelo. El redactor
 es determinista (expresiones regulares y comparación de texto): tiene límites conocidos y medidos
-— ver la tabla de fugas por tipo en [`VALIDACION.md`](VALIDACION.md) — y por eso la app muestra
-siempre el texto exacto enviado y permite desmarcar la nube.
+— ver la tabla de fugas por tipo en [`VALIDACION.md`](VALIDACION.md). La app no muestra ese detalle en
+pantalla (la interfaz se mantiene simple); para inspeccionar lo que sale, usá la pestaña *Network* del
+navegador (sección 3.3) o las pruebas. Quien no quiera usar internet para la carta tiene la opción
+*Opciones → No usar internet para escribir la carta* en el formulario.
 
 No se guarda nada en `localStorage`: al recargar, el formulario queda vacío.
 
@@ -267,9 +347,9 @@ No se guarda nada en `localStorage`: al recargar, el formulario queda vacío.
 
 ```
 emily/
-├── index.html                  # maquetación de la página
+├── index.html                  # maquetación: paso 1 (tus datos) y paso 2 (tu carta + nota)
 ├── src/
-│   ├── main.ts                 # UI (vanilla TS)
+│   ├── main.ts                 # UI (vanilla TS): una carta visible, selector de versión, nota, "Usar sin internet"
 │   ├── styles.css
 │   ├── firebase-config.ts      # lee VITE_FIREBASE_* (sin valores en el repo)
 │   ├── lib/
@@ -279,7 +359,7 @@ emily/
 │   │   ├── prompt.ts           # constructor de prompt ÚNICO (local, nube y evaluación)
 │   │   ├── negotiation.ts      # nota privada (reglas fijas)
 │   │   ├── template.ts         # carta plantilla
-│   │   ├── letter-checks.ts    # verificaciones deterministas de la carta
+│   │   ├── letter-checks.ts    # verificaciones deterministas de la carta (las usa la evaluación)
 │   │   ├── orchestrator.ts     # un clic: nota + plantilla + nube
 │   │   ├── cloud.ts  firebase.ts          # Firebase AI Logic + App Check
 │   │   └── local-model.ts  local-model-meta.ts  local-llm-client.ts
@@ -289,6 +369,8 @@ emily/
 ├── eval/                       # evaluación: fixtures, run.ts, report.ts, CRITERIOS.md, results/
 ├── scripts/                    # verificaciones manuales (modelo en Node/navegador, llamada real a la nube, íconos)
 ├── docs/decisiones.md          # decisiones y errores reales
+├── docs/screenshots/ui-*.png   # capturas de la interfaz (desktop 1440×900 y móvil 390×844)
+├── DIDACTICA.md  TEMAS.md      # prueba didáctica del README · temas para artículos
 └── VALIDACION.md               # reporte generado por la evaluación
 ```
 
@@ -302,15 +384,15 @@ salida `dist`, y las variables `VITE_FIREBASE_*` (+ `VITE_RECAPTCHA_ENTERPRISE_K
 
 | Síntoma | Causa | Solución |
 |---|---|---|
-| La carta de la nube dice `401 … Firebase App Check token is invalid` | El proyecto exige App Check para Firebase AI Logic | Sección [3.2](#32-app-check-obligatorio-para-la-carta-de-la-nube-en-este-proyecto): token de depuración en dev o reCAPTCHA Enterprise en producción |
-| La franja dice *"Nube sin configurar"* | Falta `.env.local` o alguna `VITE_FIREBASE_*` | Paso [3.1](#31-configurar-firebase-para-la-carta-de-la-nube); reiniciá `npm run dev` después de editar `.env.local` |
+| La app dice *"No pudimos generar la versión en línea; te dejamos la versión base."* y la consola muestra `401 … Firebase App Check token is invalid` | El proyecto exige App Check para Firebase AI Logic | Sección [3.2](#32-app-check-obligatorio-para-la-versión-en-línea-en-este-proyecto): `VITE_RECAPTCHA_ENTERPRISE_KEY` (o un token de depuración en dev) |
+| Nunca aparece la versión *En línea*, ni mensaje de error | Falta `.env.local` o alguna `VITE_FIREBASE_*` (sin configuración la app no intenta la nube), o marcaste *Opciones → No usar internet* | Paso [3.1](#31-configurar-firebase-para-la-carta-de-la-nube); reiniciá `npm run dev` después de editar `.env.local` |
 | `npm ci` muestra *"install scripts blocked"* (npm 12) | npm 12 bloquea scripts de instalación por defecto | No hace falta aprobarlos: `onnxruntime-node` y `esbuild` ya traen sus binarios. Si algo falla, `npm install-scripts approve <paquete>` |
 | `npm ci` falla con `EACCES … _cacache` | Caché de npm con permisos de otro usuario | `npm ci --cache /tmp/npm-cache` (o arreglá los permisos de `~/.npm`) |
-| El modelo local dice *WASM, más lento* | El navegador no tiene WebGPU | Usá Chrome/Edge reciente; revisá `chrome://gpu`. En WASM funciona pero puede tardar minutos por carta |
-| La descarga del modelo se corta o no avanza | Conexión inestable, o recargaste la página (en `npm run dev`, guardar un archivo recarga la página y mata el worker) | Volvé a tocar "Descargar modelo": los archivos ya completos quedan en caché |
+| La tarjeta *"Usar sin internet"* dice que en este navegador sería muy lenta | El navegador no tiene WebGPU | Usá Chrome/Edge reciente; revisá `chrome://gpu`. Con *"Descargar de todos modos"* funciona en WASM, pero puede tardar minutos por carta |
+| La descarga del modelo se corta o no avanza | Conexión inestable, o recargaste la página (en `npm run dev`, guardar un archivo recarga la página y mata el worker) | Tocá *"Intentar de nuevo"*: los archivos ya completos quedan en caché |
 | `Cannot use apply_chat_template() because tokenizer.chat_template is not set` | Usar el pipeline de transformers.js directamente con este repo ONNX | Usá `createLocalGenerator` (carga la plantilla con `Gemma4Processor`) |
-| `npm run test:e2e` dice que falta el navegador | Chromium de Playwright no instalado | `npx playwright install chromium` |
-| `npm run test:e2e` dice que el puerto 4173 está ocupado | Otro `vite preview` corriendo | Cerralo (`lsof -i :4173`) |
+| `npm run e2e` dice que falta el navegador | Chromium de Playwright no instalado | `npx playwright install chromium` |
+| `npm run e2e` dice que el puerto 4173 está ocupado | Otro `vite preview` corriendo | Cerralo (`lsof -i :4173`) |
 | `npm run eval` falla con `Could not load the default credentials` | Falta ADC | `gcloud auth application-default login` |
 | `npm run eval` muestra `429 RESOURCE_EXHAUSTED` | Cuota de Vertex compartida | Se reintenta solo con espera exponencial; si persiste, esperá unos minutos (las cartas ya generadas quedan en caché) |
 | `npm run eval` tarda mucho en *local* | Corre en CPU (sin WebGPU en Node) | Es normal: ~1.4 tokens/s en CPU vs ~22 en WebGPU en un Mac M-series. Podés usar `--skip-local` |

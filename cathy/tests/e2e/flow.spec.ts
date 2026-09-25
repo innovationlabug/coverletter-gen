@@ -37,52 +37,113 @@ async function mockApis(page: Page, opts: { negotiationDelayMs?: number } = {}) 
   return letterBodies;
 }
 
-test("flujo completo: nota privada + carta + panel de tiers (con GPU despertando)", async ({ page }) => {
+/** Palabras de ingeniería que no deben aparecer en la interfaz. */
+const TECH_WORDS = ["Ollama", "Gemini", "Vertex", "GPU", "tier", "T0", "T1", "T2", "Protocolo", "espécimen", "EXP. 07", "tok/s", "gemma", "qwen"];
+
+async function expectNoTechWords(page: Page) {
+  const text = await page.locator("body").innerText();
+  for (const w of TECH_WORDS) expect(text, `la UI no debería decir "${w}"`).not.toContain(w);
+}
+
+test("flujo completo: números al instante, espera amable, carta y nota privada", async ({ page }) => {
   const letterBodies = await mockApis(page, { negotiationDelayMs: 4500 });
   await page.goto("/");
+  await expectNoTechWords(page);
+  await expect(page.getByRole("radio")).toHaveCount(0); // sin selector de modelo
+  // correo y teléfono no se usan en la carta: no se piden
+  await expect(page.locator("input[name=email], input[name=phone]")).toHaveCount(0);
+
   await page.getByTestId("load-example").click();
+  await expect(page.locator("textarea[name=jobOffer]")).toBeVisible(); // el ejemplo abre los opcionales
   await page.getByTestId("run").click();
 
-  await expect(page.getByTestId("waking")).toBeVisible({ timeout: 6000 });
-  await expect(page.getByTestId("waking")).toContainText("Despertando la GPU");
-
-  const note = page.getByTestId("note");
-  await expect(note).toBeVisible({ timeout: 15000 });
+  // mientras el modelo privado "despierta": un solo estado de espera, y los números ya están
+  await expect(page.getByTestId("waiting")).toContainText("Preparando tu carta y tu nota");
   await expect(page.getByTestId("note-headline")).toContainText("+16.7 %");
-  await expect(page.getByTestId("draft")).toContainText("automatización de reportes");
-  // el "30 %" que inventó el modelo queda marcado; los números calculados no
-  await expect(page.getByTestId("flagged")).toContainText("1 cifra");
-  await expect(page.locator("[data-testid=draft] mark")).toHaveText(["30 %"]);
-  await expect(page.getByTestId("timing")).toContainText("range-covers");
+  await expect(page.getByTestId("letter-pending")).toBeVisible();
+  await expect(page.getByTestId("waking")).toContainText("hasta un minuto la primera vez", { timeout: 6000 });
+  await expectNoTechWords(page);
 
+  await expect(page.getByTestId("waiting")).toBeHidden({ timeout: 15000 });
   await expect(page.getByTestId("letter-text")).toContainText("Analista de BI Senior");
-  await expect(page.getByTestId("letter-source")).toContainText("gemini-3.8-flash");
-  await expect(page.getByTestId("instrument")).toContainText("19.6");
-  await expect(page.getByTestId("instrument")).toContainText("CPU");
+  await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "gemini");
+  await expect(page.getByTestId("letter-basic")).toHaveCount(0);
 
-  await expect(page.getByTestId("tier-1")).toContainText("currentSalary");
-  const t2 = page.getByTestId("t2-payload");
-  await expect(t2).toContainText("[EMPLEADOR_ACTUAL]");
+  // la carta va primero; la nota privada después
+  const letterBox = await page.getByTestId("letter").boundingBox();
+  const noteBox = await page.getByTestId("note").boundingBox();
+  expect(letterBox!.y).toBeLessThan(noteBox!.y);
+
+  await expect(page.getByTestId("draft")).toContainText("automatización de reportes");
+  // el "30 %" que inventó el modelo se avisa en lenguaje llano y se marca; los números calculados no
+  await expect(page.getByTestId("flagged")).toContainText("“30 %”");
+  await expect(page.locator("[data-testid=draft] mark")).toHaveText(["30 %"]);
+  await expect(page.getByTestId("timing")).toContainText("primera llamada");
+  await expectNoTechWords(page);
 
   // lo que realmente viajó a /api/letter
   expect(letterBodies).toHaveLength(1);
-  for (const s of ["15000", "15,000", "17500", "17,500", "Banco Industrial", "majo.castillo", "5512", "currentSalary"]) {
+  for (const s of ["15000", "15,000", "17500", "17,500", "Banco Industrial", "currentSalary"]) {
     expect(letterBodies[0]).not.toContain(s);
   }
 });
 
-test("si Ollama no está configurado, la nota cae a heurísticas y la carta igual sale", async ({ page }) => {
+test("sin avisos de cifras cuando el borrador cuadra con los números", async ({ page }) => {
+  await page.route("**/api/ollama/negotiation", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/x-ndjson",
+      body: ndjson([{ type: "done", content: "Pasar de Q15,000 a Q17,500 es razonable. Apóyate en tus reportes automatizados.", stats: null }]),
+    }),
+  );
+  await page.route("**/api/ollama/requirements", (route) => route.fulfill({ status: 200, contentType: "application/x-ndjson", body: REQUIREMENTS }));
+  await page.route("**/api/letter", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ letter: LETTER, model: "m", latencyMs: 1 }) }));
+  await page.goto("/");
+  await page.getByTestId("load-example").click();
+  await page.getByTestId("run").click();
+  await expect(page.getByTestId("draft")).toContainText("reportes automatizados");
+  await expect(page.getByTestId("flagged")).toHaveCount(0);
+  await expect(page.locator("[data-testid=draft] mark")).toHaveCount(0);
+});
+
+test("si el modelo privado no está configurado, la nota queda con los números y la carta igual sale", async ({ page }) => {
   await page.route("**/api/ollama/*", (route) => route.fulfill({ status: 503, contentType: "application/json", body: '{"error":"ollama_not_configured"}' }));
   await page.route("**/api/letter", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ letter: LETTER, model: "gemini-3.8-flash", latencyMs: 1500 }) }));
   await page.goto("/");
   await page.getByTestId("load-example").click();
   await page.getByTestId("run").click();
-  await expect(page.getByTestId("draft-fallback")).toContainText("heurísticas");
+  await expect(page.getByTestId("draft-fallback")).toContainText("siguen siendo válidos");
   await expect(page.getByTestId("note-headline")).toContainText("+16.7 %");
-  await expect(page.getByTestId("letter-source")).toContainText("gemini");
+  await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "gemini");
+  await expectNoTechWords(page);
 });
 
-test("offline: tras recargar sin red la app carga (service worker) y da nota heurística + carta de plantilla", async ({ page, context }) => {
+test("formulario incompleto: avisa en el campo y no llama a ningún modelo", async ({ page }) => {
+  const apiCalls: string[] = [];
+  page.on("request", (r) => {
+    if (/\/api\/(ollama|letter)/.test(r.url())) apiCalls.push(r.url());
+  });
+  await page.goto("/");
+  await page.getByTestId("run").click();
+  await expect(page.locator("input[name=fullName]")).toBeFocused();
+  await expect(page.getByText("Falta este dato").first()).toBeVisible();
+  expect(apiCalls).toEqual([]);
+});
+
+test("móvil 375 px: sin scroll horizontal, antes y después de generar", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await mockApis(page);
+  await page.goto("/");
+  const overflow = () => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(await overflow()).toBeLessThanOrEqual(0);
+  await page.getByTestId("load-example").click();
+  await page.getByTestId("run").click();
+  await expect(page.getByTestId("letter-text")).toBeVisible({ timeout: 15000 });
+  await expect(page.getByTestId("draft")).toContainText("automatización");
+  expect(await overflow()).toBeLessThanOrEqual(0);
+});
+
+test("offline: tras recargar sin red la app carga (service worker) y da nota con números + carta básica", async ({ page, context }) => {
   const apiCalls: string[] = [];
   page.on("request", (r) => {
     if (/\/api\/(ollama|letter)/.test(r.url())) apiCalls.push(r.url());
@@ -98,15 +159,17 @@ test("offline: tras recargar sin red la app carga (service worker) y da nota heu
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByTestId("offline-banner")).toBeVisible();
-  await expect(page.getByTestId("net-chip")).toContainText("Sin conexión");
+  await expect(page.getByTestId("offline-banner")).toContainText("Sin conexión");
 
   await page.getByTestId("load-example").click();
   await page.getByTestId("run").click();
   await expect(page.getByTestId("note-headline")).toContainText("+16.7 %");
   await expect(page.getByTestId("draft-fallback")).toContainText("Sin conexión");
-  await expect(page.getByTestId("letter-source")).toContainText("plantilla determinista");
+  await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "template");
+  await expect(page.getByTestId("letter-basic")).toBeVisible();
   await expect(page.getByTestId("letter-text")).toContainText("Estimado equipo de Cervecería Centro Americana");
   await expect(page.getByTestId("letter-text")).not.toContainText("Banco Industrial");
+  await expectNoTechWords(page);
   expect(apiCalls).toEqual([]);
   await context.setOffline(false);
 });

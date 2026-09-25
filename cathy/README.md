@@ -9,7 +9,15 @@ Generador de **carta de interés** (carta de presentación para acompañar el CV
 Le cuentas tu situación tal cual (puesto, empleador, **salario actual**, puesto y salario deseados y, si quieres, pegas la oferta) y recibes:
 
 1. **Carta de interés** lista para enviar.
-2. **Nota privada**: brecha salarial, banda (conservador → agresivo), cómo se compara con el rango publicado, **cuándo mencionar la expectativa** y un borrador en prosa escrito por el modelo local. Las cifras de la nota salen de las heurísticas, nunca del modelo, y cualquier número del borrador que no coincida con lo calculado se marca en rojo.
+2. **Nota privada**: brecha salarial, banda (conservador → agresivo), cómo se compara con el rango publicado, **cuándo mencionar la expectativa** y un borrador en prosa escrito por el modelo local. Las cifras de la nota salen de las heurísticas, nunca del modelo, y cualquier número del borrador que no coincida con lo calculado se subraya con un aviso en lenguaje llano.
+
+La interfaz está pensada para quien busca trabajo, no para quien la construyó: un formulario corto (logros y oferta quedan como opcionales plegables), un solo botón, la carta primero y la nota privada después. La UI **no** muestra tiers, modelos ni métricas; la arquitectura se explica aquí y en el artículo. Mientras el modelo privado arranca en frío, los números de la nota ya están en pantalla y hay un único aviso de espera ("puede tardar hasta un minuto la primera vez").
+
+| Formulario | Carta | Nota privada |
+|---|---|---|
+| ![Formulario](docs/screenshots/ui-form-desktop.png) | ![Carta](docs/screenshots/ui-letter-desktop.png) | ![Nota privada](docs/screenshots/ui-note-desktop.png) |
+
+Versiones móviles (390 px) y el estado de espera en [`docs/screenshots/`](docs/screenshots/); se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`.
 
 ![Arquitectura](docs/diagrams/arquitectura.png)
 
@@ -33,7 +41,7 @@ Le cuentas tu situación tal cual (puesto, empleador, **salario actual**, puesto
 | **Calidad** | La carta es el texto que lee un reclutador: ahí conviene el mejor modelo. Una nota privada de 150 palabras y una extracción de viñetas se resuelven bien con un modelo de ~2B. |
 | **Costo** | Heurísticas: US$0. Ollama en Cloud Run escala a cero (US$0 en reposo) y solo cobra mientras procesa. Gemini se llama una vez por carta con un prompt corto. |
 | **Disponibilidad** | Si Ollama no responde (cold start, cuota, caída), la nota sale solo con heurísticas; si Gemini falla, la carta sale de una plantilla determinista. **Offline** la app carga (service worker) y entrega ambas cosas. |
-| **Latencia** | Las heurísticas son instantáneas y se muestran primero. El borrador del modelo local llega en streaming; el costo es el cold start de la GPU (~30–60 s) o de CPU (hasta ~2 min), que la UI muestra con honestidad. |
+| **Latencia** | Las heurísticas son instantáneas y se muestran primero. El borrador del modelo local llega en streaming; el costo es el cold start de la GPU (~30–60 s) o de CPU (hasta ~2 min); la UI lo cubre con un solo aviso de espera, sin jerga, mientras muestra los números. |
 
 ### La decisión de la nube privada (condición 2, reinterpretada)
 
@@ -169,7 +177,7 @@ Alternativa: `OLLAMA_URL=https://ollama-coverletter-….run.app` y `OLLAMA_TOKEN
 
 **Producción** (Cloud Run): `./deploy-app.sh` crea la cuenta de servicio `coverletter-cathy-app`, le da `roles/aiplatform.user` y `roles/run.invoker` **solo** sobre `ollama-coverletter`, construye con Cloud Build y despliega `cathy-coverletter` (pública) con las variables de entorno. El Ollama se despliega aparte con `ollama/deploy.sh`.
 
-Variables: `OLLAMA_URL`, `OLLAMA_MODEL` (default del selector), `OLLAMA_TOKEN` (solo dev), `OLLAMA_TIMEOUT_MS` (default 300000), `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION=global`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GEMINI_MODEL` (default `gemini-3.8-flash`).
+Variables: `OLLAMA_URL`, `OLLAMA_MODEL` (modelo que usa la app; la UI no lo expone), `OLLAMA_TOKEN` (solo dev), `OLLAMA_TIMEOUT_MS` (default 300000), `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION=global`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GEMINI_MODEL` (default `gemini-3.8-flash`).
 
 ---
 
@@ -183,7 +191,7 @@ npm run bench            # benchmark real (necesita OLLAMA_URL y ADC para el jue
 ```
 
 - **`tests/leak.test.ts`** corre el orquestador real con `fetch` simulado para los 12 perfiles de `bench/inputs/` (con el salario y el empleador además escondidos en los logros, y con un "Ollama" que devuelve requisitos que repiten el salario). Captura cada petición y verifica que el salario (actual y deseado, en todas sus formas: `15000`, `15,000`, `15.000`, `Q15,000`, `Q 15 000`, `15 mil`, `15k`…) y el empleador aparezcan **solo** en `/api/ollama/*` y **nunca** en `/api/letter`. Tiene control positivo (sí los encuentra en `/api/ollama/negotiation`) y se validó por mutación: si se apaga el redactor, fallan 13 pruebas. Además prueba la ruta del servidor con `@google/genai` simulado: aunque un cliente modificado esconda el salario en los logros, lo que llega a Gemini ya está redactado; un campo extra da 400 y el residuo da 422.
-- **e2e**: flujo completo (incluido el estado "despertando la GPU"), fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
+- **e2e**: flujo completo (números al instante, aviso de espera cuando el modelo privado tarda, carta antes que la nota, aviso de cifras solo cuando aplica, y que la UI no muestre jerga como "Ollama", "GPU" o "tier"), formulario incompleto, sin scroll horizontal a 375 px, fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
 - **Benchmark**: ver [`BENCHMARK.md`](BENCHMARK.md). Flags: `--runs N`, `--inputs N`, `--models a,b`, `--tasks negotiation,requirements`, `--no-cold`, `--no-judge`, `--dry`, y `--from bench/results/X.json [--rejudge]` para recalcular calidad y juez sin volver a generar.
 
 ### Resultado del benchmark (corrida real en CPU, 12 perfiles)

@@ -70,7 +70,7 @@ export interface ApiStatusInfo {
   attempts?: number;
 }
 
-/** One entry of the "qué salió a la nube" panel. */
+/** One request body that left the browser (kept for tests and debugging; not rendered). */
 export interface OutgoingRecord {
   destination: Destination;
   /** Route in our app that the browser called. */

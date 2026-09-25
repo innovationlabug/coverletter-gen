@@ -9,13 +9,13 @@ const REQUIRED: Array<keyof FormState> = ["fullName", "currentRole", "currentEmp
 /** Formulario → Profile. Los montos se interpretan con la misma heurística que el redactor. */
 export function formToProfile(form: FormState): { profile: Profile | null; errors: FormErrors } {
   const errors: FormErrors = {};
-  for (const k of REQUIRED) if (!String(form[k]).trim()) errors[k] = "Requerido";
+  for (const k of REQUIRED) if (!String(form[k]).trim()) errors[k] = "Falta este dato";
   const current = form.currentSalary.trim() ? parseMoney(form.currentSalary, form.currentCurrency) : null;
   const desired = form.desiredSalary.trim() ? parseMoney(form.desiredSalary, form.desiredCurrency) : null;
-  if (form.currentSalary.trim() && !current) errors.currentSalary = "No entendí el monto (prueba Q15,000 o 15k)";
-  if (form.desiredSalary.trim() && !desired) errors.desiredSalary = "No entendí el monto";
+  if (form.currentSalary.trim() && !current) errors.currentSalary = "Escribe el monto así: 15,000 o 15k";
+  if (form.desiredSalary.trim() && !desired) errors.desiredSalary = "Escribe el monto así: 17,500 o 17.5k";
   const years = Number(form.yearsExperience);
-  if (form.yearsExperience.trim() && (!Number.isInteger(years) || years < 0 || years > 60)) errors.yearsExperience = "Años entre 0 y 60";
+  if (form.yearsExperience.trim() && (!Number.isInteger(years) || years < 0 || years > 60)) errors.yearsExperience = "Escribe un número entre 0 y 60";
   if (Object.keys(errors).length || !current || !desired) return { profile: null, errors };
   const profile: Profile = {
     fullName: form.fullName.trim(),
@@ -29,8 +29,6 @@ export function formToProfile(form: FormState): { profile: Profile | null; error
     yearsExperience: years,
     achievements: form.achievements.trim(),
   };
-  if (form.email.trim()) profile.email = form.email.trim();
-  if (form.phone.trim()) profile.phone = form.phone.trim();
   if (form.jobOffer.trim()) profile.jobOffer = form.jobOffer.trim();
   return { profile, errors };
 }

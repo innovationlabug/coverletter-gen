@@ -7,8 +7,9 @@
  *      │            └─► /api/letter  (Gemini, with redacted Tavily facts)
  *      └──────────► negotiation note + template letter (local, always available)
  *
- * Every step reports its status so the UI can show the chips, and every body
- * that leaves the browser is recorded for the "qué salió a la nube" panel.
+ * Every step reports its status and every body that leaves the browser is
+ * recorded (result.statuses / result.outgoing) for tests and debugging. The UI
+ * only uses them to word its single progress line and plain-language notices.
  */
 import { CLIENT_TIMEOUTS_MS, SIGNATURE_TOKEN, SLOW_THRESHOLD_MS } from "@/config/constants";
 import { fetchLetter, LETTER_ROUTE } from "./apis/gemini";

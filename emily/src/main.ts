@@ -1,186 +1,221 @@
 import '@fontsource-variable/fraunces/opsz.css';
 import '@fontsource-variable/newsreader/opsz.css';
 import '@fontsource-variable/newsreader/opsz-italic.css';
-import '@fontsource/ibm-plex-mono/400.css';
 import './styles.css';
 
 import { isFirebaseConfigured } from './firebase-config';
-import { appCheckMode } from './lib/firebase';
-import { checkLetter, CRITERIA } from './lib/letter-checks';
 import { createLocalLlm, isModelCached } from './lib/local-llm-client';
 import { LOCAL_MODEL } from './lib/local-model-meta';
 import { formatMoney } from './lib/money';
+import { buildNegotiationNote, type NegotiationNote } from './lib/negotiation';
 import { generateAll, type GenerateResult } from './lib/orchestrator';
 import { buildLetterPrompt, finalizeLetter, localLetterInput } from './lib/prompt';
-import { TAGS } from './lib/redact';
-import { LOCAL_ONLY_FIELDS } from './lib/router';
-import { wordCount } from './lib/text';
+import { buildTemplateLetter } from './lib/template';
 import type { Currency, Profile, SensitiveType } from './lib/types';
 import { EXAMPLE_PROFILE } from './ui/example';
 
-type View = 'local' | 'nube' | 'plantilla' | 'comparar';
+/**
+ * UI. Two steps: "tus datos" (form) → "tu carta" (one letter + private note).
+ * The letter shown by default is the best one available: online (cloud) → on this device (local
+ * model, if downloaded) → base (template). How the cloud request is built and gated lives in
+ * src/lib/router.ts; the UI deliberately does not surface it (see README §8).
+ */
+
+type Version = 'nube' | 'local' | 'plantilla';
+
+const TEST_MODE = import.meta.env.VITE_TEST_MODE === '1';
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string) => document.querySelector(sel) as T;
 const form = $<HTMLFormElement>('#perfil');
 
 const state: {
   profile: Profile | null;
+  base: { note: NegotiationNote; template: string } | null;
   result: GenerateResult | null;
-  local: { status: 'idle' | 'loading' | 'ready' | 'writing' | 'done' | 'error'; text: string; error?: string; ms?: number; device?: string };
-  modelCached: boolean;
-  view: View;
+  cloudPending: boolean;
+  run: number;
+  view: Version;
+  userPicked: boolean;
+  model: { phase: 'idle' | 'loading' | 'ready' | 'failed'; cached: boolean; webgpu: boolean | null; loaded: number; total: number };
+  draft: { status: 'none' | 'writing' | 'done' | 'failed'; text: string; run: number };
 } = {
   profile: null,
+  base: null,
   result: null,
-  local: { status: 'idle', text: '' },
-  modelCached: false,
+  cloudPending: false,
+  run: 0,
   view: 'plantilla',
-};
-
-const TYPE_LABEL: Record<SensitiveType, string> = {
-  salary: 'Monto de dinero',
-  employer: 'Empleador actual',
-  person_name: 'Nombre de persona',
-  phone: 'Teléfono',
-  email: 'Correo',
-  dpi: 'DPI',
-  address: 'Dirección',
-  nit: 'NIT',
+  userPicked: false,
+  model: { phase: 'idle', cached: false, webgpu: null, loaded: 0, total: LOCAL_MODEL.approxBytes },
+  draft: { status: 'none', text: '', run: 0 },
 };
 
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
-const gb = (bytes: number) => `${(bytes / 1e9).toFixed(2)} GB`;
+const gb = (bytes: number) => `${(bytes / 1e9).toFixed(1)} GB`;
 
 // ---------------------------------------------------------------------------
-// Status strip
+// Steps (form → results), with browser back support
 // ---------------------------------------------------------------------------
 
-function renderStatus() {
-  const online = navigator.onLine;
-  $('#st-red').textContent = online ? 'Con conexión' : 'Sin conexión: nota y plantilla siguen funcionando';
-  $('#st-red').dataset.state = online ? 'ok' : 'off';
-  const cfg = isFirebaseConfigured();
-  const ac = appCheckMode();
-  $('#st-nube').textContent = !cfg
-    ? 'Nube sin configurar'
-    : ac === 'off'
-      ? 'Nube: Gemini (sin App Check)'
-      : ac === 'debug-token'
-        ? 'Nube: Gemini (App Check de desarrollo)'
-        : 'Nube: Gemini con App Check';
-  $('#st-nube').dataset.state = cfg ? 'ok' : 'off';
-  const m = state.local;
-  $('#st-modelo').textContent =
-    m.status === 'ready' || m.status === 'done' || m.status === 'writing'
-      ? `Modelo local listo (${m.device === 'webgpu' ? 'WebGPU' : 'WASM'})`
-      : state.modelCached
-        ? 'Modelo local descargado'
-        : 'Modelo local sin descargar';
-  $('#st-modelo').dataset.state = state.modelCached || m.status === 'ready' || m.status === 'done' ? 'ok' : 'off';
+function showStep(step: 'datos' | 'carta', focus = true) {
+  const results = step === 'carta';
+  $('#paso-datos').hidden = results;
+  $('#paso-carta').hidden = !results;
+  $('#editar').hidden = !results;
+  document.body.dataset.step = step;
+  window.scrollTo({ top: 0 });
+  if (!focus) return;
+  if (results) $('#results-title').focus({ preventScroll: true });
+  else $('#intake-title').focus({ preventScroll: true });
 }
 
+$('#editar').addEventListener('click', () => {
+  if (history.state?.step === 'carta') history.back();
+  else showStep('datos');
+});
+
+window.addEventListener('popstate', (e) => {
+  showStep(e.state?.step === 'carta' && state.base ? 'carta' : 'datos');
+});
+
 // ---------------------------------------------------------------------------
-// Local model
+// Offline banner
+// ---------------------------------------------------------------------------
+
+function renderNetwork() {
+  $('#offline').hidden = navigator.onLine;
+}
+window.addEventListener('online', renderNetwork);
+window.addEventListener('offline', renderNetwork);
+
+// ---------------------------------------------------------------------------
+// Local model ("Usar sin internet")
 // ---------------------------------------------------------------------------
 
 const llm = createLocalLlm({
   onEvent(e) {
-    if (e.type === 'device') state.local.device = e.device;
     if (e.type === 'progress') {
-      $('#model-progress').hidden = false;
-      $<HTMLProgressElement>('#model-bar').value = e.progress;
-      $('#model-bytes').textContent = `${gb(e.loaded)} de ${gb(e.total)}`;
+      state.model.loaded = e.loaded;
+      state.model.total = e.total || LOCAL_MODEL.approxBytes;
+      renderModel();
     }
-    if (e.type === 'ready') {
-      state.local.device = e.device;
-      state.modelCached = true;
-      $('#model-progress').hidden = true;
-    }
-    renderModel();
-    renderStatus();
   },
 });
 
-function renderModel() {
-  const m = state.local;
-  const desc = $('#model-desc');
-  const btn = $<HTMLButtonElement>('#model-load');
-  const size = gb(LOCAL_MODEL.approxBytes);
-  if (m.status === 'loading') {
-    desc.textContent = state.modelCached
-      ? `Cargando ${LOCAL_MODEL.label} desde el caché del navegador…`
-      : `Descargando ${LOCAL_MODEL.label} (${size}). Se descarga una sola vez y queda guardado para usarlo sin internet.`;
-    btn.disabled = true;
-    btn.textContent = 'Cargando…';
-    return;
-  }
-  if (m.status === 'error') {
-    desc.textContent = `No se pudo usar el modelo local: ${m.error}. La plantilla y la nota siguen disponibles.`;
-    btn.disabled = false;
-    btn.textContent = 'Reintentar';
-    return;
-  }
-  if (m.status === 'ready' || m.status === 'writing' || m.status === 'done') {
-    desc.textContent = `${LOCAL_MODEL.label} listo en tu dispositivo (${m.device === 'webgpu' ? 'WebGPU' : 'WASM, más lento'}). Recibe tu perfil completo porque nada sale de aquí.`;
-    btn.disabled = !state.profile || m.status === 'writing';
-    btn.textContent = m.status === 'writing' ? 'Escribiendo…' : 'Escribir borrador local';
-    return;
-  }
-  desc.textContent = state.modelCached
-    ? `${LOCAL_MODEL.label} ya está descargado. Funciona sin internet.`
-    : `${LOCAL_MODEL.label}: ${size} que se descargan una sola vez. Mejor con Wi-Fi y en una computadora con WebGPU.`;
-  btn.disabled = false;
-  btn.textContent = state.modelCached ? 'Cargar modelo' : `Descargar modelo (${size})`;
+let modelLoad: Promise<boolean> | null = null;
+
+function modelAvailable(): boolean {
+  return state.model.phase === 'ready' || (state.model.cached && state.model.phase !== 'failed');
 }
 
-async function loadModel(): Promise<boolean> {
-  state.local.status = 'loading';
-  state.local.error = undefined;
-  renderModel();
-  try {
-    await llm.load();
-    state.local.status = 'ready';
-  } catch (err) {
-    state.local.status = 'error';
-    state.local.error = err instanceof Error ? err.message : String(err);
-  }
-  renderModel();
-  renderStatus();
-  return state.local.status === 'ready';
+function ensureModel(): Promise<boolean> {
+  if (state.model.phase === 'ready') return Promise.resolve(true);
+  modelLoad ??= (async () => {
+    state.model.phase = 'loading';
+    renderModel();
+    try {
+      await llm.load();
+      state.model.phase = 'ready';
+      state.model.cached = true;
+      return true;
+    } catch (err) {
+      console.warn('[emily] modelo local:', err);
+      state.model.phase = 'failed';
+      return false;
+    } finally {
+      modelLoad = null;
+      renderModel();
+      renderLetter();
+    }
+  })();
+  return modelLoad;
 }
 
 async function writeLocalDraft() {
-  if (!state.profile) return;
   const profile = state.profile;
-  state.local.status = 'writing';
-  state.local.text = '';
-  state.view = 'local';
-  renderModel();
+  const d = state.draft;
+  if (!profile || d.status === 'writing' || (d.status === 'done' && d.run === state.run)) return;
+  const run = state.run;
+  state.draft = { status: 'writing', text: '', run };
   renderLetter();
-  const t0 = performance.now();
+  if (!(await ensureModel())) {
+    if (state.draft.run === run) state.draft.status = 'failed';
+    if (state.view === 'local') state.view = bestVersion();
+    renderLetter();
+    return;
+  }
   try {
     const raw = await llm.generate(buildLetterPrompt(localLetterInput(profile)), (chunk) => {
-      state.local.text += chunk;
+      if (state.draft.run !== run) return;
+      state.draft.text += chunk;
       renderLetter();
     });
-    state.local.text = finalizeLetter(raw, profile.nombre);
-    state.local.ms = performance.now() - t0;
-    state.local.status = 'done';
+    if (state.draft.run !== run) return;
+    state.draft = { status: 'done', text: finalizeLetter(raw, profile.nombre), run };
   } catch (err) {
-    state.local.status = 'error';
-    state.local.error = err instanceof Error ? err.message : String(err);
+    console.warn('[emily] borrador local:', err);
+    if (state.draft.run !== run) return;
+    state.draft.status = 'failed';
+    if (state.view === 'local') state.view = bestVersion();
   }
-  renderModel();
   renderLetter();
 }
 
+function renderModel() {
+  const card = $('#modelo');
+  const m = state.model;
+  // Once the model is on the device the card is no longer needed: the letter switcher offers it.
+  card.hidden = m.phase === 'ready' || (m.cached && m.phase !== 'failed');
+  if (card.hidden) return;
+  const desc = $('#model-desc');
+  const btn = $<HTMLButtonElement>('#model-load');
+  const size = gb(LOCAL_MODEL.approxBytes);
+  $('#model-progress').hidden = m.phase !== 'loading';
+  if (m.phase === 'loading') {
+    const pct = m.total ? Math.round((m.loaded / m.total) * 100) : 0;
+    $<HTMLProgressElement>('#model-bar').value = pct;
+    $('#model-bytes').textContent = `${gb(m.loaded)} de ${gb(m.total)}`;
+    desc.textContent = 'Descargando. Podés seguir usando la app mientras tanto.';
+    btn.hidden = true;
+    return;
+  }
+  btn.hidden = false;
+  btn.disabled = false;
+  if (m.phase === 'failed') {
+    desc.textContent = 'No se pudo completar la descarga. Revisá tu conexión e intentá de nuevo.';
+    btn.textContent = 'Intentar de nuevo';
+    return;
+  }
+  if (m.webgpu === false) {
+    desc.textContent =
+      'En este navegador la versión sin internet sería muy lenta. Funciona mejor en Chrome o Edge, en una computadora.';
+    btn.textContent = `Descargar de todos modos (${size})`;
+    return;
+  }
+  desc.textContent = `Descargá una versión privada que escribe la carta en tu dispositivo, incluso sin conexión. Son ${size}, una sola vez; mejor con Wi-Fi.`;
+  btn.textContent = `Descargar (${size})`;
+}
+
 $('#model-load').addEventListener('click', async () => {
-  if (state.local.status === 'ready' || state.local.status === 'done') return writeLocalDraft();
-  const ok = await loadModel();
-  if (ok && state.profile) await writeLocalDraft();
+  const ok = await ensureModel();
+  if (ok && state.profile) {
+    state.view = 'local';
+    state.userPicked = true;
+    await writeLocalDraft();
+  }
 });
+
+async function detectWebGpu(): Promise<boolean> {
+  if (TEST_MODE) return true;
+  try {
+    const gpu = (navigator as Navigator & { gpu?: { requestAdapter(): Promise<unknown> } }).gpu;
+    return Boolean(gpu && (await gpu.requestAdapter()));
+  } catch {
+    return false;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Form
@@ -196,28 +231,39 @@ function parseAmount(raw: string): number {
   return Number(s);
 }
 
-function readProfile(): { profile?: Profile; errors: string[] } {
+const REQUIRED: [name: string, label: string][] = [
+  ['nombre', 'tu nombre'],
+  ['puestoActual', 'tu puesto actual'],
+  ['aniosExperiencia', 'años de experiencia'],
+  ['empleadorActual', 'dónde trabajás hoy'],
+  ['puestoDeseado', 'el puesto que buscás'],
+  ['empresaDestino', 'la empresa'],
+  ['logros', 'tus logros'],
+  ['salarioActual', 'cuánto ganás hoy'],
+  ['salarioDeseado', 'cuánto querés ganar'],
+];
+
+function readProfile(): { profile?: Profile; missing: (typeof REQUIRED)[number][] } {
   const fd = new FormData(form);
   const get = (k: string) => String(fd.get(k) ?? '').trim();
-  const errors: string[] = [];
-  const need = (k: string, label: string) => {
-    if (!get(k)) errors.push(label);
-  };
-  need('nombre', 'nombre');
-  need('puestoActual', 'puesto actual');
-  need('empleadorActual', 'empleador actual');
-  need('puestoDeseado', 'puesto deseado');
-  need('empresaDestino', 'empresa destino');
-  need('logros', 'logros');
   const salarioActual = parseAmount(get('salarioActual'));
   const salarioDeseado = parseAmount(get('salarioDeseado'));
   const anios = Number(get('aniosExperiencia'));
-  if (!(salarioActual > 0)) errors.push('salario actual (un número mayor que cero)');
-  if (!(salarioDeseado > 0)) errors.push('salario deseado (un número mayor que cero)');
-  if (!Number.isFinite(anios) || anios < 0 || get('aniosExperiencia') === '') errors.push('años de experiencia');
-  if (errors.length) return { errors };
+  const invalid = new Set<string>();
+  for (const [k] of REQUIRED) if (!get(k)) invalid.add(k);
+  if (!(salarioActual > 0)) invalid.add('salarioActual');
+  if (!(salarioDeseado > 0)) invalid.add('salarioDeseado');
+  if (!Number.isFinite(anios) || anios < 0) invalid.add('aniosExperiencia');
+
+  for (const [k] of REQUIRED) {
+    const el = form.elements.namedItem(k) as HTMLInputElement;
+    if (invalid.has(k)) el.setAttribute('aria-invalid', 'true');
+    else el.removeAttribute('aria-invalid');
+  }
+  const missing = REQUIRED.filter(([k]) => invalid.has(k));
+  if (missing.length) return { missing };
   return {
-    errors,
+    missing,
     profile: {
       nombre: get('nombre'),
       puestoActual: get('puestoActual'),
@@ -235,138 +281,195 @@ function readProfile(): { profile?: Profile; errors: string[] } {
   };
 }
 
+function renderPreview() {
+  document.querySelectorAll<HTMLElement>('[data-bind]').forEach((el) => {
+    const field = form.elements.namedItem(el.dataset.bind!) as HTMLInputElement | null;
+    const v = field?.value.trim() ?? '';
+    el.textContent = v || el.dataset.empty || '';
+    el.classList.toggle('is-empty', !v);
+  });
+}
+
 function fillForm(p: Profile) {
-  const set = (k: string, v: string | number | undefined) => {
+  (Object.keys(p) as (keyof Profile)[]).forEach((k) => {
     const el = form.elements.namedItem(k) as HTMLInputElement | null;
-    if (el) el.value = v === undefined ? '' : String(v);
-  };
-  (Object.keys(p) as (keyof Profile)[]).forEach((k) => set(k, p[k] as string | number | undefined));
+    if (el) el.value = p[k] === undefined ? '' : String(p[k]);
+    el?.removeAttribute('aria-invalid');
+  });
+  if (p.oferta) $<HTMLDetailsElement>('#oferta-box').open = true;
+  $('#form-error').hidden = true;
+  renderPreview();
 }
 
 $('#ejemplo').addEventListener('click', () => fillForm(EXAMPLE_PROFILE));
 
+form.addEventListener('input', (e) => {
+  (e.target as HTMLElement).removeAttribute('aria-invalid');
+  renderPreview();
+});
+
 form.addEventListener('submit', async (ev) => {
   ev.preventDefault();
-  const { profile, errors } = readProfile();
+  const { profile, missing } = readProfile();
   const errEl = $('#form-error');
   if (!profile) {
     errEl.hidden = false;
-    errEl.textContent = `Falta completar: ${errors.join(', ')}.`;
+    errEl.textContent = `Te falta completar: ${missing.map(([, label]) => label).join(', ')}.`;
+    (form.elements.namedItem(missing[0][0]) as HTMLElement).focus();
     return;
   }
   errEl.hidden = true;
+
+  const run = ++state.run;
+  const online = navigator.onLine;
+  const deviceOnly = (form.elements.namedItem('soloDispositivo') as HTMLInputElement).checked;
+  const useCloud = !deviceOnly && isFirebaseConfigured();
+
   state.profile = profile;
-  state.local = { ...state.local, text: '', status: state.local.status === 'done' ? 'ready' : state.local.status };
-  const useCloud = (form.elements.namedItem('usarNube') as HTMLInputElement).checked;
-  const submit = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
-  submit.disabled = true;
-  submit.textContent = useCloud && navigator.onLine ? 'Preparando… (esperando a la nube)' : 'Preparando…';
+  state.base = { note: buildNegotiationNote(profile), template: buildTemplateLetter(profile) };
   state.result = null;
-  renderCloudPending(useCloud);
-  const result = await generateAll(profile, { online: navigator.onLine, useCloud: useCloud && isFirebaseConfigured() });
-  if (useCloud && !isFirebaseConfigured() && result.cloudStatus === 'skipped') result.cloudError = 'nube sin configurar';
-  state.result = result;
-  state.view = result.cloudStatus === 'sent' ? 'nube' : 'plantilla';
-  submit.disabled = false;
-  submit.textContent = 'Preparar carta y nota';
+  state.draft = { status: 'none', text: '', run };
+  state.userPicked = false;
+  state.cloudPending = useCloud && online;
+  state.view = state.cloudPending ? 'nube' : bestVersion();
+
+  history.pushState({ step: 'carta' }, '');
   renderAll();
-  if (state.local.status === 'ready') void writeLocalDraft();
-  $('#hoja').focus({ preventScroll: false });
-});
+  showStep('carta');
+  if (state.view === 'local') void writeLocalDraft();
 
-// ---------------------------------------------------------------------------
-// Letter sheet
-// ---------------------------------------------------------------------------
-
-document.querySelectorAll<HTMLButtonElement>('.tabs [role=tab]').forEach((tab) => {
-  tab.addEventListener('click', () => {
-    state.view = tab.dataset.view as View;
-    renderLetter();
-  });
-  tab.addEventListener('keydown', (e) => {
-    const tabs = [...document.querySelectorAll<HTMLButtonElement>('.tabs [role=tab]')];
-    const i = tabs.indexOf(tab);
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      next.focus();
-      next.click();
-    }
-  });
-});
-
-function checksHtml(letter: string): string {
-  if (!state.profile || !letter.trim()) return '';
-  const c = checkLetter(letter, state.profile);
-  return `<ul class="checks" aria-label="Revisión automática">${CRITERIA.map(
-    (k) => `<li data-pass="${c[k.id].pass}" title="${esc(c[k.id].detail)}"><span aria-hidden="true">${c[k.id].pass ? '✓' : '·'}</span> ${esc(k.label)}<span class="sr">: ${c[k.id].pass ? 'cumple' : 'revisar'} (${esc(c[k.id].detail)})</span></li>`,
-  ).join('')}</ul>`;
-}
-
-function letterBlock(title: string, text: string, meta: string, testid: string): string {
-  return `<div class="letter" data-testid="${testid}">
-    <div class="letter__meta"><span>${esc(title)}</span><span>${esc(meta)}</span></div>
-    <div class="letter__text">${esc(text)}</div>
-    ${checksHtml(text)}
-    <button type="button" class="btn btn--quiet copy" data-copy="${testid}">Copiar carta</button>
-  </div>`;
-}
-
-function localBlock(): string {
-  const m = state.local;
-  if (m.status === 'writing') return letterBlock('Borrador local', m.text || 'Pensando…', 'escribiendo en tu dispositivo', 'letter-local');
-  if (m.status === 'done') return letterBlock('Borrador local', m.text, `${wordCount(m.text)} palabras · ${((m.ms ?? 0) / 1000).toFixed(0)} s en tu dispositivo`, 'letter-local');
-  if (m.status === 'error') return `<p class="empty">El modelo local falló: ${esc(m.error ?? '')}. Usá la plantilla o la carta de la nube.</p>`;
-  return `<p class="empty">El borrador local necesita el modelo (${gb(LOCAL_MODEL.approxBytes)}). Usá “${state.modelCached ? 'Cargar modelo' : 'Descargar modelo'}” arriba; después se escribe solo.</p>`;
-}
-
-function cloudBlock(): string {
-  const r = state.result;
-  if (!r) return '<p class="empty">Aún no hay carta de la nube.</p>';
-  switch (r.cloudStatus) {
-    case 'sent':
-      return letterBlock('Carta de la nube', r.cloudLetter!.finalText, `${wordCount(r.cloudLetter!.finalText)} palabras · ${(r.cloudLetter!.latencyMs / 1000).toFixed(1)} s · ${r.cloudLetter!.model}`, 'letter-cloud');
-    case 'blocked':
-      return '<p class="empty">No se envió nada: el control final encontró datos sensibles después del tachado. Revisá “Qué salió a la nube”.</p>';
-    case 'offline':
-      return '<p class="empty">Sin conexión: no se pidió la carta a la nube. La plantilla y el borrador local siguen disponibles.</p>';
-    case 'error':
-      return `<p class="empty">La nube respondió con un error: ${esc(r.cloudError ?? '')}</p>${
-        /app check/i.test(r.cloudError ?? '')
-          ? '<p class="empty">El proyecto de Firebase exige App Check para Gemini. Configurá una clave de reCAPTCHA Enterprise en VITE_RECAPTCHA_ENTERPRISE_KEY (o, en desarrollo, un token de depuración en VITE_APPCHECK_DEBUG_TOKEN). Ver README, sección “Solución de problemas”. Mientras tanto, la plantilla y el borrador local funcionan.</p>'
-          : ''
-      }`;
-    default:
-      return `<p class="empty">No se pidió carta a la nube${r.cloudError ? ` (${esc(r.cloudError)})` : ''}.</p>`;
+  const result = await generateAll(profile, { online, useCloud });
+  if (run !== state.run) return;
+  if (result.cloudStatus === 'error') console.warn('[emily] versión en línea:', result.cloudError);
+  state.result = result;
+  state.cloudPending = false;
+  if (!state.userPicked || (state.view === 'nube' && result.cloudStatus !== 'sent')) {
+    state.view = bestVersion();
+    if (state.view === 'local') void writeLocalDraft();
   }
+  renderLetter();
+});
+
+// ---------------------------------------------------------------------------
+// Letter
+// ---------------------------------------------------------------------------
+
+function availableVersions(): Version[] {
+  const v: Version[] = [];
+  if (state.cloudPending || state.result?.cloudStatus === 'sent') v.push('nube');
+  const d = state.draft.status;
+  if (d === 'writing' || d === 'done' || (d === 'none' && modelAvailable())) v.push('local');
+  v.push('plantilla');
+  return v;
+}
+
+function bestVersion(): Version {
+  if (state.result?.cloudStatus === 'sent') return 'nube';
+  if (state.draft.status !== 'failed' && (state.draft.status !== 'none' || modelAvailable())) return 'local';
+  return 'plantilla';
+}
+
+function currentText(): string | null {
+  if (state.view === 'nube') return state.result?.cloudLetter?.finalText ?? null;
+  if (state.view === 'local') return state.draft.status === 'done' ? state.draft.text : null;
+  return state.base?.template ?? null;
+}
+
+const SENSITIVE_PLAIN: Record<SensitiveType, string> = {
+  salary: 'una cifra de tu salario',
+  employer: 'dónde trabajás hoy',
+  person_name: 'el nombre de otra persona',
+  phone: 'un número de teléfono',
+  email: 'un correo',
+  dpi: 'un DPI',
+  address: 'una dirección',
+  nit: 'un NIT',
+};
+
+function noticeText(): string {
+  const r = state.result;
+  const fallback = state.view === 'local' ? 'la versión de tu dispositivo' : 'la versión base';
+  if (r?.cloudStatus === 'blocked') {
+    const what = SENSITIVE_PLAIN[r.route.residual[0]?.type ?? 'salary'];
+    return `Como tu texto menciona ${what}, te dejamos ${fallback}. Si quitás ese dato, podés pedir la versión en línea.`;
+  }
+  if (r?.cloudStatus === 'error') return `No pudimos generar la versión en línea; te dejamos ${fallback}.`;
+  if (state.draft.status === 'failed' && state.view !== 'nube')
+    return 'No pudimos escribir la versión de tu dispositivo; te dejamos la versión base.';
+  return '';
+}
+
+function letterHtml(text: string, testid: string, writing = false): string {
+  return `<div class="letter" data-testid="${testid}"><div class="letter__text${writing ? ' is-writing' : ''}">${esc(text)}</div></div>`;
+}
+
+function writingHtml(message: string, testid: string): string {
+  return `<div class="writing" data-testid="${testid}"><p>${esc(message)}</p><div class="writing__lines" aria-hidden="true"><span></span><span></span><span></span><span></span></div></div>`;
 }
 
 function renderLetter() {
-  document.querySelectorAll<HTMLButtonElement>('.tabs [role=tab]').forEach((t) => {
-    const sel = t.dataset.view === state.view;
-    t.setAttribute('aria-selected', String(sel));
-    t.tabIndex = sel ? 0 : -1;
+  if (!state.base || !state.profile) return;
+  const versions = availableVersions();
+  if (!versions.includes(state.view)) state.view = versions[0];
+
+  $('#results-title').textContent = `Tu carta para ${state.profile.empresaDestino}`;
+
+  // version switcher: only when there is more than one letter to choose from
+  const box = $('#versions');
+  box.hidden = versions.length < 2;
+  box.querySelectorAll<HTMLLabelElement>('label[data-version]').forEach((label) => {
+    const v = label.dataset.version as Version;
+    label.hidden = !versions.includes(v);
+    label.querySelector('input')!.checked = v === state.view;
   });
-  const body = $('#sheet-body');
-  body.setAttribute('aria-labelledby', `tab-${state.view}`);
-  body.dataset.view = state.view;
-  if (!state.result) {
-    body.innerHTML = state.view === 'local' ? localBlock() : '<p class="empty">Completá tu situación y tocá “Preparar carta y nota”. La plantilla y la nota funcionan incluso sin internet.</p>';
-    return;
-  }
-  const tpl = letterBlock('Plantilla', state.result.template, `${wordCount(state.result.template)} palabras · sin modelo`, 'letter-template');
-  if (state.view === 'plantilla') body.innerHTML = tpl;
-  else if (state.view === 'nube') body.innerHTML = cloudBlock();
-  else if (state.view === 'local') body.innerHTML = localBlock();
-  else body.innerHTML = `<div class="compare">${localBlock()}${cloudBlock()}${tpl}</div>`;
+
+  const notice = noticeText();
+  $('#letter-notice').hidden = !notice;
+  $('#letter-notice').textContent = notice;
+
+  const sheet = $('#hoja');
+  let busy = false;
+  if (state.view === 'nube') {
+    if (state.cloudPending) {
+      busy = true;
+      sheet.innerHTML = writingHtml('Escribiendo tu carta…', 'letter-pending');
+    } else sheet.innerHTML = letterHtml(state.result!.cloudLetter!.finalText, 'letter-cloud');
+  } else if (state.view === 'local') {
+    const d = state.draft;
+    if (d.status === 'done') sheet.innerHTML = letterHtml(d.text, 'letter-local');
+    else {
+      busy = true;
+      sheet.innerHTML = d.text
+        ? letterHtml(d.text, 'letter-local', true)
+        : writingHtml(
+            state.model.phase === 'loading' && !state.model.cached
+              ? 'Descargando la versión de tu dispositivo…'
+              : 'Escribiendo tu carta en este dispositivo…',
+            'letter-local-pending',
+          );
+    }
+  } else sheet.innerHTML = letterHtml(state.base.template, 'letter-template');
+  sheet.setAttribute('aria-busy', String(busy));
+  sheet.dataset.view = state.view;
+
+  $<HTMLButtonElement>('#copiar').disabled = !currentText();
 }
 
-$('#sheet-body').addEventListener('click', async (e) => {
-  const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
-  if (!btn) return;
-  const text = btn.parentElement?.querySelector('.letter__text')?.textContent ?? '';
+$('#versions').addEventListener('change', (e) => {
+  const input = e.target as HTMLInputElement;
+  state.view = input.value as Version;
+  state.userPicked = true;
+  if (state.view === 'local' && state.draft.status === 'none') void writeLocalDraft();
+  renderLetter();
+});
+
+$('#copiar').addEventListener('click', async () => {
+  const btn = $<HTMLButtonElement>('#copiar');
+  const text = currentText();
+  if (!text) return;
   try {
     await navigator.clipboard.writeText(text);
-    btn.textContent = 'Carta copiada';
+    btn.textContent = 'Copiada';
   } catch {
     btn.textContent = 'No se pudo copiar';
   }
@@ -374,91 +477,59 @@ $('#sheet-body').addEventListener('click', async (e) => {
 });
 
 // ---------------------------------------------------------------------------
-// Negotiation note
+// Private negotiation note
 // ---------------------------------------------------------------------------
 
 function renderNote() {
-  const r = state.result;
   const p = state.profile;
-  if (!r || !p) return;
-  const n = r.note;
-  const range = `${formatMoney(n.suggestedRange.min, n.suggestedRange.currency)} – ${formatMoney(n.suggestedRange.max, n.suggestedRange.currency)}`;
+  const n = state.base?.note;
+  if (!p || !n) return;
+  const money = (v: number, c: Currency) => formatMoney(v, c);
+  // keep "25 %–40 %" together: no break before "%" or around a dash between numbers
+  const nbsp = (t: string) => t.replace(/ %/g, '\u00a0%').replace(/%–(\d)/g, '%\u2060–\u2060$1');
+  const pct = `${Math.abs(n.gapPct).toFixed(1)}\u00a0%`;
+  const change =
+    Math.abs(n.gapPct) < 0.05
+      ? 'Pedís lo mismo que ganás hoy'
+      : `Pedís ${pct} ${n.gapPct > 0 ? 'más' : 'menos'} que hoy`;
+  const facts = [
+    `<div><dt>Rango para pedir</dt><dd>${esc(`${money(n.suggestedRange.min, n.suggestedRange.currency)} – ${money(n.suggestedRange.max, n.suggestedRange.currency)}`)}</dd></div>`,
+  ];
+  if (n.offerRange) {
+    const o = n.offerRange;
+    facts.push(`<div><dt>La oferta publica</dt><dd>${esc(`${money(o.min, o.currency)}${o.max !== o.min ? ` – ${money(o.max, o.currency)}` : ''}`)}</dd></div>`);
+  }
+  // The first "when to mention" rule ("no salary figures in the letter") is already enforced
+  // by the app itself, so the note shows the advice plus the timing rules.
+  const tips = [...n.advice, ...n.whenToMention.slice(1)].slice(0, 4);
   $('#nota-body').innerHTML = `
-    <p class="note__headline" data-band="${n.band.id}">${esc(n.headline)}</p>
-    <dl class="note__facts">
-      <div><dt>Diferencia</dt><dd>${n.gapPct >= 0 ? '+' : ''}${n.gapPct.toFixed(1)} %</dd></div>
-      <div><dt>Rango para decir</dt><dd>${esc(range)}</dd></div>
-      <div><dt>Oferta publica</dt><dd>${n.offerRange ? esc(`${formatMoney(n.offerRange.min, n.offerRange.currency)}${n.offerRange.max !== n.offerRange.min ? ` – ${formatMoney(n.offerRange.max, n.offerRange.currency)}` : ''}`) : 'sin rango'}</dd></div>
-    </dl>
-    <h3>Qué tan realista es</h3>
-    <ul>${n.advice.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
-    <h3>Cuándo mencionarlo</h3>
-    <ul>${n.whenToMention.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
-    <p class="fine">Reglas fijas, sin modelo. Conversión con 1 USD = ${n.constants.USD_TO_GTQ} GTQ (constante de referencia). Bandas: menos de 10 % conservadora, 10–25 % razonable, 25–40 % ambiciosa, más de 40 % muy ambiciosa.</p>`;
-}
-
-// ---------------------------------------------------------------------------
-// "Qué salió a la nube"
-// ---------------------------------------------------------------------------
-
-function renderCloudPending(useCloud: boolean) {
-  $('#nube-body').innerHTML = useCloud && navigator.onLine ? '<p class="empty">Tachando datos sensibles y consultando a la nube…</p>' : '<p class="empty">Preparando…</p>';
-}
-
-function renderCloud() {
-  const r = state.result;
-  if (!r) return;
-  const statusText: Record<GenerateResult['cloudStatus'], string> = {
-    sent: 'Enviado: solo el texto de abajo salió del dispositivo.',
-    blocked: 'Bloqueado: el control final detectó datos sensibles. No salió nada.',
-    offline: 'Sin conexión: no salió nada.',
-    skipped: 'No se pidió carta a la nube: no salió nada.',
-    error: 'Se intentó enviar el texto de abajo, pero la nube respondió con error.',
-  };
-  const redactions = r.route.redactions;
-  const rows = redactions
-    .map(
-      (x) =>
-        `<tr><td>${esc(x.field)}</td><td>${esc(TYPE_LABEL[x.finding.type])}</td><td><s>${esc(x.finding.match)}</s></td><td>${esc(x.finding.rule === 'own_name' ? '{{NOMBRE}}' : TAGS[x.finding.type])}</td></tr>`,
-    )
-    .join('');
-  const residual = r.route.residual.length
-    ? `<div class="residual" role="alert"><p>El control final encontró esto después del tachado:</p><ul>${r.route.residual
-        .map((f) => `<li>${esc(TYPE_LABEL[f.type])}: “${esc(f.match)}” (${esc(f.rule)})</li>`)
-        .join('')}</ul><p>Editá el texto para quitarlo o desmarcá la nube.</p></div>`
-    : '';
-  const sent = r.sent[0];
-  $('#nube-body').innerHTML = `
-    <p class="cloud__status" data-status="${r.cloudStatus}" data-testid="cloud-status">${esc(statusText[r.cloudStatus])}</p>
-    ${residual}
-    <details class="kept" open>
-      <summary>Se quedó en tu dispositivo</summary>
-      <ul>${Object.values(LOCAL_ONLY_FIELDS).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-    </details>
-    <details class="redactions" ${redactions.length ? 'open' : ''}>
-      <summary>Datos tachados antes de salir (${redactions.length})</summary>
-      ${redactions.length ? `<div class="table-wrap"><table><thead><tr><th scope="col">Campo</th><th scope="col">Tipo</th><th scope="col">Original (solo aquí)</th><th scope="col">Salió como</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p>No hubo nada que tachar.</p>'}
-    </details>
-    <details class="payload" ${sent ? '' : ''}>
-      <summary>${sent ? `Texto exacto enviado (${sent.bytes.toLocaleString('es-GT')} bytes, ${esc(sent.destination)})` : 'Texto que se habría enviado'}</summary>
-      <pre data-testid="cloud-payload">${esc(`${r.route.prompt.system}\n\n${r.route.prompt.user}`)}</pre>
-    </details>`;
+    <p class="verdict" data-band="${n.band.id}">${esc(n.band.label)}</p>
+    <p class="verdict__sub">${esc(change)}: de ${esc(money(p.salarioActual, p.monedaActual))} a ${esc(money(p.salarioDeseado, p.monedaDeseada))}.</p>
+    <dl class="facts">${facts.join('')}</dl>
+    <ul class="tips">${tips.map((t) => `<li>${esc(nbsp(t))}</li>`).join('')}</ul>`;
 }
 
 function renderAll() {
-  renderStatus();
+  renderNetwork();
   renderModel();
   renderLetter();
   renderNote();
-  renderCloud();
 }
 
-window.addEventListener('online', renderStatus);
-window.addEventListener('offline', renderStatus);
+// ---------------------------------------------------------------------------
+// Boot
+// ---------------------------------------------------------------------------
 
 void isModelCached().then((cached) => {
-  state.modelCached = cached;
+  state.model.cached = cached;
   renderModel();
-  renderStatus();
+  renderLetter();
 });
+void detectWebGpu().then((ok) => {
+  state.model.webgpu = ok;
+  renderModel();
+});
+history.replaceState({ step: 'datos' }, '');
+showStep('datos', false);
+renderPreview();
 renderAll();

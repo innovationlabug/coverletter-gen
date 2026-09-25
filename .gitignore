@@ -18,3 +18,4 @@ CLAUDE.md
 dist-e2e/
 tsconfig.tsbuildinfo
 next-env.d.ts
+emily/eval/results/*-leaks.*

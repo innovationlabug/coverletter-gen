@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Cathy · carta dividida",
+    name: "Cathy · carta de interés",
     short_name: "Cathy",
-    description: "Carta de interés + nota privada de negociación. Funciona sin conexión.",
+    description: "Carta de interés lista para enviar y una nota privada para negociar tu salario. Funciona sin conexión.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f3efe4",
-    theme_color: "#f3efe4",
+    background_color: "#eef1f5",
+    theme_color: "#eef1f5",
     lang: "es-GT",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },

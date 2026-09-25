@@ -126,7 +126,7 @@ export function buildNegotiationNote(p: Profile): NegotiationNote {
   const advice: string[] = [];
   switch (bandFor.id) {
     case 'recorte':
-      advice.push('Estás pidiendo menos de lo que ganas hoy. Si es a propósito (cambio de carrera, trabajo remoto, estabilidad), está bien, pero no lo digas en la entrevista: no hace falta justificar un número bajo.');
+      advice.push('Estás pidiendo menos de lo que ganás hoy. Si es a propósito (cambio de carrera, trabajo remoto, estabilidad), está bien, pero no lo mencionés en la entrevista: no hace falta justificar un número bajo.');
       break;
     case 'conservadora':
       advice.push('Tu expectativa es conservadora. Tenés margen para pedir un poco más: un cambio de empresa suele justificar entre 10 % y 25 %.');

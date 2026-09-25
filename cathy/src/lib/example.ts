@@ -3,8 +3,6 @@ import type { Currency } from "./types";
 /** Estado del formulario (todo texto: la persona puede escribir "Q15,000", "15k", "USD 2000"…). */
 export interface FormState {
   fullName: string;
-  email: string;
-  phone: string;
   currentRole: string;
   currentEmployer: string;
   currentSalary: string;
@@ -20,8 +18,6 @@ export interface FormState {
 
 export const EMPTY_FORM: FormState = {
   fullName: "",
-  email: "",
-  phone: "",
   currentRole: "",
   currentEmployer: "",
   currentSalary: "",
@@ -38,14 +34,12 @@ export const EMPTY_FORM: FormState = {
 /** Perfil ficticio de ejemplo (mismo que bench/inputs/01). */
 export const EXAMPLE_FORM: FormState = {
   "fullName": "María José Castillo",
-  "email": "majo.castillo@correo.gt",
-  "phone": "+502 5512-3344",
   "currentRole": "Analista de datos",
   "currentEmployer": "Banco Industrial",
-  "currentSalary": "Q15,000",
+  "currentSalary": "15,000",
   "currentCurrency": "GTQ",
   "desiredRole": "Analista de BI Senior",
-  "desiredSalary": "Q17,500",
+  "desiredSalary": "17,500",
   "desiredCurrency": "GTQ",
   "targetCompany": "Cervecería Centro Americana",
   "yearsExperience": "5",

@@ -66,52 +66,84 @@ async function waitForOfflineShell(page: Page) {
 }
 
 async function fillForm(page: Page) {
+  await page.getByLabel("Puesto al que aplicas").fill("Software Engineer");
+  await page.getByLabel("Empresa", { exact: true }).fill("Tigo Guatemala");
   await page.getByLabel("Tu nombre").fill("Ana Lucía Pérez");
   await page.getByLabel("Años de experiencia").fill("5");
+  await page.locator("#currentSalary").fill("15000");
+  await page.locator("#desiredSalary").fill("19000");
+  // Optional details live behind a disclosure; location defaults to Guatemala.
+  await page.getByText("Agrega detalles para una mejor carta").click();
+  await expect(page.getByLabel("Ubicación")).toHaveValue("Guatemala");
   await page.getByLabel("Puesto actual").fill("Desarrolladora backend");
   await page.getByLabel("Empleador actual").fill("Banco Industrial");
-  await page.locator("#currentSalary").fill("15000");
-  await page.getByLabel("Puesto deseado").fill("Software Engineer");
-  await page.getByLabel("Empresa destino").fill("Tigo Guatemala");
-  await page.getByLabel("Ubicación").fill("Guatemala");
-  await page.locator("#desiredSalary").fill("19000");
   await page
     .getByLabel("Logros y fortalezas")
     .fill("Migré 12 servicios a Kubernetes. En Banco Industrial gano Q15,000. Lideré un equipo de 4 personas.");
 }
 
-test("online: form → Gemini letter + private note, nothing sensitive sent", async ({ page, context }) => {
+const SUBMIT = "Crear carta y nota";
+const LEAK = /15,?000|19,?000|Banco Industrial|Ana Luc/i;
+
+/** The UI is for a job seeker: no provider names, HTTP codes or payload dumps. */
+async function expectNoInternals(page: Page) {
+  const body = page.locator("body");
+  for (const word of ["Qué salió a la nube", "Tavily", "JSearch", "Gemini", "HTTP", "403", "POST /api"]) {
+    await expect(body).not.toContainText(word);
+  }
+}
+
+test("validation: empty form points to the first missing field", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: SUBMIT }).click();
+  await expect(page.getByText("Escribe el puesto al que aplicas.")).toBeVisible();
+  await expect(page.getByLabel("Puesto al que aplicas")).toBeFocused();
+  await expect(page.getByTestId("letter")).toHaveCount(0);
+});
+
+test("online: form → letter with sources + private note, nothing sensitive sent", async ({ page, context }) => {
   const bodies = await mockApis(context);
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Carta y copia" })).toBeVisible();
   await fillForm(page);
-  await page.getByRole("button", { name: "Generar carta y nota" }).click();
+  await page.getByRole("button", { name: SUBMIT }).click();
 
   const letter = page.getByTestId("letter");
   await expect(letter).toBeVisible();
   await expect(letter).toHaveAttribute("data-source", "gemini");
   await expect(letter).toContainText("Ana Lucía Pérez"); // signature added locally
   await expect(letter.getByRole("link", { name: /red 5G/ })).toHaveAttribute("href", "https://example.com/tigo-5g");
+  await expect(letter.getByRole("button", { name: "Copiar" })).toBeVisible();
+  await expect(page.getByTestId("notice")).toHaveCount(0);
 
   const note = page.getByTestId("note");
-  await expect(note).toContainText("Solo para ti, no sale de tu dispositivo");
+  await expect(note).toContainText("Solo para ti");
   await expect(note).toContainText("Realista");
   await expect(note).toContainText("Glassdoor");
+  await expect(note).toContainText("Si te piden un número");
 
-  await expect(page.locator('[data-api="gemini"]')).toHaveAttribute("data-status", /ok|slow/);
-  await expect(page.getByTestId("manifest")).toContainText("POST /api/letter");
+  await expectNoInternals(page);
 
+  // Network-level leak check: every body the browser sent, captured by interception.
   expect(bodies).toHaveLength(3);
-  for (const b of bodies) {
-    expect(b).not.toMatch(/15,?000|19,?000|Banco Industrial|Ana Luc/i);
-  }
+  for (const b of bodies) expect(b).not.toMatch(LEAK);
+
+  // The letter can be edited in place.
+  await letter.getByRole("button", { name: "Editar" }).click();
+  await letter.getByLabel("Texto de la carta").fill("Hola equipo de Tigo");
+  await letter.getByRole("button", { name: "Listo" }).click();
+  await expect(letter).toContainText("Hola equipo de Tigo");
+
+  // Back to the form keeps the data.
+  await page.getByRole("button", { name: "Editar datos" }).click();
+  await expect(page.getByLabel("Puesto al que aplicas")).toHaveValue("Software Engineer");
 });
 
-test("offline: app shell loads from the service worker and still produces note + template letter", async ({
+test("offline: app shell loads from the service worker and still produces note + base letter", async ({
   page,
   context,
 }) => {
-  await mockApis(context);
+  const bodies = await mockApis(context);
   await page.goto("/");
   // Wait until the service worker controls the page and the shell is cached.
   await waitForOfflineShell(page);
@@ -122,36 +154,43 @@ test("offline: app shell loads from the service worker and still produces note +
   await expect(page.getByTestId("net")).toContainText("Sin conexión");
 
   await fillForm(page);
-  await page.getByRole("button", { name: "Generar carta y nota" }).click();
+  await page.getByRole("button", { name: SUBMIT }).click();
 
   const letter = page.getByTestId("letter");
   await expect(letter).toHaveAttribute("data-source", "template");
   await expect(letter).toContainText("Estimado equipo de selección de Tigo Guatemala:");
   await expect(letter).not.toContainText("Q15,000");
   await expect(letter).not.toContainText("Banco Industrial");
+  await expect(page.getByTestId("notice")).toContainText("versión base de la carta que puedes editar");
   await expect(page.getByTestId("note")).toContainText("Realista");
-  await expect(page.locator('[data-api="gemini"]')).toHaveAttribute("data-status", "offline");
-  await expect(page.getByTestId("manifest")).toContainText("Nada. Esta vez todo se resolvió en tu dispositivo.");
+  await expect(page.getByTestId("note")).toContainText("Sin conexión no pudimos consultar salarios");
+  await expectNoInternals(page);
+  // Nothing left the device.
+  expect(bodies).toHaveLength(0);
 });
 
-test("offline with a cached JSearch benchmark uses it (status 'desde caché')", async ({ page, context }) => {
-  await mockApis(context);
+test("offline with a saved market benchmark still shows the market comparison", async ({ page, context }) => {
+  const bodies = await mockApis(context);
   await page.goto("/");
   await fillForm(page);
-  await page.getByRole("button", { name: "Generar carta y nota" }).click();
+  await page.getByRole("button", { name: SUBMIT }).click();
   await expect(page.getByTestId("note")).toContainText("Glassdoor");
   await waitForOfflineShell(page);
+  expect(bodies).toHaveLength(3);
 
   await context.setOffline(true);
   await page.reload();
   await fillForm(page);
-  await page.getByRole("button", { name: "Generar carta y nota" }).click();
-  await expect(page.locator('[data-api="jsearch"]')).toHaveAttribute("data-status", "cached");
-  await expect(page.getByTestId("note")).toContainText("desde caché local");
+  await page.getByRole("button", { name: SUBMIT }).click();
+  const note = page.getByTestId("note");
+  await expect(note).toContainText("Glassdoor");
+  await expect(note).toContainText("Datos guardados de tu consulta anterior");
+  await expect(note.getByRole("img", { name: /Mercado: de Q11,625 a Q22,333/ })).toBeVisible();
+  expect(bodies).toHaveLength(3); // no new request while offline
 });
 
-test("JSearch 403 (not subscribed) → chip 'falló' and note without market benchmark", async ({ page, context }) => {
-  await mockApis(context);
+test("salary service refuses (JSearch 403) → plain-language note without market data", async ({ page, context }) => {
+  const bodies = await mockApis(context);
   await context.route("**/api/salary", (route) =>
     route.fulfill({
       status: 424,
@@ -160,10 +199,27 @@ test("JSearch 403 (not subscribed) → chip 'falló' and note without market ben
   );
   await page.goto("/");
   await fillForm(page);
-  await page.getByRole("button", { name: "Generar carta y nota" }).click();
-  const chip = page.locator('[data-api="jsearch"]');
-  await expect(chip).toHaveAttribute("data-status", "failed");
-  await expect(chip).toContainText("no está suscrita");
+  await page.getByRole("button", { name: SUBMIT }).click();
   await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "gemini");
-  await expect(page.getByTestId("note")).toContainText("Sin referencia de mercado");
+  const note = page.getByTestId("note");
+  await expect(note).toContainText("No encontramos datos de mercado para este puesto");
+  await expect(note).toContainText("Realista");
+  await expect(note).not.toContainText("suscrita");
+  await expectNoInternals(page);
+  for (const b of bodies) expect(b).not.toMatch(LEAK);
+});
+
+test("AI letter service fails → base letter with a plain-language notice", async ({ page, context }) => {
+  await mockApis(context);
+  await context.route("**/api/letter", (route) =>
+    route.fulfill({ status: 424, json: { error: { code: "upstream_auth", message: "bad key" } } }),
+  );
+  await page.goto("/");
+  await fillForm(page);
+  await page.getByRole("button", { name: SUBMIT }).click();
+  await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "template");
+  await expect(page.getByTestId("notice")).toHaveText(
+    "No pudimos contactar al servicio; te dejamos una versión base que puedes editar.",
+  );
+  await expectNoInternals(page);
 });
