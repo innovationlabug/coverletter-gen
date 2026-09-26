@@ -10,7 +10,8 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      // Registramos el SW desde main.ts (registerSW) para recargar sola cuando hay versión nueva.
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'icons/*.png'],
       manifest: {
         name: 'Emily — Carta de interés',
@@ -36,6 +37,9 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
+        // Toma control en la primera visita y activa versiones nuevas sin esperar a cerrar pestañas.
+        clientsClaim: true,
+        skipWaiting: true,
       },
     }),
   ],

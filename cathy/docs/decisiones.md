@@ -97,3 +97,7 @@ Con la app corriendo contra el Ollama de Cloud Run y Vertex (sin mocks), la prim
 - El MCP de documentación (context7) no funcionó en esta sesión (API key inválida). Las APIs se verificaron contra los tipos instalados (`@google/genai` 2.24: `vertexai`, `thinkingConfig.thinkingLevel`, `responseJsonSchema`; `google-auth-library` 11: `getIdTokenClient`, `getRequestHeaders()` devuelve `Headers`) y contra la documentación que Next.js 16 trae en `node_modules/next/dist/docs` (route handlers con `params` como Promise, `output: 'standalone'`, PWA).
 - TypeScript `latest` ya es la 7 (compilador nativo); se fijó `~6.0` para no arriesgar la verificación de tipos de `next build`.
 - `next start` avisa que no es el servidor recomendado con `output: 'standalone'`; funciona y es lo que usa el e2e (lo pide el enunciado). El contenedor usa `node server.js` del build standalone.
+
+## 14. Gemini convertía requisitos en habilidades
+
+Revisando una carta real en producción apareció "manejo un nivel de inglés intermedio". La persona del ejemplo nunca dijo eso: "Inglés intermedio (deseable)" era un **requisito de la oferta**, y Gemini lo escribió como si fuera una habilidad de la candidata. Ninguna prueba lo detectaba porque no es un dato sensible, es un dato inventado. Arreglo en `letterPrompt`: los requisitos son lo que pide la empresa, no lo que la persona tiene, y no se afirman habilidades, idiomas ni certificaciones que no estén en los logros. Verificado de nuevo en producción. El mismo cambio se aplicó a la app de Luis.

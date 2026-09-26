@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Carta de interés lista para enviar y una nota privada para negociar tu salario. Funciona sin conexión.",
     start_url: "/",
     display: "standalone",
-    background_color: "#eef1f5",
-    theme_color: "#eef1f5",
+    background_color: "#f6f6f3",
+    theme_color: "#f6f6f3",
     lang: "es-GT",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },

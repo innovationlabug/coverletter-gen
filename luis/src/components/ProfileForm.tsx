@@ -3,12 +3,19 @@
 import type { FormErrors, ProfileForm as Form } from "@/lib/profile";
 import type { Currency } from "@/lib/types";
 
-/** Fields that live inside the "más detalles" disclosure. */
-export const DETAIL_FIELDS: (keyof Form)[] = ["achievements", "jobOffer", "currentRole", "currentEmployer", "location"];
+/** Fields that live inside the "Más detalles" disclosure. */
+export const DETAIL_FIELDS: (keyof Form)[] = [
+  "name",
+  "achievements",
+  "jobOffer",
+  "currentRole",
+  "currentEmployer",
+  "location",
+];
 
 export function LockIcon() {
   return (
-    <svg aria-hidden="true" width="12" height="13" viewBox="0 0 11 12" className="lock">
+    <svg aria-hidden="true" width="11" height="12" viewBox="0 0 11 12" className="lock">
       <rect x="1" y="5" width="9" height="6.5" rx="1.5" fill="currentColor" />
       <path d="M3 5V3.6a2.5 2.5 0 0 1 5 0V5" fill="none" stroke="currentColor" strokeWidth="1.4" />
     </svg>
@@ -21,35 +28,25 @@ interface FieldProps {
   value: string;
   onChange: (v: string) => void;
   error?: string;
-  optional?: boolean;
-  hint?: string;
   placeholder?: string;
   inputMode?: "numeric" | "text" | "decimal";
   autoComplete?: string;
   multiline?: number;
+  className?: string;
 }
 
-function Field({ id, label, value, onChange, error, optional, hint, placeholder, inputMode, autoComplete, multiline }: FieldProps) {
-  const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-err` : null].filter(Boolean).join(" ") || undefined;
+function Field({ id, label, value, onChange, error, placeholder, inputMode, autoComplete, multiline, className }: FieldProps) {
   const common = {
     id,
     name: id,
     value,
     placeholder,
     "aria-invalid": error ? true : undefined,
-    "aria-describedby": describedBy,
+    "aria-describedby": error ? `${id}-err` : undefined,
   } as const;
   return (
-    <div className="field">
-      <label htmlFor={id}>
-        {label}
-        {optional && <span className="optional"> (opcional)</span>}
-      </label>
-      {hint && (
-        <p className="hint" id={`${id}-hint`}>
-          {hint}
-        </p>
-      )}
+    <div className={`field${className ? ` ${className}` : ""}`}>
+      <label htmlFor={id}>{label}</label>
       {multiline ? (
         <textarea {...common} rows={multiline} onChange={(e) => onChange(e.target.value)} />
       ) : (
@@ -107,6 +104,7 @@ function MoneyField({
           name={id}
           inputMode="decimal"
           autoComplete="off"
+          placeholder="al mes"
           value={value}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-err salary-note` : "salary-note"}
@@ -150,59 +148,31 @@ export function ProfileForm({
         onSubmit();
       }}
     >
-      <fieldset>
-        <legend>El puesto</legend>
-        <div className="row">
-          <Field
-            id="desiredRole"
-            label="Puesto al que aplicas"
-            value={form.desiredRole}
-            onChange={set("desiredRole")}
-            error={errors.desiredRole}
-            placeholder="Ej. Software Engineer"
-          />
-          <Field
-            id="targetCompany"
-            label="Empresa"
-            value={form.targetCompany}
-            onChange={set("targetCompany")}
-            error={errors.targetCompany}
-            placeholder="Ej. Tigo Guatemala"
-          />
-        </div>
-      </fieldset>
+      <div className="row">
+        <Field
+          id="desiredRole"
+          label="Puesto al que aplicas"
+          value={form.desiredRole}
+          onChange={set("desiredRole")}
+          error={errors.desiredRole}
+          placeholder="Ej. Analista de datos"
+        />
+        <Field
+          id="targetCompany"
+          label="Empresa"
+          value={form.targetCompany}
+          onChange={set("targetCompany")}
+          error={errors.targetCompany}
+          placeholder="Ej. Tigo Guatemala"
+        />
+      </div>
 
-      <fieldset>
-        <legend>Sobre ti</legend>
-        <div className="row">
-          <Field
-            id="name"
-            label="Tu nombre"
-            value={form.name}
-            onChange={set("name")}
-            optional
-            autoComplete="name"
-            placeholder="Para firmar la carta"
-          />
-          <Field
-            id="yearsExperience"
-            label="Años de experiencia"
-            value={form.yearsExperience}
-            onChange={set("yearsExperience")}
-            inputMode="numeric"
-            error={errors.yearsExperience}
-            placeholder="Ej. 5"
-          />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Tu salario</legend>
+      <div className="salary">
         <div className="row">
           <MoneyField
             id="currentSalary"
             currencyId="currentCurrency"
-            label="Salario mensual actual"
+            label="Salario actual"
             value={form.currentSalary}
             currency={form.currentCurrency}
             onValue={set("currentSalary")}
@@ -212,7 +182,7 @@ export function ProfileForm({
           <MoneyField
             id="desiredSalary"
             currencyId="desiredCurrency"
-            label="Salario mensual que buscas"
+            label="Salario que quieres"
             value={form.desiredSalary}
             currency={form.desiredCurrency}
             onValue={set("desiredSalary")}
@@ -221,35 +191,51 @@ export function ProfileForm({
           />
         </div>
         <p className="private-line" id="salary-note">
-          <LockIcon /> Tu salario no sale de tu dispositivo: solo se usa para tu nota privada.
+          <LockIcon /> Tu salario no sale de tu dispositivo.
         </p>
-      </fieldset>
+      </div>
+
+      <Field
+        id="yearsExperience"
+        label="Años de experiencia"
+        value={form.yearsExperience}
+        onChange={set("yearsExperience")}
+        inputMode="numeric"
+        error={errors.yearsExperience}
+        placeholder="Ej. 5"
+        className="field-short"
+      />
 
       <details
         className="more"
         open={detailsOpen}
         onToggle={(e) => onDetailsOpen((e.currentTarget as HTMLDetailsElement).open)}
       >
-        <summary>
-          <span className="more-title">Agrega detalles para una mejor carta</span>
-          <span className="more-sub">Tus logros, la oferta de trabajo y tu puesto actual. Todo opcional.</span>
-        </summary>
+        <summary>Más detalles (opcional)</summary>
         <div className="more-body">
           <Field
+            id="name"
+            label="Tu nombre"
+            value={form.name}
+            onChange={set("name")}
+            autoComplete="name"
+            placeholder="Para firmar la carta"
+          />
+          <Field
             id="achievements"
-            label="Logros y fortalezas"
+            label="Logros"
             value={form.achievements}
             onChange={set("achievements")}
-            hint="Qué lograste y con qué impacto: proyectos, equipos, mejoras."
-            multiline={4}
+            placeholder="Qué lograste y con qué impacto"
+            multiline={3}
           />
           <Field
             id="jobOffer"
             label="Oferta de trabajo"
             value={form.jobOffer}
             onChange={set("jobOffer")}
-            hint="Pega el anuncio. Si publica un rango salarial, tu nota lo toma en cuenta."
-            multiline={4}
+            placeholder="Pega el anuncio"
+            multiline={3}
           />
           <div className="row">
             <Field
@@ -257,14 +243,12 @@ export function ProfileForm({
               label="Puesto actual"
               value={form.currentRole}
               onChange={set("currentRole")}
-              placeholder="Ej. Desarrolladora backend"
             />
             <Field
               id="currentEmployer"
               label="Empleador actual"
               value={form.currentEmployer}
               onChange={set("currentEmployer")}
-              placeholder="Nombre de la empresa"
             />
           </div>
           <Field
@@ -279,7 +263,7 @@ export function ProfileForm({
       </details>
 
       <button type="submit" className="primary" disabled={busy}>
-        {busy ? "Creando tu carta…" : "Crear carta y nota"}
+        {busy ? "Creando…" : "Crear carta y nota"}
       </button>
     </form>
   );

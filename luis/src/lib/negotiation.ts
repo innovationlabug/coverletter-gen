@@ -386,29 +386,23 @@ export function buildNegotiationNote(input: NoteInputs): NegotiationNote {
 
   // --- when to mention it
   const when: NoteSection = { id: "when", title: "Cuándo y cómo mencionarla", items: [] };
+  // The range itself is shown once, as "Si te piden un número"; these tips don't repeat it.
   if (offerRange && offerRange.min !== offerRange.max) {
     when.items.push(
-      "La oferta ya tiene rango: menciónalo solo cuando te lo pregunten, anclando en la parte alta.",
-      `Frase sugerida: «Por lo que he visto del puesto, estaría buscando entre ${formatMoney(
-        suggestedRange.min,
-        cur,
-      )} y ${formatMoney(suggestedRange.max, cur)} mensuales, según el paquete completo».`,
+      "La oferta ya trae rango: menciónalo solo si te preguntan, anclando en la parte alta.",
+      "Dalo como rango y «según el paquete completo», no como una cifra fija.",
     );
   } else {
     when.items.push(
-      "No lo pongas en la carta. Espera la primera llamada del reclutador o a que te pregunten.",
-      "Si insisten, devuelve la pregunta: «¿Cuál es el rango que tienen presupuestado para el puesto?».",
-      `Si tienes que dar un número, da un rango cuyo piso sea tu meta: ${formatMoney(
-        suggestedRange.min,
-        cur,
-      )} – ${formatMoney(suggestedRange.max, cur)} mensuales.`,
+      "No lo pongas en la carta: espera a que te pregunten.",
+      "Si insisten, pregunta primero: «¿Qué rango tienen previsto para el puesto?».",
     );
   }
   if (band.id === "ambitious" || band.id === "out_of_range") {
-    when.items.push("Llega con 2–3 logros medibles que justifiquen el salto; sin eso, el reclutador lo descartará.");
+    when.items.push("Llega con 2 o 3 logros medibles que justifiquen el salto.");
   }
   if (market?.position === "above_max") {
-    when.items.push("Estás por encima del máximo del mercado: considera negociar por bonos, capacitación o trabajo remoto.");
+    when.items.push("Estás sobre el máximo del mercado: negocia también bonos, capacitación o trabajo remoto.");
   }
 
   const never: NoteSection = {

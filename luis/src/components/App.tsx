@@ -40,8 +40,8 @@ function fallbackNotice(run: Run): string | null {
   const r = run.result;
   if (!r || r.letter.source !== "template") return null;
   if (r.statuses.gemini.status === "blocked")
-    return "Para proteger tus datos, esta carta se armó en tu dispositivo. Revísala y edítala a tu gusto.";
-  if (run.offline) return "Sin conexión: te dejamos una versión base de la carta que puedes editar. Tu nota privada está completa.";
+    return "Para proteger tus datos, esta carta se armó en tu dispositivo. Puedes editarla.";
+  if (run.offline) return "Sin conexión: esta es una versión base de la carta que puedes editar.";
   return "No pudimos contactar al servicio; te dejamos una versión base que puedes editar.";
 }
 
@@ -123,67 +123,41 @@ export function App() {
         <h1 className="wordmark">Carta y copia</h1>
         {!online && (
           <p className="offline" role="status" data-testid="net">
-            Sin conexión. Igual puedes crear tu nota privada y una carta base.
+            Sin conexión. Igual funciona, con una carta base.
           </p>
         )}
       </header>
 
       {view === "form" && (
-        <main className="intro-layout">
-          <div className="intro">
-            <h2 className="intro-title">
-              <span>Una carta para la empresa.</span> <span>Una copia para ti.</span>
-            </h2>
-            <p className="intro-lead">
-              Llena tus datos una vez y recibe tu carta de interés lista para enviar, más una nota privada con cuánto
-              pedir de salario y cuándo decirlo.
-            </p>
-            <div className="sheets-art" aria-hidden="true">
-              <div className="art-copy">
-                <span />
-                <span />
-                <span />
-              </div>
-              <div className="art-letter">
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
-            <div className="intro-tools">
-              <p>
-                ¿Quieres ver cómo funciona?{" "}
-                <button
-                  type="button"
-                  className="link"
-                  onClick={() => {
-                    setForm(EXAMPLE_FORM);
-                    setErrors({});
-                    setDetailsOpen(true);
-                  }}
-                >
-                  Llenar con un ejemplo
-                </button>
-              </p>
-              {dirty && (
-                <button type="button" className="link" onClick={startOver}>
-                  Borrar datos
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="form-card">
-            <ProfileForm
-              form={form}
-              errors={errors}
-              busy={busy}
-              detailsOpen={detailsOpen}
-              onDetailsOpen={setDetailsOpen}
-              onChange={onChange}
-              onSubmit={onSubmit}
-            />
-          </div>
+        <main className="intro">
+          <h2 className="intro-title">Carta para ellos, nota para ti.</h2>
+          <p className="intro-lead">Tu carta de interés y cuánto pedir de salario.</p>
+          <ProfileForm
+            form={form}
+            errors={errors}
+            busy={busy}
+            detailsOpen={detailsOpen}
+            onDetailsOpen={setDetailsOpen}
+            onChange={onChange}
+            onSubmit={onSubmit}
+          />
+          <p className="intro-tools">
+            <button
+              type="button"
+              className="link"
+              onClick={() => {
+                setForm(EXAMPLE_FORM);
+                setErrors({});
+              }}
+            >
+              Llenar con un ejemplo
+            </button>
+            {dirty && (
+              <button type="button" className="link" onClick={startOver}>
+                Borrar datos
+              </button>
+            )}
+          </p>
         </main>
       )}
 
@@ -192,16 +166,13 @@ export function App() {
           <div className="results-bar">
             <button type="button" className="back" onClick={backToForm}>
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               Editar datos
             </button>
             <h2 id="results-title" tabIndex={-1} className="results-title">
-              {run.profile.desiredRole} en {run.profile.targetCompany}
+              {run.profile.desiredRole} · {run.profile.targetCompany}
             </h2>
-            <button type="button" className="link" onClick={startOver}>
-              Empezar de nuevo
-            </button>
           </div>
 
           {run.failed && (
@@ -226,7 +197,7 @@ export function App() {
           )}
 
           {run.result && (
-            <div className="results-grid">
+            <div className="results-stack">
               <LetterSheet key={run.id} letter={run.result.letter} />
               <PrivateNote note={run.result.note} profile={run.profile} offline={run.offline} />
             </div>

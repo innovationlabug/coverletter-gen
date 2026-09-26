@@ -62,7 +62,7 @@ describe('buildNegotiationNote', () => {
     expect(asks.whenToMention.join(' ')).toMatch(/formulario o en el correo/);
     expect(asks.whenToMention[0]).toMatch(/Nunca escribas cifras/);
     const none = buildNegotiationNote({ ...baseProfile, oferta: '' });
-    expect(none.whenToMention.join(' ')).toMatch(/Esperá a que Recursos Humanos/);
+    expect(none.whenToMention.join(' ')).toMatch(/Espera a que Recursos Humanos/);
     const range = buildNegotiationNote(baseProfile);
     expect(range.whenToMention.join(' ')).toMatch(/ya publica un rango/);
   });

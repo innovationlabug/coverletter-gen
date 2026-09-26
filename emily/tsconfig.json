@@ -12,7 +12,7 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
-    "types": ["node", "vite/client"]
+    "types": ["node", "vite/client", "vite-plugin-pwa/client"]
   },
   "include": ["src", "tests", "eval", "scripts", "vite.config.ts", "playwright.config.ts", "vitest.config.ts"]
 }

@@ -13,7 +13,7 @@
     <a class="skip" href="#contenido">Saltar al contenido</a>
 
     <p id="offline" class="offline" role="status" data-testid="offline-banner" hidden>
-      Sin conexión. Igual podés preparar tu carta y tu nota.
+      Sin conexión. Igual puedes preparar tu carta y tu nota.
     </p>
 
     <header class="top">
@@ -24,165 +24,121 @@
     <main id="contenido">
       <!-- Paso 1: tus datos -->
       <section id="paso-datos" class="intake" aria-labelledby="intake-title">
-        <div class="intake__form">
-          <h1 id="intake-title" tabindex="-1">Tu carta de interés, sin empezar de cero.</h1>
-          <p class="lede">
-            Contanos de vos y del puesto que buscás. Te damos la carta lista para copiar y una nota privada para
-            negociar tu salario.
-          </p>
+        <h1 id="intake-title" tabindex="-1">Tu carta de interés, lista para enviar.</h1>
+        <p class="lede">Y una nota privada para negociar tu salario.</p>
 
-          <form id="perfil" class="form" novalidate>
-            <p class="form__example">
-              ¿Solo querés ver cómo funciona?
-              <button type="button" class="link-btn" id="ejemplo" data-testid="fill-example">Usar un ejemplo</button>
-            </p>
+        <form id="perfil" class="form" novalidate>
+          <div class="field">
+            <label for="f-puestoDeseado">Puesto al que aplicas</label>
+            <input id="f-puestoDeseado" name="puestoDeseado" required />
+          </div>
+          <div class="field">
+            <label for="f-empresa">Empresa</label>
+            <input id="f-empresa" name="empresaDestino" autocomplete="off" required />
+          </div>
+          <div class="pair">
+            <div class="field">
+              <label for="f-salarioActual">Salario actual</label>
+              <div class="money">
+                <select name="monedaActual" aria-label="Moneda del salario actual"><option value="GTQ">Q</option><option value="USD">US$</option></select>
+                <input id="f-salarioActual" name="salarioActual" inputmode="decimal" aria-describedby="h-mes" required />
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-salarioDeseado">Salario que quieres</label>
+              <div class="money">
+                <select name="monedaDeseada" aria-label="Moneda del salario que quieres"><option value="GTQ">Q</option><option value="USD">US$</option></select>
+                <input id="f-salarioDeseado" name="salarioDeseado" inputmode="decimal" aria-describedby="h-mes" required />
+              </div>
+            </div>
+          </div>
+          <p class="hint" id="h-mes">Al mes. Tu salario no aparece en la carta y no sale de este dispositivo.</p>
+          <div class="field field--short">
+            <label for="f-anios">Años de experiencia</label>
+            <input id="f-anios" name="aniosExperiencia" inputmode="numeric" required />
+          </div>
 
-            <fieldset>
-              <legend>Sobre vos</legend>
+          <details class="more" id="mas-detalles">
+            <summary>Más detalles <span class="optional">(opcional)</span></summary>
+            <div class="more__body">
               <div class="field">
-                <label for="f-nombre">Nombre completo</label>
-                <input id="f-nombre" name="nombre" autocomplete="name" required />
-              </div>
-              <div class="row">
-                <div class="field grow">
-                  <label for="f-puestoActual">Puesto actual</label>
-                  <input id="f-puestoActual" name="puestoActual" autocomplete="organization-title" required />
-                </div>
-                <div class="field field--short">
-                  <label for="f-anios">Años de experiencia</label>
-                  <input id="f-anios" name="aniosExperiencia" inputmode="numeric" required />
-                </div>
+                <label for="f-nombre">Tu nombre, para la firma</label>
+                <input id="f-nombre" name="nombre" autocomplete="name" />
               </div>
               <div class="field">
-                <label for="f-empleador">Dónde trabajás hoy</label>
-                <input id="f-empleador" name="empleadorActual" autocomplete="organization" required />
-              </div>
-            </fieldset>
-
-            <fieldset>
-              <legend>El puesto que buscás</legend>
-              <div class="field">
-                <label for="f-puestoDeseado">Puesto</label>
-                <input id="f-puestoDeseado" name="puestoDeseado" required />
+                <label for="f-puestoActual">Puesto actual</label>
+                <input id="f-puestoActual" name="puestoActual" autocomplete="organization-title" />
               </div>
               <div class="field">
-                <label for="f-empresa">Empresa</label>
-                <input id="f-empresa" name="empresaDestino" required />
+                <label for="f-empleador">Dónde trabajas hoy</label>
+                <input id="f-empleador" name="empleadorActual" autocomplete="organization" aria-describedby="h-empleador" />
+                <p class="hint" id="h-empleador">No aparece en la carta.</p>
               </div>
-              <details class="disclosure" id="oferta-box">
-                <summary>Pegar la oferta de trabajo <span class="optional">(opcional)</span></summary>
-                <div class="field">
-                  <label for="f-oferta" class="sr">Oferta de trabajo</label>
-                  <textarea id="f-oferta" name="oferta" rows="5" aria-describedby="h-oferta"></textarea>
-                  <p class="hint" id="h-oferta">La carta se ajusta mejor a lo que piden, y la nota compara tu salario con el rango que publican.</p>
-                </div>
-              </details>
-            </fieldset>
-
-            <fieldset>
-              <legend>Tus logros</legend>
               <div class="field">
-                <label for="f-logros">Qué has logrado, en tus palabras</label>
+                <label for="f-logros">Tus logros, uno por línea</label>
                 <textarea
                   id="f-logros"
                   name="logros"
                   rows="4"
-                  required
-                  aria-describedby="h-logros"
                   placeholder="Automaticé los reportes del equipo y ahorramos 20 horas al mes."
                 ></textarea>
-                <p class="hint" id="h-logros">Uno por línea. Con dos o tres basta.</p>
               </div>
-            </fieldset>
-
-            <fieldset>
-              <legend>Tu salario</legend>
-              <div class="money-row">
-                <div class="field">
-                  <label for="f-salarioActual">Hoy ganás (al mes)</label>
-                  <div class="money">
-                    <select name="monedaActual" aria-label="Moneda de tu salario actual"><option value="GTQ">Q</option><option value="USD">US$</option></select>
-                    <input id="f-salarioActual" name="salarioActual" inputmode="decimal" required />
-                  </div>
-                </div>
-                <div class="field">
-                  <label for="f-salarioDeseado">Querés ganar (al mes)</label>
-                  <div class="money">
-                    <select name="monedaDeseada" aria-label="Moneda del salario que querés"><option value="GTQ">Q</option><option value="USD">US$</option></select>
-                    <input id="f-salarioDeseado" name="salarioDeseado" inputmode="decimal" required />
-                  </div>
-                </div>
+              <div class="field">
+                <label for="f-oferta">La oferta de trabajo</label>
+                <textarea id="f-oferta" name="oferta" rows="4" aria-describedby="h-oferta"></textarea>
+                <p class="hint" id="h-oferta">Pégala y la carta se ajusta a lo que piden.</p>
               </div>
-              <p class="reassure">Tu salario no aparece en la carta y no sale de este dispositivo.</p>
-            </fieldset>
-
-            <p id="form-error" class="form-error" role="alert" hidden></p>
-
-            <div class="actions">
-              <button type="submit" class="btn btn--primary" data-testid="generate">Preparar carta y nota</button>
-            </div>
-
-            <details class="disclosure disclosure--quiet">
-              <summary>Opciones</summary>
               <label class="check">
                 <input type="checkbox" name="soloDispositivo" data-testid="device-only" />
-                <span>No usar internet para escribir la carta. Vas a recibir la versión base, o la de tu dispositivo si la descargaste.</span>
+                <span>No usar internet para escribir la carta</span>
               </label>
-            </details>
-          </form>
-        </div>
+            </div>
+          </details>
 
-        <div class="intake__preview" aria-hidden="true">
-          <div class="preview-sheet">
-            <p class="preview-sheet__line">Estimado equipo de <span data-bind="empresaDestino" data-empty="la empresa">la empresa</span>:</p>
-            <p class="preview-sheet__line">
-              Me interesa el puesto de <span data-bind="puestoDeseado" data-empty="tu próximo puesto">tu próximo puesto</span>.
-            </p>
-            <div class="preview-sheet__blank"></div>
-            <p class="preview-sheet__line">Atentamente,</p>
-            <p class="preview-sheet__line preview-sheet__sign"><span data-bind="nombre" data-empty="Tu nombre">Tu nombre</span></p>
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+
+          <div class="actions">
+            <button type="submit" class="btn btn--primary" data-testid="generate">Preparar carta y nota</button>
+            <button type="button" class="link-btn link-btn--quiet" id="ejemplo" data-testid="fill-example">Probar con un ejemplo</button>
           </div>
-        </div>
+        </form>
       </section>
 
       <!-- Paso 2: tu carta y tu nota -->
       <section id="paso-carta" class="results" aria-labelledby="results-title" hidden>
-        <div class="results__main">
-          <h1 id="results-title" tabindex="-1">Tu carta</h1>
+        <h1 id="results-title" tabindex="-1">Tu carta</h1>
 
-          <div class="toolbar">
-            <fieldset class="versions" id="versions" hidden>
-              <legend>Versión</legend>
-              <div class="versions__options">
-                <label data-version="nube" hidden><input type="radio" name="version" value="nube" data-testid="version-nube" /><span>En línea</span></label>
-                <label data-version="local" hidden><input type="radio" name="version" value="local" data-testid="version-local" /><span>En tu dispositivo</span></label>
-                <label data-version="plantilla"><input type="radio" name="version" value="plantilla" data-testid="version-plantilla" /><span>Base</span></label>
-              </div>
-            </fieldset>
-            <button type="button" class="btn btn--quiet btn--small" id="copiar" data-testid="copy" disabled>Copiar carta</button>
-          </div>
-
-          <p id="letter-notice" class="notice" data-testid="letter-notice" role="status" hidden></p>
-
-          <article id="hoja" class="sheet" aria-label="Carta" aria-live="polite" aria-busy="false" data-testid="letter"></article>
+        <div class="toolbar">
+          <fieldset class="versions" id="versions" hidden>
+            <legend class="sr">Versión de la carta</legend>
+            <div class="versions__options">
+              <label data-version="nube" hidden><input type="radio" name="version" value="nube" data-testid="version-nube" /><span>En línea</span></label>
+              <label data-version="local" hidden><input type="radio" name="version" value="local" data-testid="version-local" /><span>En tu dispositivo</span></label>
+              <label data-version="plantilla"><input type="radio" name="version" value="plantilla" data-testid="version-plantilla" /><span>Base</span></label>
+            </div>
+          </fieldset>
+          <button type="button" class="btn btn--quiet btn--small" id="copiar" data-testid="copy" disabled>Copiar</button>
         </div>
 
-        <aside class="results__side" aria-label="Tu nota y opciones">
-          <section id="nota" class="note" aria-labelledby="nota-title" data-testid="note">
-            <h2 id="nota-title">Tu nota privada</h2>
-            <div id="nota-body"></div>
-          </section>
+        <p id="letter-notice" class="notice" data-testid="letter-notice" role="status" hidden></p>
 
-          <section id="modelo" class="offline-card" aria-labelledby="modelo-title" data-testid="model-card" hidden>
-            <h2 id="modelo-title">Usar sin internet</h2>
-            <p id="model-desc"></p>
-            <div class="progress" id="model-progress" hidden>
-              <progress id="model-bar" max="100" value="0" aria-labelledby="modelo-title"></progress>
-              <span id="model-bytes" aria-live="polite"></span>
-            </div>
-            <button type="button" class="btn btn--quiet btn--small" id="model-load" data-testid="model-load"></button>
-          </section>
-        </aside>
+        <article id="hoja" class="sheet" aria-label="Carta" aria-live="polite" aria-busy="false" data-testid="letter"></article>
+
+        <section id="nota" class="note" aria-labelledby="nota-title" data-testid="note">
+          <h2 id="nota-title">Tu nota privada</h2>
+          <div id="nota-body"></div>
+        </section>
+
+        <div id="modelo" class="offline-line" data-testid="model-card" hidden>
+          <p id="model-desc">
+            <button type="button" class="link-btn" id="model-load" data-testid="model-load"></button>
+            <span id="model-hint"></span>
+          </p>
+          <div class="progress" id="model-progress" hidden>
+            <progress id="model-bar" max="100" value="0" aria-label="Descarga de la versión sin internet"></progress>
+            <span id="model-bytes" aria-live="polite"></span>
+          </div>
+        </div>
       </section>
     </main>
 

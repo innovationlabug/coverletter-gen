@@ -14,19 +14,20 @@ La interfaz está pensada para quien busca trabajo, no para ingenieros: no muest
 
 | Formulario | Carta y nota privada |
 |---|---|
-| ![Formulario vacío](docs/screenshots/ui-desktop-1-form.png) | ![Carta y nota en producción (Tavily y JSearch reales, modo oscuro)](docs/screenshots/produccion-carta-y-nota.jpg) |
+| ![Formulario](docs/screenshots/ui-desktop-form.png) | ![Carta y nota privada (producción, con Tavily y JSearch reales)](docs/screenshots/produccion-resultados.png) |
 
-Móvil (390 px): [formulario](docs/screenshots/ui-mobile-1-form.png), [formulario con ejemplo](docs/screenshots/ui-mobile-1-form-filled.png), [carta](docs/screenshots/ui-mobile-2-letter.png), [nota privada](docs/screenshots/ui-mobile-3-note.png). Escritorio: [formulario con ejemplo](docs/screenshots/ui-desktop-1-form-filled.png), [nota privada](docs/screenshots/ui-desktop-3-note.png), [modo oscuro](docs/screenshots/ui-desktop-2-letter-dark.png).
+Móvil (390 px): [formulario](docs/screenshots/ui-mobile-form.png), [carta y nota](docs/screenshots/ui-mobile-results.png). Escritorio en [modo oscuro](docs/screenshots/ui-desktop-results-dark.png).
 
-- **Formulario corto**: puesto, empresa, nombre (opcional), años de experiencia y los dos salarios (GTQ por defecto). Logros, oferta pegada, puesto y empleador actual y ubicación (por defecto "Guatemala") van en un desplegable opcional. "Llenar con un ejemplo" es un enlace discreto.
+- **Una sola columna**: título corto, una línea de subtítulo y el formulario.
+- **Cinco campos a la vista**: puesto, empresa, salario actual, salario que quieres (Q o US$) y años de experiencia. Nombre, logros, oferta pegada, puesto y empleador actual y ubicación (por defecto "Guatemala") van plegados en "Más detalles (opcional)". Una sola línea de privacidad: "Tu salario no sale de tu dispositivo." "Llenar con un ejemplo" es un enlace pequeño bajo el botón.
 - **Un solo estado de carga** ("Investigando la empresa…" → "Escribiendo tu carta…").
-- **Resultados**: primero la carta (editable, botón *Copiar*, fuentes de la empresa como notas al pie), luego la nota privada en papel "carbón": veredicto, barra del rango de mercado si hay datos, el rango para decir en voz alta y 2–4 consejos de cuándo mencionarlo; el resto va en "Más detalles".
-- **Fallas en lenguaje simple**: si la IA no responde, "No pudimos contactar al servicio; te dejamos una versión base que puedes editar". Sin conexión, un único aviso pequeño arriba.
-- Tema claro con modo oscuro por `prefers-color-scheme`, móvil primero, sin scroll horizontal a 375 px.
+- **Resultados**: primero la carta (editable, botón *Copiar*, fuentes como notas al pie). Luego la nota privada: veredicto en una línea ("Realista · pides 27 % más"), la barra del mercado solo si hay datos, "Si te piden un número" con el rango (una sola vez) y dos consejos. Todo lo demás va en "Ver más".
+- **Fallas en lenguaje simple**: si la IA no responde, "No pudimos contactar al servicio; te dejamos una versión base que puedes editar". Sin conexión, un aviso pequeño arriba.
+- Tema claro y oscuro (`prefers-color-scheme`), móvil primero, sin scroll horizontal a 375 px (lo verifica un e2e).
 
 ## Qué hace
 
-- Formulario: puesto deseado, empresa destino, nombre, años de experiencia, salario actual y deseado (GTQ/USD); opcionales en un desplegable: logros, oferta pegada, puesto actual, empleador actual y ubicación.
+- Formulario: puesto deseado, empresa destino, salario actual y deseado (GTQ/USD) y años de experiencia; opcionales en un desplegable: nombre, logros, oferta pegada, puesto actual, empleador actual y ubicación.
 - En paralelo consulta **Tavily** (investigación de la empresa) y **JSearch** (salario de mercado), luego pide la carta a **Gemini** con los hechos de Tavily ya limpios.
 - La nota de negociación, el redactor, el cálculo de brecha salarial y la carta de respaldo corren **localmente**.
 - **Sin conexión**: la app carga desde el service worker y entrega la nota (con el benchmark en caché, si lo hay) y una carta de plantilla.
@@ -150,7 +151,7 @@ Pruebas:
 - `tests/router.test.ts`: allowlist exacta por destino, redacción en texto libre y bloqueo de residuos en campos estructurados.
 - `tests/leak.test.ts`: **la prueba de la condición 2.** Mockea `fetch` global, ejecuta `generate()` con las **rutas reales** en el medio y captura cada solicitud en los dos saltos (navegador → ruta y ruta → Tavily/JSearch/Gemini). Busca el salario actual y el deseado en todas sus formas escritas, el empleador (sin tildes) y el nombre. Incluye un perfil con el salario pegado en "logros" (se redacta) y uno con empresa destino = empleador (se bloquea). Se verificó que la prueba **falla** si se desactiva la redacción del router.
 - `tests/apis-failure.test.ts`: timeouts, 429 → reintento → éxito, 500 dos veces → plantilla, 403 de JSearch → nota sin benchmark, offline → plantilla, caché de 7 días y `localStorage` que lanza excepciones.
-- `e2e/app.spec.ts` (Playwright contra `next build && next start`): validación; formulario → carta + nota con las rutas mockeadas, revisando **por intercepción de red** que ningún cuerpo enviado contenga salarios, empleador ni nombre; `context.setOffline(true)` + recarga → la app carga desde el service worker, entrega nota + carta base y no sale ninguna petición; benchmark desde caché offline; JSearch 403 → nota sin mercado con mensaje simple; Gemini falla → carta base con aviso simple. Todas verifican además que la UI no muestre nombres de proveedores, códigos HTTP ni payloads.
+- `e2e/app.spec.ts` (Playwright contra `next build && next start`): validación; formulario → carta + nota con las rutas mockeadas, revisando **por intercepción de red** que ningún cuerpo enviado contenga salarios, empleador ni nombre; `context.setOffline(true)` + recarga → la app carga desde el service worker, entrega nota + carta base y no sale ninguna petición; benchmark desde caché offline; JSearch 403 → nota sin mercado con mensaje simple; Gemini falla → carta base con aviso simple; a 375 px no hay scroll horizontal (formulario y resultados). Todas verifican además que la UI no muestre nombres de proveedores, códigos HTTP ni payloads.
 
 ## Cómo correr la app
 

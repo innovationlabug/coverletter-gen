@@ -3,7 +3,7 @@ import { test, type Page } from "@playwright/test";
 /**
  * Capturas de la UI para el README / revisión de diseño. No es una prueba: solo corre con
  *   SCREENSHOTS=1 npx playwright test screenshots
- * y escribe docs/screenshots/ui-*.png. Las APIs se simulan igual que en flow.spec.ts.
+ * y escribe docs/screenshots/ui-{form,results}-{desktop,mobile}.png. Las APIs se simulan igual que en flow.spec.ts.
  */
 test.skip(!process.env.SCREENSHOTS, "solo con SCREENSHOTS=1");
 
@@ -51,25 +51,15 @@ for (const size of SIZES) {
     await page.setViewportSize({ width: size.width, height: size.height });
     const shot = (name: string, fullPage = false) => page.screenshot({ path: `docs/screenshots/ui-${name}-${size.name}.png`, fullPage });
 
-    await mock(page, 8000);
+    await mock(page, 1500);
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     await shot("form");
 
     await page.getByTestId("load-example").click();
     await page.getByTestId("run").click();
-    await page.getByTestId("waking").waitFor({ timeout: 8000 });
-    await page.getByTestId("waiting").scrollIntoViewIfNeeded();
-    await shot("waiting");
-
     await page.getByTestId("letter-text").waitFor({ timeout: 20000 });
-    await page.getByTestId("draft").getByText("primera llamada").first().waitFor();
-    await page.getByTestId("letter").evaluate((el) => el.scrollIntoView({ block: "start" }));
-    await page.evaluate(() => window.scrollBy(0, -16));
-    await shot("letter");
-    await page.getByTestId("note").evaluate((el) => el.scrollIntoView({ block: "start" }));
-    await page.evaluate(() => window.scrollBy(0, -16));
-    await shot("note");
-    await shot("full", true);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await shot("results", true);
   });
 }

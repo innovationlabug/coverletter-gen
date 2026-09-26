@@ -2,15 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EMPTY_FORM, EXAMPLE_FORM, type FormState } from "@/lib/example";
-import { formToProfile, type FormErrors } from "@/lib/form";
+import { formToProfile, REQUIRED, type FormErrors } from "@/lib/form";
 import { generate, type GenerateResult, type OrchestratorEvent } from "@/lib/orchestrator";
 import { DEFAULT_MODEL, isModelId, type ModelId } from "@/lib/schemas";
-import { buildPayload } from "@/lib/router";
-import { computeFacts, type NegotiationFacts } from "@/lib/facts";
-import { buildHeuristicNote, type HeuristicNote } from "@/lib/note";
 import { ProfileForm } from "./ProfileForm";
 import { NoteCard, type DraftView } from "./NoteCard";
-import { LetterCard, LetterPending } from "./LetterCard";
+import { LetterCard } from "./LetterCard";
 
 function useOnline(): boolean {
   const [online, setOnline] = useState(true);
@@ -27,9 +24,15 @@ function useOnline(): boolean {
   return online;
 }
 
-interface Preview {
-  facts: NegotiationFacts;
-  note: HeuristicNote;
+function draftView(result: GenerateResult): DraftView {
+  return result.draft
+    ? {
+        kind: "ready",
+        text: result.draft.text,
+        flagged: result.draft.consistency.flagged.map((f) => f.raw),
+        offTopic: !result.draft.topic.onTopic,
+      }
+    : { kind: "missing", offline: result.mode === "offline" };
 }
 
 export function Lab() {
@@ -40,11 +43,15 @@ export function Lab() {
   const [model, setModel] = useState<ModelId>(DEFAULT_MODEL);
   const [running, setRunning] = useState(false);
   const [slow, setSlow] = useState(false);
-  const [liveDraft, setLiveDraft] = useState("");
-  const [preview, setPreview] = useState<Preview | null>(null);
   const [result, setResult] = useState<GenerateResult | null>(null);
-  const [exampleLoads, setExampleLoads] = useState(0);
+  // Tras generar, el formulario se pliega a una línea con "Editar datos".
+  const [editing, setEditing] = useState(true);
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  const loadExample = useCallback(() => {
+    setForm(EXAMPLE_FORM);
+    setErrors({});
+  }, []);
 
   useEffect(() => {
     fetch("/api/config")
@@ -55,29 +62,34 @@ export function Lab() {
       .catch(() => {});
   }, []);
 
+  // "Usar un ejemplo" es un enlace a /?ejemplo: si se tocó antes de que la app cargara, se aplica aquí.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("ejemplo")) {
+      loadExample();
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, [loadExample]);
+
   const onEvent = useCallback((e: OrchestratorEvent) => {
-    if (e.type === "draft-delta") setLiveDraft((d) => d + e.text);
-    else if (e.type === "ollama-phase" && e.phase === "waking") setSlow(true);
+    if (e.type === "ollama-phase" && e.phase === "waking") setSlow(true);
   }, []);
 
   async function run() {
     const { profile, errors } = formToProfile(form);
     setErrors(errors);
     if (!profile) {
-      const first = Object.keys(errors)[0];
+      const first = REQUIRED.find((k) => errors[k]) ?? Object.keys(errors)[0];
       if (first) document.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
       return;
     }
-    // Los números son deterministas: se muestran de inmediato, antes de que responda cualquier modelo.
-    const facts = computeFacts(buildPayload(profile, "device"));
-    setPreview({ facts, note: buildHeuristicNote(facts) });
     setRunning(true);
     setSlow(false);
     setResult(null);
-    setLiveDraft("");
-    if (window.matchMedia("(max-width: 959px)").matches) {
-      requestAnimationFrame(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
-    }
+    setEditing(false);
+    requestAnimationFrame(() => {
+      resultsRef.current?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
     try {
       setResult(await generate(profile, { model, offline: !navigator.onLine, onEvent }));
     } finally {
@@ -86,79 +98,58 @@ export function Lab() {
     }
   }
 
-  const note = result?.note ?? preview?.note ?? null;
-  const facts = result?.facts ?? preview?.facts ?? null;
-  const draftView: DraftView | null = result
-    ? result.draft
-      ? {
-          kind: "ready",
-          text: result.draft.text,
-          flagged: result.draft.consistency.flagged.map((f) => f.raw),
-          offTopic: !result.draft.topic.onTopic,
-        }
-      : { kind: "missing", offline: result.mode === "offline" }
-    : running
-      ? { kind: "pending", live: liveDraft }
-      : null;
+  function edit() {
+    setEditing(true);
+    requestAnimationFrame(() => document.querySelector<HTMLElement>('[name="desiredRole"]')?.focus());
+  }
 
   return (
     <div className="page">
       <header className="masthead">
         <p className="wordmark">Cathy</p>
-        <h1>Tu carta de interés y cómo hablar de salario</h1>
-        <p className="lede">
-          Llena tus datos una vez. Recibes una carta lista para enviar con tu CV y una nota privada, solo para ti, con cuánto pedir y
-          cuándo decirlo.
-        </p>
+        <h1>Tu carta y cuánto pedir</h1>
+        <p className="lede">Una carta para enviar con tu CV y una nota privada, solo para ti.</p>
       </header>
 
       {!online && (
         <p className="offline" role="status" data-testid="offline-banner">
-          Sin conexión. Igual puedes generar una carta básica y tu nota con los números.
+          Sin conexión: igual puedes generar una carta básica y tu nota.
         </p>
       )}
 
-      <main className="layout">
-        <ProfileForm
-          key={exampleLoads}
-          form={form}
-          errors={errors}
-          running={running}
-          onChange={setForm}
-          onExample={() => {
-            setForm(EXAMPLE_FORM);
-            setErrors({});
-            setExampleLoads((n) => n + 1);
-          }}
-          onSubmit={run}
-        />
+      <main>
+        {editing ? (
+          <ProfileForm form={form} errors={errors} running={running} onChange={setForm} onExample={loadExample} onSubmit={run} />
+        ) : (
+          <p className="recap" data-testid="recap">
+            <span>
+              {form.desiredRole.trim()} · {form.targetCompany.trim()}
+            </span>
+            {!running && (
+              <button type="button" className="link" onClick={edit} data-testid="edit">
+                Editar datos
+              </button>
+            )}
+          </p>
+        )}
 
-        <div className="results" ref={resultsRef} aria-label="Resultados">
-          {!note && (
-            <div className="placeholder" aria-hidden>
-              <div className="placeholder-sheet">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
-              <p>Aquí aparecerá tu carta, y debajo tu nota privada.</p>
-            </div>
-          )}
-
+        <div className="results" ref={resultsRef} tabIndex={-1} aria-label="Resultados">
           {running && (
-            <div className="progress" role="status" data-testid="waiting">
+            <div className="waiting" role="status" data-testid="waiting">
               <p>
-                <strong>Preparando tu carta y tu nota…</strong>
+                Preparando tu carta y tu nota…
                 {slow && <span data-testid="waking"> Puede tardar hasta un minuto la primera vez.</span>}
               </p>
               <div className="progress-bar" aria-hidden />
             </div>
           )}
 
-          {result ? <LetterCard result={result} /> : running ? <LetterPending /> : null}
-          {note && facts && draftView && <NoteCard note={note} facts={facts} draft={draftView} />}
+          {result && (
+            <>
+              <LetterCard result={result} />
+              <NoteCard note={result.note} facts={result.facts} draft={draftView(result)} />
+            </>
+          )}
         </div>
       </main>
     </div>

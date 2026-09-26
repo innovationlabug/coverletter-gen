@@ -46,13 +46,13 @@ La configuración web de Firebase es pública por diseño, pero la regla del pro
 
 ## 4. Lo que encontró la evaluación en su primera corrida (y corregimos)
 
-La primera corrida de `npm run eval -- --leaks-only` (salida guardada en `docs/.run0-leaks-baseline.txt`) encontró errores **del redactor, no de los canarios**:
+La primera corrida de `npm run eval -- --leaks-only` (salida guardada en `docs/.run0-leaks-baseline.txt`) encontró errores **del redactor, no de los datos trampa**:
 
 | Hallazgo | Causa | Arreglo |
 |---|---|---|
 | **7 de 18 casos bloqueados** sin motivo real | La compuerta revisa el prompt completo, y el patrón de personas usaba `\s+`, que cruza saltos de línea: "Puesto al que aplica: Coordinadora de enfermería⏎**Empresa** destino" se leía como *cargo + nombre*. El error estaba en **nuestra propia plantilla de prompt**. | Los patrones de personas y direcciones usan `[ \t]` (no cruzan líneas). Prueba de regresión. |
 | "Lead Product Designer" tachado como persona | "lead" estaba en la lista de cargos | Se quitó; prueba de regresión |
-| "Residenciales Los Álamos" (canario **fácil**) se fugó | Palabras clave de zona en minúscula y sin bandera `i` | Palabra clave insensible a mayúsculas; prueba de regresión |
+| "Residenciales Los Álamos" (dato trampa **fácil**) se fugó | Palabras clave de zona en minúscula y sin bandera `i` | Palabra clave insensible a mayúsculas; prueba de regresión |
 | La empresa destino "Café Calle Real" tachada como dirección | Nada distinguía una empresa de una calle | **Textos públicos declarados** (empresa destino y puesto deseado) quedan protegidos: una detección que cae entera dentro de ellos se descarta. Prueba de regresión. |
 
 Resultado, antes → después:
@@ -73,7 +73,7 @@ También encontró (en la parte de calidad):
 
 ### Segunda corrida (la completa, con cartas y juez)
 
-- **Las fugas se escriben en la carta.** El canario difícil "ana lópez" (en minúscula) se escapó del redactor, y Gemini lo devolvió **capitalizado dentro de la carta**: "Ana López". Lo mismo con "Ricardo Arzú" (el cargo "CEO" no está en la lista de cargos): la carta dice "Ejecutivo Ricardo Arzú". Un nombre de tercero que se escapa no solo llega a Google, **termina en un documento que se envía a otra empresa**. El reporte ahora cuenta cuántas fugas llegan a la carta (sección 2.5 de `VALIDACION.md`).
+- **Las fugas se escriben en la carta.** El dato trampa difícil "ana lópez" (en minúscula) se escapó del redactor, y Gemini lo devolvió **capitalizado dentro de la carta**: "Ana López". Lo mismo con "Ricardo Arzú" (el cargo "CEO" no está en la lista de cargos): la carta dice "Ejecutivo Ricardo Arzú". Un nombre de tercero que se escapa no solo llega a Google, **termina en un documento que se envía a otra empresa**. El reporte ahora cuenta cuántas fugas llegan a la carta (sección 2.5 de `VALIDACION.md`).
 - **Confusión entre posición y calidad en el juez.** El orden "aleatorio" con semilla dejó la carta de la nube en la posición C en 12 de 18 casos, y C tuvo el promedio más alto (4.56 vs 3.73–3.94). Con eso no se puede separar el sesgo de posición de la calidad. Se cambió a una asignación **balanceada**: las 6 permutaciones, 3 casos cada una, así cada fuente cae 6 veces en A, 6 en B y 6 en C.
 - **Falsos positivos de las reglas de carta** (no del router): "cien mil descargas" contado como salario; "Café Calle Real" (la empresa destino) como dirección; "Ingeniero React Native Senior" como persona. Y uno del redactor: "un **mil**lón" coincidía con "un mil". Arreglados y con pruebas de regresión.
 - La plantilla escribía "; y Hice …" e "y implementé" (el juez lo señaló): ahora baja la inicial de más verbos comunes y usa "e" antes de sonido /i/.
@@ -91,10 +91,12 @@ Al verificar el modelo en el navegador contra `vite dev`, la descarga se quedó 
 - En móvil la página medía 564 px en un viewport de 390: la tabla de tachaduras forzaba el ancho mínimo de las columnas del grid. Solución: `grid-template-columns: minmax(0, 1fr)`.
 - `.progress { display: flex }` anulaba el atributo `hidden`; se añadió `[hidden] { display: none !important }`.
 - El formulario *sticky* con scroll propio cortaba contenido y era incómodo en páginas largas; se quitó.
+- **Interfaz mínima.** La revisión de la dueña del proyecto fue "las interfaces se ven algo llenas". Quedó una sola columna centrada; el formulario muestra solo lo que la carta y la nota necesitan (puesto al que aplicas, empresa, los dos salarios y años de experiencia), y nombre, puesto y empleador actuales, logros, oferta y la opción sin internet pasaron a **Más detalles (opcional)**, así que ya no son obligatorios (el router, la plantilla y el prompt ya aceptaban campos vacíos). Se quitó la hoja rayada decorativa del formulario; la nota muestra veredicto, una frase, el rango para pedir y dos consejos, con el resto bajo *Ver más*; la tarjeta "Usar sin internet" es ahora una sola línea que se convierte en barra de progreso.
+- **Tuteo, no voseo.** La interfaz y los textos de la nota decían "Contanos de vos", "ganás", "Preparate"; se pasó todo a tú ("ganas", "Prepárate"), también en README y en el reporte de la evaluación.
 
 ## 8. Otras decisiones
 
-- **Tu nombre viaja como `{{NOMBRE}}`** y se restituye en el dispositivo: la nube escribe la firma sin saber quién sos.
+- **Tu nombre viaja como `{{NOMBRE}}`** y se restituye en el dispositivo: la nube escribe la firma sin saber quién eres.
 - **El salario deseado tampoco sale**: la carta no debe mencionar cifras; solo lo usa la nota.
 - **Constante de cambio** `USD_TO_GTQ = 7.70` (redondeada; las bandas de la nota tienen 10–15 puntos de ancho, así que ±2 % no cambia el consejo).
 - **No se guarda nada en `localStorage`**: sería guardar el salario en claro en el navegador.

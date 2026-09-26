@@ -68,18 +68,24 @@ async function waitForOfflineShell(page: Page) {
 async function fillForm(page: Page) {
   await page.getByLabel("Puesto al que aplicas").fill("Software Engineer");
   await page.getByLabel("Empresa", { exact: true }).fill("Tigo Guatemala");
-  await page.getByLabel("Tu nombre").fill("Ana Lucía Pérez");
-  await page.getByLabel("Años de experiencia").fill("5");
   await page.locator("#currentSalary").fill("15000");
   await page.locator("#desiredSalary").fill("19000");
-  // Optional details live behind a disclosure; location defaults to Guatemala.
-  await page.getByText("Agrega detalles para una mejor carta").click();
+  await page.getByLabel("Años de experiencia").fill("5");
+  // Everything else lives behind one collapsed disclosure; location defaults to Guatemala.
+  await expect(page.getByLabel("Tu nombre")).toBeHidden();
+  await page.getByText("Más detalles (opcional)").click();
   await expect(page.getByLabel("Ubicación")).toHaveValue("Guatemala");
+  await page.getByLabel("Tu nombre").fill("Ana Lucía Pérez");
   await page.getByLabel("Puesto actual").fill("Desarrolladora backend");
   await page.getByLabel("Empleador actual").fill("Banco Industrial");
   await page
-    .getByLabel("Logros y fortalezas")
+    .getByLabel("Logros")
     .fill("Migré 12 servicios a Kubernetes. En Banco Industrial gano Q15,000. Lideré un equipo de 4 personas.");
+}
+
+/** Open the note's single "Ver más" disclosure. */
+async function openNoteMore(page: Page) {
+  await page.getByTestId("note").getByText("Ver más").click();
 }
 
 const SUBMIT = "Crear carta y nota";
@@ -118,9 +124,17 @@ test("online: form → letter with sources + private note, nothing sensitive sen
 
   const note = page.getByTestId("note");
   await expect(note).toContainText("Solo para ti");
-  await expect(note).toContainText("Realista");
+  await expect(note.locator(".verdict")).toHaveText("Realista · pides 27 % más");
   await expect(note).toContainText("Glassdoor");
   await expect(note).toContainText("Si te piden un número");
+  // The suggested range is shown once, and at most two tips are visible.
+  const range = (await note.locator(".ask-range").innerText()).split(" ")[0];
+  const visible = await note.innerText();
+  expect(visible.split(range.split("–")[1]).length - 1).toBe(1);
+  await expect(note.locator(".tips li")).toHaveCount(2);
+  await expect(note.getByText("Lo que nunca va por escrito")).toBeHidden();
+  await openNoteMore(page);
+  await expect(note.getByText("Lo que nunca va por escrito")).toBeVisible();
 
   await expectNoInternals(page);
 
@@ -163,7 +177,8 @@ test("offline: app shell loads from the service worker and still produces note +
   await expect(letter).not.toContainText("Banco Industrial");
   await expect(page.getByTestId("notice")).toContainText("versión base de la carta que puedes editar");
   await expect(page.getByTestId("note")).toContainText("Realista");
-  await expect(page.getByTestId("note")).toContainText("Sin conexión no pudimos consultar salarios");
+  await openNoteMore(page);
+  await expect(page.getByTestId("note").getByText(/Sin conexión no pudimos consultar salarios/)).toBeVisible();
   await expectNoInternals(page);
   // Nothing left the device.
   expect(bodies).toHaveLength(0);
@@ -184,7 +199,7 @@ test("offline with a saved market benchmark still shows the market comparison", 
   await page.getByRole("button", { name: SUBMIT }).click();
   const note = page.getByTestId("note");
   await expect(note).toContainText("Glassdoor");
-  await expect(note).toContainText("Datos guardados de tu consulta anterior");
+  await expect(note.locator(".market-source")).toContainText("datos guardados");
   await expect(note.getByRole("img", { name: /Mercado: de Q11,625 a Q22,333/ })).toBeVisible();
   expect(bodies).toHaveLength(3); // no new request while offline
 });
@@ -202,8 +217,10 @@ test("salary service refuses (JSearch 403) → plain-language note without marke
   await page.getByRole("button", { name: SUBMIT }).click();
   await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "gemini");
   const note = page.getByTestId("note");
-  await expect(note).toContainText("No encontramos datos de mercado para este puesto");
   await expect(note).toContainText("Realista");
+  await expect(note.getByRole("img", { name: /Mercado/ })).toHaveCount(0);
+  await openNoteMore(page);
+  await expect(note.getByText(/No encontramos datos de mercado para este puesto/)).toBeVisible();
   await expect(note).not.toContainText("suscrita");
   await expectNoInternals(page);
   for (const b of bodies) expect(b).not.toMatch(LEAK);
@@ -222,4 +239,19 @@ test("AI letter service fails → base letter with a plain-language notice", asy
     "No pudimos contactar al servicio; te dejamos una versión base que puedes editar.",
   );
   await expectNoInternals(page);
+});
+
+test("375 px: no horizontal scroll on the form or the results", async ({ page, context }) => {
+  await mockApis(context);
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+  const noHScroll = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+  expect(await noHScroll()).toBe(true);
+  await page.getByRole("button", { name: "Llenar con un ejemplo" }).click();
+  await page.getByText("Más detalles (opcional)").click();
+  expect(await noHScroll()).toBe(true);
+  await page.getByRole("button", { name: SUBMIT }).click();
+  await expect(page.getByTestId("note")).toBeVisible();
+  await openNoteMore(page);
+  expect(await noHScroll()).toBe(true);
 });

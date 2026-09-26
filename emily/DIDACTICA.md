@@ -22,7 +22,7 @@
 | # | Paso | Qué pasó | Severidad | Corrección aplicada |
 |---|---|---|---|---|
 | 1 | §1 Arquitectura | La imagen `docs/diagrams/arquitectura.png` no existía: lo primero que veía era una imagen rota. | confuso | Se agregó el diagrama. |
-| 2 | Antes del §3 | El README no decía que se necesita acceso al repo privado **y** ser miembro del proyecto de Firebase. Para un externo, el §3.1 es un callejón sin salida. | confuso (bloqueante sin acceso) | Nueva sección "Quién puede seguir este README", con qué hacer si no tenés acceso a Firebase. |
+| 2 | Antes del §3 | El README no decía que se necesita acceso al repo privado **y** ser miembro del proyecto de Firebase. Para un externo, el §3.1 es un callejón sin salida. | confuso (bloqueante sin acceso) | Nueva sección "Quién puede seguir este README", con qué hacer si no tienes acceso a Firebase. |
 | 3 | §3 `npm ci` | `EACCES` en la caché de npm. | menor | Ya estaba cubierto en *Solución de problemas*, y funcionó con `--cache`. |
 | 4 | §3 `npm ci` | npm 12 bloquea scripts de 6 paquetes, pero el README nombraba 2. `node_modules` pesa ~850 MB, no ~700 MB. | menor | Lista completa de paquetes y tamaño corregido. |
 | 5 | §3.1 | `apps:sdkconfig` imprime JSON puro con 2 campos de más, no "un objeto `firebaseConfig`". | menor | Se explica qué 7 campos copiar. |
@@ -36,7 +36,7 @@
 ### Qué aprendimos de la prueba
 
 - **La primera fricción fue visual, no técnica.** Una imagen rota al principio le quita confianza a todo lo que sigue.
-- **Los permisos son parte de las instrucciones.** El README asumía que quien lo leyera era la dueña del proyecto. Escribir "quién puede seguir esto" y "qué hacer si no podés" cambió un bloqueo por un desvío.
+- **Los permisos son parte de las instrucciones.** El README asumía que quien lo leyera era la dueña del proyecto. Escribir "quién puede seguir esto" y "qué hacer si no puedes" cambió un bloqueo por un desvío.
 - **Una salida correcta que parece un error es un error de documentación.** El `--leaks-only` reporta fugas *a propósito* (son los casos difíciles), y sin decirlo asusta.
 - **La tabla de *Solución de problemas* funcionó.** El único error real (`EACCES`) se resolvió sin ayuda porque estaba ahí.
 

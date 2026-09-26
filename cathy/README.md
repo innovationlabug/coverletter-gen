@@ -15,13 +15,13 @@ Le cuentas tu situación tal cual (puesto, empleador, **salario actual**, puesto
 1. **Carta de interés** lista para enviar.
 2. **Nota privada**: brecha salarial, banda (conservador → agresivo), cómo se compara con el rango publicado, **cuándo mencionar la expectativa** y un borrador en prosa escrito por el modelo local. Las cifras de la nota salen de las heurísticas, nunca del modelo, y cualquier número del borrador que no coincida con lo calculado se subraya con un aviso en lenguaje llano.
 
-La interfaz está pensada para quien busca trabajo, no para quien la construyó: un formulario corto (logros y oferta quedan como opcionales plegables), un solo botón, la carta primero y la nota privada después. La UI **no** muestra tiers, modelos ni métricas; la arquitectura se explica aquí y en el artículo. Mientras el modelo privado arranca en frío, los números de la nota ya están en pantalla y hay un único aviso de espera ("puede tardar hasta un minuto la primera vez").
+La interfaz está pensada para quien busca trabajo, no para quien la construyó: una sola columna y cinco datos a la vista (puesto que buscas, empresa, salario actual, salario que quieres pedir y años de experiencia). Nombre, puesto y empresa actuales, logros y oferta van plegados en **"Más detalles (opcional)"**; si no pones tu nombre, la carta firma "Tu nombre" para que lo cambies. Al generar, el formulario se pliega a una línea con "Editar datos", la espera es una sola línea con una barra fina, y luego aparece la carta (con "Copiar") y debajo la nota privada: veredicto, tres cifras (hoy, lo que pides, diferencia) y a lo más dos consejos; el borrador del modelo y el resto quedan en "Ver más". La UI **no** muestra tiers, modelos ni métricas; la arquitectura se explica aquí y en el artículo.
 
-| Formulario | Carta | Nota privada |
-|---|---|---|
-| ![Formulario](docs/screenshots/ui-form-desktop.png) | ![Carta](docs/screenshots/ui-letter-desktop.png) | ![Nota privada](docs/screenshots/ui-note-desktop.png) |
+| Formulario | Resultado |
+|---|---|
+| ![Formulario](docs/screenshots/ui-form-desktop.png) | ![Carta y nota privada (producción, Ollama en GPU y Gemini reales)](docs/screenshots/produccion-resultados.png) |
 
-Versiones móviles (390 px) y el estado de espera en [`docs/screenshots/`](docs/screenshots/); se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`.
+Versiones móviles (390 px): [`ui-form-mobile.png`](docs/screenshots/ui-form-mobile.png) y [`ui-results-mobile.png`](docs/screenshots/ui-results-mobile.png). Se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`.
 
 ![Arquitectura](docs/diagrams/arquitectura.png)
 
@@ -195,7 +195,7 @@ npm run bench            # benchmark real (necesita OLLAMA_URL y ADC para el jue
 ```
 
 - **`tests/leak.test.ts`** corre el orquestador real con `fetch` simulado para los 12 perfiles de `bench/inputs/` (con el salario y el empleador además escondidos en los logros, y con un "Ollama" que devuelve requisitos que repiten el salario). Captura cada petición y verifica que el salario (actual y deseado, en todas sus formas: `15000`, `15,000`, `15.000`, `Q15,000`, `Q 15 000`, `15 mil`, `15k`…) y el empleador aparezcan **solo** en `/api/ollama/*` y **nunca** en `/api/letter`. Tiene control positivo (sí los encuentra en `/api/ollama/negotiation`) y se validó por mutación: si se apaga el redactor, fallan 13 pruebas. Además prueba la ruta del servidor con `@google/genai` simulado: aunque un cliente modificado esconda el salario en los logros, lo que llega a Gemini ya está redactado; un campo extra da 400 y el residuo da 422.
-- **e2e**: flujo completo (números al instante, aviso de espera cuando el modelo privado tarda, carta antes que la nota, aviso de cifras solo cuando aplica, y que la UI no muestre jerga como "Ollama", "GPU" o "tier"), formulario incompleto, sin scroll horizontal a 375 px, fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
+- **e2e**: flujo completo (solo cinco campos a la vista, espera de una línea con aviso cuando el modelo privado tarda, carta antes que la nota, prosa del modelo plegada en "Ver más", aviso de cifras solo cuando aplica, "Editar datos", y que la UI no muestre jerga como "Ollama", "GPU" o "tier"), solo con los cinco datos esenciales, "Usar un ejemplo" antes de que cargue la app, formulario incompleto, sin scroll horizontal a 375 px, fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
 - **Benchmark**: ver [`BENCHMARK.md`](BENCHMARK.md). Flags: `--runs N`, `--inputs N`, `--models a,b`, `--tasks negotiation,requirements`, `--no-cold`, `--no-judge`, `--dry`, y `--from bench/results/X.json [--rejudge]` para recalcular calidad y juez sin volver a generar.
 
 ### Resultado del benchmark (corrida real en GPU L4, 12 perfiles, 3 corridas tibias)

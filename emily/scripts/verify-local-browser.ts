@@ -1,3 +1,5 @@
+// Nota: script histórico, escrito para la primera versión de la interfaz (ver docs/decisiones.md).
+// Sus selectores ya no existen en la UI actual; se conserva como registro de cómo se verificó.
 /**
  * Manual verification (not part of the test suite): loads the REAL local model in Chromium
  * through the app's Web Worker, writes the local draft for the example profile and reports

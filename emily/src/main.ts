@@ -2,6 +2,7 @@ import '@fontsource-variable/fraunces/opsz.css';
 import '@fontsource-variable/newsreader/opsz.css';
 import '@fontsource-variable/newsreader/opsz-italic.css';
 import './styles.css';
+import { registerSW } from 'virtual:pwa-register';
 
 import { isFirebaseConfigured } from './firebase-config';
 import { createLocalLlm, isModelCached } from './lib/local-llm-client';
@@ -13,6 +14,10 @@ import { buildLetterPrompt, finalizeLetter, localLetterInput } from './lib/promp
 import { buildTemplateLetter } from './lib/template';
 import type { Currency, Profile, SensitiveType } from './lib/types';
 import { EXAMPLE_PROFILE } from './ui/example';
+// Con registerType 'autoUpdate', esto recarga la página en cuanto el service worker nuevo toma el
+// control: quien ya visitó la app no se queda con una versión vieja en caché.
+registerSW({ immediate: true });
+
 
 /**
  * UI. Two steps: "tus datos" (form) → "tu carta" (one letter + private note).
@@ -164,38 +169,33 @@ async function writeLocalDraft() {
 }
 
 function renderModel() {
-  const card = $('#modelo');
+  const box = $('#modelo');
   const m = state.model;
-  // Once the model is on the device the card is no longer needed: the letter switcher offers it.
-  card.hidden = m.phase === 'ready' || (m.cached && m.phase !== 'failed');
-  if (card.hidden) return;
-  const desc = $('#model-desc');
+  // Once the model is on the device the line is no longer needed: the letter switcher offers it.
+  box.hidden = m.phase === 'ready' || (m.cached && m.phase !== 'failed');
+  if (box.hidden) return;
+  const hint = $('#model-hint');
   const btn = $<HTMLButtonElement>('#model-load');
   const size = gb(LOCAL_MODEL.approxBytes);
+  box.dataset.phase = m.phase;
   $('#model-progress').hidden = m.phase !== 'loading';
   if (m.phase === 'loading') {
     const pct = m.total ? Math.round((m.loaded / m.total) * 100) : 0;
     $<HTMLProgressElement>('#model-bar').value = pct;
     $('#model-bytes').textContent = `${gb(m.loaded)} de ${gb(m.total)}`;
-    desc.textContent = 'Descargando. Podés seguir usando la app mientras tanto.';
+    hint.textContent = 'Descargando la versión sin internet. Puedes seguir usando la app.';
     btn.hidden = true;
     return;
   }
   btn.hidden = false;
   btn.disabled = false;
   if (m.phase === 'failed') {
-    desc.textContent = 'No se pudo completar la descarga. Revisá tu conexión e intentá de nuevo.';
+    hint.textContent = 'No se pudo completar la descarga.';
     btn.textContent = 'Intentar de nuevo';
     return;
   }
-  if (m.webgpu === false) {
-    desc.textContent =
-      'En este navegador la versión sin internet sería muy lenta. Funciona mejor en Chrome o Edge, en una computadora.';
-    btn.textContent = `Descargar de todos modos (${size})`;
-    return;
-  }
-  desc.textContent = `Descargá una versión privada que escribe la carta en tu dispositivo, incluso sin conexión. Son ${size}, una sola vez; mejor con Wi-Fi.`;
-  btn.textContent = `Descargar (${size})`;
+  btn.textContent = `Usar sin internet (${size})`;
+  hint.textContent = m.webgpu === false ? 'En este navegador sería lenta; va mejor en Chrome o Edge.' : '';
 }
 
 $('#model-load').addEventListener('click', async () => {
@@ -231,16 +231,13 @@ function parseAmount(raw: string): number {
   return Number(s);
 }
 
+/** Visible fields; everything under "Más detalles" is optional. */
 const REQUIRED: [name: string, label: string][] = [
-  ['nombre', 'tu nombre'],
-  ['puestoActual', 'tu puesto actual'],
-  ['aniosExperiencia', 'años de experiencia'],
-  ['empleadorActual', 'dónde trabajás hoy'],
-  ['puestoDeseado', 'el puesto que buscás'],
+  ['puestoDeseado', 'el puesto al que aplicas'],
   ['empresaDestino', 'la empresa'],
-  ['logros', 'tus logros'],
-  ['salarioActual', 'cuánto ganás hoy'],
-  ['salarioDeseado', 'cuánto querés ganar'],
+  ['salarioActual', 'tu salario actual'],
+  ['salarioDeseado', 'el salario que quieres'],
+  ['aniosExperiencia', 'tus años de experiencia'],
 ];
 
 function readProfile(): { profile?: Profile; missing: (typeof REQUIRED)[number][] } {
@@ -281,31 +278,19 @@ function readProfile(): { profile?: Profile; missing: (typeof REQUIRED)[number][
   };
 }
 
-function renderPreview() {
-  document.querySelectorAll<HTMLElement>('[data-bind]').forEach((el) => {
-    const field = form.elements.namedItem(el.dataset.bind!) as HTMLInputElement | null;
-    const v = field?.value.trim() ?? '';
-    el.textContent = v || el.dataset.empty || '';
-    el.classList.toggle('is-empty', !v);
-  });
-}
-
 function fillForm(p: Profile) {
   (Object.keys(p) as (keyof Profile)[]).forEach((k) => {
     const el = form.elements.namedItem(k) as HTMLInputElement | null;
     if (el) el.value = p[k] === undefined ? '' : String(p[k]);
     el?.removeAttribute('aria-invalid');
   });
-  if (p.oferta) $<HTMLDetailsElement>('#oferta-box').open = true;
   $('#form-error').hidden = true;
-  renderPreview();
 }
 
 $('#ejemplo').addEventListener('click', () => fillForm(EXAMPLE_PROFILE));
 
 form.addEventListener('input', (e) => {
   (e.target as HTMLElement).removeAttribute('aria-invalid');
-  renderPreview();
 });
 
 form.addEventListener('submit', async (ev) => {
@@ -377,7 +362,7 @@ function currentText(): string | null {
 
 const SENSITIVE_PLAIN: Record<SensitiveType, string> = {
   salary: 'una cifra de tu salario',
-  employer: 'dónde trabajás hoy',
+  employer: 'dónde trabajas hoy',
   person_name: 'el nombre de otra persona',
   phone: 'un número de teléfono',
   email: 'un correo',
@@ -391,7 +376,7 @@ function noticeText(): string {
   const fallback = state.view === 'local' ? 'la versión de tu dispositivo' : 'la versión base';
   if (r?.cloudStatus === 'blocked') {
     const what = SENSITIVE_PLAIN[r.route.residual[0]?.type ?? 'salary'];
-    return `Como tu texto menciona ${what}, te dejamos ${fallback}. Si quitás ese dato, podés pedir la versión en línea.`;
+    return `Como tu texto menciona ${what}, te dejamos ${fallback}. Si quitas ese dato, puedes pedir la versión en línea.`;
   }
   if (r?.cloudStatus === 'error') return `No pudimos generar la versión en línea; te dejamos ${fallback}.`;
   if (state.draft.status === 'failed' && state.view !== 'nube')
@@ -473,7 +458,7 @@ $('#copiar').addEventListener('click', async () => {
   } catch {
     btn.textContent = 'No se pudo copiar';
   }
-  setTimeout(() => (btn.textContent = 'Copiar carta'), 2000);
+  setTimeout(() => (btn.textContent = 'Copiar'), 2000);
 });
 
 // ---------------------------------------------------------------------------
@@ -490,23 +475,22 @@ function renderNote() {
   const pct = `${Math.abs(n.gapPct).toFixed(1)}\u00a0%`;
   const change =
     Math.abs(n.gapPct) < 0.05
-      ? 'Pedís lo mismo que ganás hoy'
-      : `Pedís ${pct} ${n.gapPct > 0 ? 'más' : 'menos'} que hoy`;
-  const facts = [
-    `<div><dt>Rango para pedir</dt><dd>${esc(`${money(n.suggestedRange.min, n.suggestedRange.currency)} – ${money(n.suggestedRange.max, n.suggestedRange.currency)}`)}</dd></div>`,
-  ];
-  if (n.offerRange) {
-    const o = n.offerRange;
-    facts.push(`<div><dt>La oferta publica</dt><dd>${esc(`${money(o.min, o.currency)}${o.max !== o.min ? ` – ${money(o.max, o.currency)}` : ''}`)}</dd></div>`);
-  }
+      ? 'Pides lo mismo que ganas hoy'
+      : `Pides ${pct} ${n.gapPct > 0 ? 'más' : 'menos'} que hoy`;
+  const range = `${money(n.suggestedRange.min, n.suggestedRange.currency)} – ${money(n.suggestedRange.max, n.suggestedRange.currency)}`;
   // The first "when to mention" rule ("no salary figures in the letter") is already enforced
-  // by the app itself, so the note shows the advice plus the timing rules.
-  const tips = [...n.advice, ...n.whenToMention.slice(1)].slice(0, 4);
+  // by the app itself, so the note shows the advice plus the timing rules: two up front (the
+  // advice already cites the offer's range when there is one), the rest under "Ver más".
+  const tips = [...n.advice, ...n.whenToMention.slice(1)].map(nbsp);
+  const shown = tips.slice(0, 2);
+  const more = tips.slice(2);
+  const list = (items: string[]) => `<ul class="tips">${items.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`;
   $('#nota-body').innerHTML = `
     <p class="verdict" data-band="${n.band.id}">${esc(n.band.label)}</p>
     <p class="verdict__sub">${esc(change)}: de ${esc(money(p.salarioActual, p.monedaActual))} a ${esc(money(p.salarioDeseado, p.monedaDeseada))}.</p>
-    <dl class="facts">${facts.join('')}</dl>
-    <ul class="tips">${tips.map((t) => `<li>${esc(nbsp(t))}</li>`).join('')}</ul>`;
+    <p class="range"><span>Rango para pedir</span> <strong>${esc(range)}</strong></p>
+    ${list(shown)}
+    ${more.length ? `<details class="more more--note"><summary>Ver más</summary><div class="more__body">${list(more)}</div></details>` : ''}`;
 }
 
 function renderAll() {
@@ -531,5 +515,4 @@ void detectWebGpu().then((ok) => {
 });
 history.replaceState({ step: 'datos' }, '');
 showStep('datos', false);
-renderPreview();
 renderAll();

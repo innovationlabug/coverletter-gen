@@ -79,6 +79,8 @@ Escribe en ${lang}. Entre 180 y 260 palabras. Tono profesional, cercano y concre
 Estructura: saludo, por qué esta empresa y este rol, 2 logros conectados con los requisitos, cierre con disponibilidad para conversar, firma con el nombre.
 Nunca menciones salario, pretensión salarial ni el empleador actual.
 Si ves marcadores entre corchetes como [MONTO] o [EMPLEADOR_ACTUAL], reescribe la frase sin ese dato; nunca copies los corchetes.
+Los "Requisitos de la oferta" son lo que pide la empresa, no lo que la persona tiene: no afirmes habilidades, idiomas, herramientas ni certificaciones que no aparezcan en Logros.
+Firma exactamente con el valor de Nombre, aunque venga entre corchetes.
 Devuelve solo el texto de la carta.`;
   const reqs = p.requirements.length ? p.requirements.map((r) => `- ${r}`).join("\n") : "(sin oferta: usa el rol deseado)";
   const user = `Nombre: ${p.fullName}

@@ -6,12 +6,12 @@ Salen de lo que encontré en la [validación](VALIDACION.md) y en la [prueba did
 
 - **A quién le sirve:** a quien construye apps con LLMs que manejan datos personales (salud, finanzas, RR. HH.) y cree que una lista de expresiones regulares basta.
 - **Qué aprende:**
-  - cómo diseñar un set de prueba con **canarios** de dificultad graduada;
+  - cómo diseñar un set de prueba con **datos trampa** de dificultad graduada;
   - por qué un 100 % casi siempre significa que las pruebas son fáciles;
   - cómo separar el *recall* del redactor, el de la compuerta final y los bloqueos falsos.
 - **Por qué vale la pena:** casi todos los tutoriales muestran el redactor funcionando. Casi ninguno mide dónde falla ni qué pasa después con lo que se escapa.
 - **Evidencia:**
-  - 78 canarios en 18 perfiles: 100 % en los fáciles y medios, 14 % en los difíciles (apodos como "don Beto", "doce y medio", correos deletreados);
+  - 78 datos trampa en 18 perfiles: 100 % en los fáciles y medios, 14 % en los difíciles (apodos como "don Beto", "doce y medio", correos deletreados);
   - **5 de los 12 datos fugados terminaron escritos en la carta** que se envía a un tercero, así que el redactor también protege al destinatario;
   - la primera corrida "mejoró" el recall a 94.9 % **por un bug**: bloqueaba 7 casos por error. La métrica honesta salió más baja y más útil.
 

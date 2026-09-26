@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FX_GTQ_PER_USD } from "@/config/constants";
-import { bandForGap, buildNegotiationNote, findOfferRange, gapPercent, toGTQ, toMonthly } from "@/lib/negotiation";
+import { bandForGap, buildNegotiationNote, findOfferRange, formatMoney, gapPercent, toGTQ, toMonthly } from "@/lib/negotiation";
 import type { SalaryBenchmark } from "@/lib/types";
 import { profile } from "./fixtures";
 
@@ -98,6 +98,15 @@ describe("buildNegotiationNote", () => {
     expect(note.sections.find((s) => s.id === "when")!.items[0]).toMatch(/anclando en la parte alta/);
     expect(note.suggestedRange.min).toBeGreaterThanOrEqual(19000);
     expect(note.suggestedRange.max).toBe(22000);
+  });
+
+  it("tips don't repeat the suggested range (the UI shows it once)", () => {
+    for (const jobOffer of ["", "Salario: Q16,000 - Q22,000 mensuales"]) {
+      const note = buildNegotiationNote({ profile: profile({ jobOffer }), benchmark });
+      const when = note.sections.find((s) => s.id === "when")!.items.join(" ");
+      expect(when).not.toContain(formatMoney(note.suggestedRange.min, note.suggestedRange.currency));
+      expect(when).not.toContain(formatMoney(note.suggestedRange.max, note.suggestedRange.currency));
+    }
   });
 
   it("normalizes a USD yearly benchmark to GTQ monthly", () => {

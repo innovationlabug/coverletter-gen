@@ -126,44 +126,44 @@ export function buildNegotiationNote(p: Profile): NegotiationNote {
   const advice: string[] = [];
   switch (bandFor.id) {
     case 'recorte':
-      advice.push('Estás pidiendo menos de lo que ganás hoy. Si es a propósito (cambio de carrera, trabajo remoto, estabilidad), está bien, pero no lo mencionés en la entrevista: no hace falta justificar un número bajo.');
+      advice.push('Estás pidiendo menos de lo que ganas hoy. Si es a propósito (cambio de carrera, trabajo remoto, estabilidad), está bien, pero no lo menciones en la entrevista: no hace falta justificar un número bajo.');
       break;
     case 'conservadora':
-      advice.push('Tu expectativa es conservadora. Tenés margen para pedir un poco más: un cambio de empresa suele justificar entre 10 % y 25 %.');
+      advice.push('Tu expectativa es conservadora. Tienes margen para pedir un poco más: un cambio de empresa suele justificar entre 10 % y 25 %.');
       break;
     case 'razonable':
-      advice.push('Tu expectativa está en el rango típico de un cambio de empresa (10 %–25 %). Podés sostenerla sin mayor justificación.');
+      advice.push('Tu expectativa está en el rango típico de un cambio de empresa (10 %–25 %). Puedes sostenerla sin mayor justificación.');
       break;
     case 'ambiciosa':
-      advice.push('Tu expectativa es ambiciosa (25 %–40 %). Preparate para justificarla con logros medibles y con el alcance del nuevo puesto.');
+      advice.push('Tu expectativa es ambiciosa (25 %–40 %). Prepárate para justificarla con logros medibles y con el alcance del nuevo puesto.');
       break;
     case 'muy_ambiciosa':
-      advice.push('Tu expectativa supera el 40 % sobre tu salario actual. Es alcanzable sobre todo con un cambio de nivel o de mercado; tené a mano ejemplos concretos y una cifra mínima aceptable.');
+      advice.push('Tu expectativa supera el 40 % sobre tu salario actual. Es alcanzable sobre todo con un cambio de nivel o de mercado; ten a mano ejemplos concretos y una cifra mínima aceptable.');
       break;
   }
   if (isPromotion && gapPct >= 25) {
     advice.push(`El puesto deseado es un paso arriba en responsabilidad: eso justifica hasta ~${40 + PROMOTION_TOLERANCE_PP} % de incremento.`);
   }
   if (junior && gapPct >= 25) {
-    advice.push(`Con menos de ${JUNIOR_YEARS} años de experiencia, un salto mayor al 25 % es más difícil de sostener: considerá negociar también capacitación o revisión salarial a los 6 meses.`);
+    advice.push(`Con menos de ${JUNIOR_YEARS} años de experiencia, un salto mayor al 25 % es más difícil de sostener: considera negociar también capacitación o revisión salarial a los 6 meses.`);
   }
   if (offerRange) {
     const r = `${formatMoney(offerRange.min, offerRange.currency)}${offerRange.max !== offerRange.min ? ` – ${formatMoney(offerRange.max, offerRange.currency)}` : ''}`;
-    if (offerPosition === 'within') advice.push(`La oferta publica ${r} y tu expectativa cae dentro: apuntá a la mitad superior del rango.`);
-    if (offerPosition === 'above') advice.push(`La oferta publica ${r} y tu expectativa está por encima: negociá el máximo del rango más beneficios (bono, vacaciones, trabajo remoto) o preguntá si hay flexibilidad.`);
-    if (offerPosition === 'below') advice.push(`La oferta publica ${r} y tu expectativa está por debajo: podés pedir más, al menos el punto medio del rango.`);
+    if (offerPosition === 'within') advice.push(`La oferta publica ${r} y tu expectativa cae dentro: apunta a la mitad superior del rango.`);
+    if (offerPosition === 'above') advice.push(`La oferta publica ${r} y tu expectativa está por encima: negocia el máximo del rango más beneficios (bono, vacaciones, trabajo remoto) o pregunta si hay flexibilidad.`);
+    if (offerPosition === 'below') advice.push(`La oferta publica ${r} y tu expectativa está por debajo: puedes pedir más, al menos el punto medio del rango.`);
   }
 
   const whenToMention: string[] = [
     'Nunca escribas cifras de salario en la carta de interés.',
-    'No reveles tu salario actual. Si te lo preguntan, redirigí a tu expectativa: "Para este puesto busco un rango de …".',
+    'No reveles tu salario actual. Si te lo preguntan, redirige a tu expectativa: "Para este puesto busco un rango de …".',
   ];
   if (offerAsksExpectation) {
-    whenToMention.push(`La oferta pide pretensión salarial: ponela en el formulario o en el correo de envío (no en la carta), como rango: ${formatMoney(suggestedRange.min, suggestedRange.currency)} – ${formatMoney(suggestedRange.max, suggestedRange.currency)}.`);
+    whenToMention.push(`La oferta pide pretensión salarial: ponla en el formulario o en el correo de envío (no en la carta), como rango: ${formatMoney(suggestedRange.min, suggestedRange.currency)} – ${formatMoney(suggestedRange.max, suggestedRange.currency)}.`);
   } else if (offerRange) {
-    whenToMention.push('La oferta ya publica un rango: mencioná tu cifra hasta la primera llamada con Recursos Humanos, cuando te pregunten.');
+    whenToMention.push('La oferta ya publica un rango: menciona tu cifra hasta la primera llamada con Recursos Humanos, cuando te pregunten.');
   } else {
-    whenToMention.push('Esperá a que Recursos Humanos saque el tema (normalmente en la primera llamada de filtro) y tené tu rango listo.');
+    whenToMention.push('Espera a que Recursos Humanos saque el tema (normalmente en la primera llamada de filtro) y ten tu rango listo.');
   }
 
   const headline = `${bandFor.label}: ${pct} (de ${formatMoney(p.salarioActual, p.monedaActual)} a ${formatMoney(p.salarioDeseado, p.monedaDeseada)})`;

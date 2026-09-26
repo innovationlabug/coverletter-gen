@@ -71,12 +71,12 @@ export function validateForm(f: ProfileForm): FormErrors {
   req("targetCompany", "Escribe la empresa a la que aplicas.");
   req("location", "Escribe la ciudad o el país.");
   const cur = parseMoneyInput(f.currentSalary);
-  if (!(cur > 0)) e.currentSalary = "Escribe tu salario mensual actual (solo se usa en tu dispositivo).";
+  if (!(cur > 0)) e.currentSalary = "Escribe tu salario actual al mes.";
   const des = parseMoneyInput(f.desiredSalary);
-  if (!(des > 0)) e.desiredSalary = "Escribe el salario mensual que buscas.";
+  if (!(des > 0)) e.desiredSalary = "Escribe el salario que quieres al mes.";
   const years = Number(f.yearsExperience);
   if (f.yearsExperience.trim() === "" || !Number.isFinite(years) || years < 0 || years > 60) {
-    e.yearsExperience = "Años de experiencia entre 0 y 60.";
+    e.yearsExperience = "Escribe un número entre 0 y 60.";
   }
   return e;
 }

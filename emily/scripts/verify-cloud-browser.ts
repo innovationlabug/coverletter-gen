@@ -1,3 +1,5 @@
+// Nota: script histórico, escrito para la primera versión de la interfaz (ver docs/decisiones.md).
+// Sus selectores ya no existen en la UI actual; se conserva como registro de cómo se verificó.
 /**
  * Manual verification (not part of the test suite): opens the app served by `npm run dev`
  * in Chromium, fills the example profile and asks for the cloud letter through the REAL
