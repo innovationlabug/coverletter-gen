@@ -1,6 +1,6 @@
 # Benchmark: `gemma4:e2b-it-qat` vs `qwen3.5:2b`
 
-Corrida del 2026-09-25 22:40 UTC · Ollama en `ollama-coverletter-611681112050.us-central1.run.app` · modo **CPU** (según `size_vram` de `/api/ps`) · 12 perfiles · 1 corrida(s) tibia(s) por entrada · duró 18.4 min.
+Corrida del 2026-09-25 23:31 UTC · Ollama en `ollama-coverletter-611681112050.europe-west4.run.app` · modo **GPU** (según `size_vram` de `/api/ps`) · 12 perfiles · 3 corrida(s) tibia(s) por entrada · duró 4.7 min.
 
 ## Método
 
@@ -17,7 +17,7 @@ Corrida del 2026-09-25 22:40 UTC · Ollama en `ollama-coverletter-611681112050.u
 
 | Modelo | Parámetros (Ollama) | Cuantización | Tamaño cargado |
 | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | 4.6B | Q4_0 | 4.05 GB |
+| `gemma4:e2b-it-qat` | 4.6B | Q4_0 | 1.80 GB |
 | `qwen3.5:2b` | 2.3B | Q8_0 | 2.36 GB |
 
 No son simétricos: Gemma 4 **E2B** son ~2B parámetros *efectivos* por token, pero el archivo trae ~4.6B en total (embeddings por capa) cuantizados a Q4 (QAT); Qwen 3.5 2B son ~2.3B densos a Q8. Los consideramos comparables por **presupuesto de despliegue**, no por conteo de parámetros: ambos son la opción "~2B" que su familia publica para dispositivo/edge, ambos caben con holgura en una L4 (24 GB) o en 32 GB de RAM, y lo que importa para esta app es calidad por segundo y por GB. Por eso reportamos memoria real y velocidad, no solo el nombre.
@@ -26,24 +26,24 @@ No son simétricos: Gemma 4 **E2B** son ~2B parámetros *efectivos* por token, p
 
 | Modelo | Tarea | n | TTFT p50 | Total p50 | Total p95 | tok/s (media) | Tokens salida | Errores |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | nota | 12 | 5.1 s | 16.9 s | 19.4 s | 18.6 | 222 | 0 |
-| `gemma4:e2b-it-qat` | requisitos | 9 | 2.8 s | 6.1 s | 6.7 s | 20.0 | 60 | 0 |
-| `qwen3.5:2b` | nota | 12 | 6.1 s | 18.2 s | 25.2 s | 15.9 | 206 | 0 |
-| `qwen3.5:2b` | requisitos | 9 | 3.5 s | 9.1 s | 15.3 s | 16.0 | 98 | 0 |
+| `gemma4:e2b-it-qat` | nota | 36 | 240 ms | 2.1 s | 2.3 s | 117.7 | 216 | 0 |
+| `gemma4:e2b-it-qat` | requisitos | 27 | 294 ms | 810 ms | 956 ms | 115.7 | 59 | 0 |
+| `qwen3.5:2b` | nota | 36 | 241 ms | 3.4 s | 4.2 s | 73.5 | 226 | 0 |
+| `qwen3.5:2b` | requisitos | 27 | 239 ms | 1.6 s | 2.4 s | 73.4 | 106 | 0 |
 
 ### Frío (modelo descargado → primera respuesta)
 
 | Modelo | Carga del modelo | TTFT | Total | tok/s |
 | --- | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | 10.2 s | 15.4 s | 26.6 s | 19.4 |
-| `qwen3.5:2b` | 8.4 s | 14.5 s | 26.8 s | 16.0 |
+| `gemma4:e2b-it-qat` | 3.4 s | 3.8 s | 5.7 s | 112.9 |
+| `qwen3.5:2b` | 7.3 s | 7.7 s | 10.5 s | 73.1 |
 
 ## Memoria
 
 | Modelo | Modo | size | size_vram |
 | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | CPU | 4.05 GB | 0.00 GB |
-| `qwen3.5:2b` | CPU | 2.36 GB | 0.00 GB |
+| `gemma4:e2b-it-qat` | GPU | 1.80 GB | 1.80 GB |
+| `qwen3.5:2b` | GPU | 2.36 GB | 2.36 GB |
 
 ## Calidad determinista
 
@@ -51,69 +51,80 @@ No son simétricos: Gemma 4 **E2B** son ~2B parámetros *efectivos* por token, p
 
 | Modelo | n | Español | Largo OK | Cifras consistentes | Cifras inventadas (total) | En tema | 2.ª persona | Palabras (media) | Puntaje |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | 12 | 100 % | 100 % | 100 % | 0 | 100 % | 42 % | 158 | 0.90 |
-| `qwen3.5:2b` | 12 | 100 % | 100 % | 100 % | 0 | 100 % | 100 % | 150 | 1.00 |
+| `gemma4:e2b-it-qat` | 36 | 100 % | 100 % | 97 % | 1 | 100 % | 39 % | 153 | 0.89 |
+| `qwen3.5:2b` | 36 | 100 % | 100 % | 100 % | 0 | 100 % | 100 % | 166 | 1.00 |
 
 **Requisitos (JSON)**
 
 | Modelo | n | JSON válido | Esquema OK | Grounding | Recall | Mencionó salario | Puntaje |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | 9 | 100 % | 100 % | 77 % | 78 % | 0 | 0.91 |
-| `qwen3.5:2b` | 9 | 100 % | 100 % | 95 % | 100 % | 4 | 0.90 |
+| `gemma4:e2b-it-qat` | 27 | 100 % | 100 % | 77 % | 78 % | 0 | 0.91 |
+| `qwen3.5:2b` | 27 | 100 % | 100 % | 97 % | 100 % | 9 | 0.93 |
 
 ## Juez LLM
 
 | Modelo | Tarea | utilidad | precision | tono | fidelidad |
 | --- | --- | --- | --- | --- | --- |
-| `gemma4:e2b-it-qat` | nota | 3.58 | 3.29 | 3.08 | 4.54 |
-| `gemma4:e2b-it-qat` | requisitos | 4.22 | 4.00 | 5.00 | 4.28 |
-| `qwen3.5:2b` | nota | 4.17 | 3.71 | 4.42 | 3.92 |
-| `qwen3.5:2b` | requisitos | 2.67 | 2.39 | 4.94 | 2.89 |
+| `gemma4:e2b-it-qat` | nota | 3.75 | 3.50 | 3.46 | 4.46 |
+| `gemma4:e2b-it-qat` | requisitos | 4.06 | 3.78 | 4.94 | 3.94 |
+| `qwen3.5:2b` | nota | 3.83 | 3.38 | 4.21 | 3.88 |
+| `qwen3.5:2b` | requisitos | 2.83 | 2.61 | 4.94 | 2.89 |
 
-**Sesgos del juez.** Posición: en 42 juicios (cada par juzgado en ambos órdenes A/B y B/A; la tabla promedia ambos), la respuesta mostrada primero ganó 24 veces (1 empates); si el juez fuera neutral, ~50 % de los no empatados. Otros sesgos conocidos que NO controlamos: preferencia por textos largos, y afinidad de familia (Gemini juzgando a Gemma, ambos de Google). Además el juez es el mismo modelo que escribe la carta en la app. Por eso el juez es una señal más, no el veredicto: los chequeos deterministas pesan igual en el compuesto.
+**Sesgos del juez.** Posición: en 42 juicios (cada par juzgado en ambos órdenes A/B y B/A; la tabla promedia ambos), la respuesta mostrada primero ganó 23 veces (0 empates); si el juez fuera neutral, ~50 % de los no empatados. Otros sesgos conocidos que NO controlamos: preferencia por textos largos, y afinidad de familia (Gemini juzgando a Gemma, ambos de Google). Además el juez es el mismo modelo que escribe la carta en la app. Por eso el juez es una señal más, no el veredicto: los chequeos deterministas pesan igual en el compuesto.
 
 ## Conclusión
 
 
-**Empate técnico en el agregado** (`gemma4:e2b-it-qat` 0.848 vs `qwen3.5:2b` 0.845; compuesto = promedio de calidad determinista y juez normalizado a 0–1). La decisión depende de la tarea:
+**Empate técnico en el agregado** (`gemma4:e2b-it-qat` 0.846 vs `qwen3.5:2b` 0.843; compuesto = promedio de calidad determinista y juez normalizado a 0–1). La decisión depende de la tarea:
 
 **Mejor modelo por tarea:**
-- **nota de negociación** → `qwen3.5:2b` (gemma4:e2b-it-qat 0.81 · qwen3.5:2b 0.91)
-- **extracción de requisitos** → `gemma4:e2b-it-qat` (gemma4:e2b-it-qat 0.89 · qwen3.5:2b 0.77)
+- **nota de negociación** → `qwen3.5:2b` (gemma4:e2b-it-qat 0.83 · qwen3.5:2b 0.88)
+- **extracción de requisitos** → `gemma4:e2b-it-qat` (gemma4:e2b-it-qat 0.87 · qwen3.5:2b 0.80)
 
 **Dónde gana `gemma4:e2b-it-qat`** (hechos medidos):
-- promedio del juez (1–5): gemma4:e2b-it-qat 3.95 · qwen3.5:2b 3.70
-- juez en requisitos (1–5): gemma4:e2b-it-qat 4.38 · qwen3.5:2b 3.22
-- extracciones que metieron el salario como requisito: gemma4:e2b-it-qat 0 · qwen3.5:2b 4
-- latencia p50 de la nota: gemma4:e2b-it-qat 16.9 s · qwen3.5:2b 18.2 s
-- velocidad de generación (tok/s): gemma4:e2b-it-qat 18.6 · qwen3.5:2b 15.9
+- promedio del juez (1–5): gemma4:e2b-it-qat 3.96 · qwen3.5:2b 3.61
+- juez en requisitos (1–5): gemma4:e2b-it-qat 4.18 · qwen3.5:2b 3.32
+- extracciones que metieron el salario como requisito: gemma4:e2b-it-qat 0 · qwen3.5:2b 9
+- latencia p50 de la nota: gemma4:e2b-it-qat 2.1 s · qwen3.5:2b 3.4 s
+- velocidad de generación (tok/s): gemma4:e2b-it-qat 117.7 · qwen3.5:2b 73.5
+- carga en frío: gemma4:e2b-it-qat 3.4 s · qwen3.5:2b 7.3 s
+- memoria ocupada: gemma4:e2b-it-qat 1.80 GB · qwen3.5:2b 2.36 GB
 
 **Dónde gana `qwen3.5:2b`:**
-- calidad determinista (0–1): gemma4:e2b-it-qat 0.91 · qwen3.5:2b 0.95
-- juez en la nota (1–5): gemma4:e2b-it-qat 3.63 · qwen3.5:2b 4.05
-- notas en segunda persona: gemma4:e2b-it-qat 42 % · qwen3.5:2b 100 %
-- fidelidad de requisitos a la oferta (grounding): gemma4:e2b-it-qat 77 % · qwen3.5:2b 95 %
-- carga en frío: gemma4:e2b-it-qat 10.2 s · qwen3.5:2b 8.4 s
-- memoria ocupada: gemma4:e2b-it-qat 4.05 GB · qwen3.5:2b 2.36 GB
+- calidad determinista (0–1): gemma4:e2b-it-qat 0.90 · qwen3.5:2b 0.96
+- juez en la nota (1–5): gemma4:e2b-it-qat 3.79 · qwen3.5:2b 3.82
+- notas con cifras consistentes: gemma4:e2b-it-qat 97 % · qwen3.5:2b 100 %
+- notas en segunda persona: gemma4:e2b-it-qat 39 % · qwen3.5:2b 100 %
+- fidelidad de requisitos a la oferta (grounding): gemma4:e2b-it-qat 77 % · qwen3.5:2b 97 %
 
 ### Decisión
 
 **Para esta app gana `gemma4:e2b-it-qat`**, y es el modelo por defecto (`OLLAMA_MODEL`).
 
-El agregado es un empate, así que la decisión sale de qué error es más grave en *esta* app:
+El agregado es un empate (0.846 vs 0.843), así que la decisión sale de qué error es más grave en *esta* app y de cómo se comporta cada modelo en el hardware donde corre:
 
-- **El error de Qwen toca la privacidad.** En 4 de 9 extracciones metió la pretensión salarial o el rango de la oferta como "requisito". Esa lista viaja después hacia Gemini (nivel 2, tercero). El redactor del router quitó los montos antes de salir, así que no hubo fuga, pero la app dependió de su segunda línea de defensa. Gemma lo hizo 0 de 9 veces.
-- **El error de Gemma es de tono.** Escribió 7 de 12 notas en primera persona ("mi expectativa…") en vez de hablarle a la persona. Molesta, pero no expone datos, las cifras siguen siendo correctas (100 % consistentes con las heurísticas) y el juez le da la mayor fidelidad a los datos en la nota (4.54 vs 3.92).
-- **En CPU, Gemma es un poco más rápido** (18.6 vs 15.9 tok/s; nota p50 16.9 s vs 18.2 s). Una diferencia de ~1 s en una nota de ~150 palabras no cambia la experiencia; el arranque en frío del contenedor (1.5–2.5 min) sí, y afecta igual a los dos.
+- **El error de Qwen toca la privacidad.** En 9 de 27 extracciones metió la pretensión salarial o el rango de la oferta como "requisito". Esa lista viaja después hacia Gemini (nivel 2, tercero). El redactor del router quitó los montos antes de salir, así que no hubo fuga, pero la app dependió de su segunda línea de defensa. Gemma lo hizo 0 de 27 veces.
+- **El error de Gemma es de tono.** Escribió en primera persona ("mi expectativa…") en 61 % de las notas en vez de hablarle a la persona. Molesta, pero no expone datos, y el juez le da la mayor fidelidad a los datos en la nota (4.46 vs 3.88).
+- **En GPU, Gemma gana también en costo de operación:** genera 1.6× más rápido (118 vs 74 tok/s; nota p50 2.1 s vs 3.4 s), carga en frío en la mitad del tiempo (3.4 s vs 7.3 s) y ocupa menos VRAM (1.80 GB vs 2.36 GB).
 
 **En qué pierde el ganador:**
 
-- **La nota**: Qwen la escribe mejor (juez 4.05 vs 3.63, tono 4.42 vs 3.08, segunda persona 100 % vs 42 %).
-- **Memoria**: 4.05 GB contra 2.36 GB. En una L4 (24 GB) o en 32 GB de RAM no importa; en una laptop de 8 GB sí.
-- **Carga en frío del modelo**: 10.2 s contra 8.4 s.
-- **Fidelidad a la oferta en requisitos** (grounding 77 % vs 95 %): Gemma traduce al español los requisitos de ofertas en inglés, y el chequeo por palabras lo cuenta como "no está en la oferta".
+- **La nota**: Qwen la escribe con mejor tono (4.21 vs 3.46) y siempre en segunda persona (100 % vs 39 %); el juez las deja casi empatadas en utilidad.
+- **Una cifra inconsistente** en 36 notas (97 % vs 100 %). La app la marca en pantalla porque los números oficiales salen de las heurísticas, nunca del modelo.
+- **Fidelidad a la oferta en requisitos** (grounding 77 % vs 97 %): Gemma traduce al español los requisitos de ofertas en inglés, y el chequeo por palabras lo cuenta como "no está en la oferta".
 
-**Siguiente paso natural:** enrutar por tarea dentro del nivel 1 (Qwen para la nota, Gemma para los requisitos). No lo implementamos: dos modelos cargados duplican la memoria y el tiempo de arranque en frío, y con el contenedor en CPU eso pesa más que la mejora de tono.
+**CPU vs GPU (mismos modelos, misma imagen, 8 vCPU / 32 GiB vs L4):**
+
+| | Gemma 4 E2B CPU | Gemma 4 E2B GPU | Qwen 3.5 2B CPU | Qwen 3.5 2B GPU |
+|---|---:|---:|---:|---:|
+| tok/s | 18.6 | 117.7 | 15.9 | 73.5 |
+| Nota p50 | 16.9 s | 2.1 s | 18.2 s | 3.4 s |
+| Carga en frío del modelo | 10.2 s | 3.4 s | 8.4 s | 7.3 s |
+| Memoria | 4.05 GB RAM | 1.80 GB VRAM | 2.36 GB RAM | 2.36 GB VRAM |
+
+Dos cosas que no esperábamos: en CPU Qwen ocupaba **menos** memoria y cargaba más rápido, y en GPU la ventaja se invierte (Ollama solo sube a la GPU las capas que Gemma usa para texto). **El ranking de "cuál es más liviano" depende del hardware**: por eso se mide en el hardware de producción. La calidad, en cambio, casi no cambió entre corridas (mismo modelo, misma cuantización). El reporte completo de CPU está en [`bench/BENCHMARK-cpu.md`](BENCHMARK-cpu.md).
+
+**Siguiente paso natural:** enrutar por tarea dentro del nivel 1 (Qwen para la nota, Gemma para los requisitos). Con una L4 hay memoria de sobra para los dos modelos, así que ya no es un problema de recursos sino de complejidad; lo dejamos como mejora.
 
 ## Reproducir
 

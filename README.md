@@ -10,7 +10,7 @@ cumplen las mismas condiciones mínimas y cada una profundiza en un área distin
 | Carpeta | Persona · área | Qué hace distinto | Demo | Artículo |
 |---|---|---|---|---|
 | [`luis/`](luis/) | Luis · **APIs** | Gemini + **Tavily** (investiga la empresa destino) + **JSearch** (salario de mercado). Documenta autenticación, fallas, costo y datos enviados de cada API. | [coverletter-luis.vercel.app](https://coverletter-luis.vercel.app) | [Tres APIs y un secreto](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit) |
-| [`cathy/`](cathy/) | Cathy · **modelos locales** | **Ollama privado en Cloud Run con GPU L4** + heurísticas. Compara **Gemma 4 E2B vs Qwen 3.5 2B** en calidad, latencia y memoria (CPU y GPU). | [cathy-coverletter…run.app](https://cathy-coverletter-611681112050.us-central1.run.app) | CATHY_ARTICLE |
+| [`cathy/`](cathy/) | Cathy · **modelos locales** | **Ollama privado en Cloud Run con GPU L4** + heurísticas. Compara **Gemma 4 E2B vs Qwen 3.5 2B** en calidad, latencia y memoria (CPU y GPU). | [cathy-coverletter…run.app](https://cathy-coverletter-611681112050.us-central1.run.app) | [¿Un Ollama en la nube sigue siendo local?](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit) |
 | [`emily/`](emily/) | Emily · **aprendizajes** | **Gemma 4 E2B en el navegador** (transformers.js) + Gemini vía Firebase AI Logic con App Check. **18 casos de validación** de fugas y calidad, prueba didáctica del README y 3 temas de artículo. | [coverletter-emily.vercel.app](https://coverletter-emily.vercel.app) | [¿Cómo sé que mi app no filtra tu salario?](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit) |
 
 ## El reto (resumen)

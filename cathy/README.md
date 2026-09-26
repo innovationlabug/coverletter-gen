@@ -1,5 +1,9 @@
 # Cathy — carta dividida con modelos locales
 
+- **Demo:** [cathy-coverletter en Cloud Run](https://cathy-coverletter-611681112050.us-central1.run.app)
+- **Artículo:** [¿Un Ollama en la nube sigue siendo local? Gemma contra Qwen en un split brain](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit)
+- **Benchmark:** [BENCHMARK.md](BENCHMARK.md) (GPU L4) · [bench/BENCHMARK-cpu.md](bench/BENCHMARK-cpu.md) (CPU)
+
 Generador de **carta de interés** (carta de presentación para acompañar el CV) + **nota privada de negociación salarial**, con "cerebro dividido" en tres niveles de confianza:
 
 - las **heurísticas** corren en tu navegador y calculan todos los números;
@@ -194,15 +198,13 @@ npm run bench            # benchmark real (necesita OLLAMA_URL y ADC para el jue
 - **e2e**: flujo completo (números al instante, aviso de espera cuando el modelo privado tarda, carta antes que la nota, aviso de cifras solo cuando aplica, y que la UI no muestre jerga como "Ollama", "GPU" o "tier"), formulario incompleto, sin scroll horizontal a 375 px, fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
 - **Benchmark**: ver [`BENCHMARK.md`](BENCHMARK.md). Flags: `--runs N`, `--inputs N`, `--models a,b`, `--tasks negotiation,requirements`, `--no-cold`, `--no-judge`, `--dry`, y `--from bench/results/X.json [--rejudge]` para recalcular calidad y juez sin volver a generar.
 
-### Resultado del benchmark (corrida real en CPU, 12 perfiles)
+### Resultado del benchmark (corrida real en GPU L4, 12 perfiles, 3 corridas tibias)
 
-Empate técnico en el agregado, con ganadores distintos por tarea: **qwen3.5:2b escribe mejor la nota** (juez 4.05 vs 3.63; gemma escribió 7 de 12 notas en primera persona) y **gemma4:e2b-it-qat extrae mejor los requisitos** (juez 4.38 vs 3.22; qwen metió la pretensión salarial como "requisito" en 4 de 9). Ninguno inventó cifras frente a las heurísticas. Gemma genera más rápido en CPU (18.6 vs 15.9 tok/s) pero ocupa más memoria (4.05 vs 2.36 GB). Con el contenedor escalado a cero, la primera nota tarda ~1.5–2.5 min en CPU. Detalle y sesgos del juez en [`BENCHMARK.md`](BENCHMARK.md) y [`docs/decisiones.md`](docs/decisiones.md).
+Empate técnico en el agregado (0.846 vs 0.843), con ganadores distintos por tarea: **qwen3.5:2b escribe mejor la nota** (tono 4.21 vs 3.46; siempre en segunda persona) y **gemma4:e2b-it-qat extrae mejor los requisitos** (juez 4.18 vs 3.32; qwen metió la pretensión salarial como "requisito" en 9 de 27). En GPU Gemma genera 1.6× más rápido (118 vs 74 tok/s; nota en 2.1 s), carga en frío en 3.4 s y ocupa 1.80 GB de VRAM.
 
-**Decisión: gana `gemma4:e2b-it-qat`** (modelo por defecto). El error de Qwen toca la privacidad (mete el salario en los requisitos que después viajan hacia Gemini; el redactor lo atrapó), mientras que el de Gemma es de tono. **Pierde** en la calidad de la nota, en memoria (4.05 vs 2.36 GB) y en carga en frío. Razonamiento completo en [`BENCHMARK.md`](BENCHMARK.md#decisión).
+**Decisión: gana `gemma4:e2b-it-qat`** (modelo por defecto). El error de Qwen toca la privacidad (el salario en los requisitos que viajan hacia Gemini; el redactor lo atrapó), mientras que el de Gemma es de tono. **Pierde** en la calidad de la nota y en fidelidad a ofertas en inglés. Razonamiento completo y la comparación **CPU vs GPU** en [`BENCHMARK.md`](BENCHMARK.md#decisión); la corrida en CPU está en [`bench/BENCHMARK-cpu.md`](bench/BENCHMARK-cpu.md).
 
-Los 12 perfiles de prueba son **ficticios** (personas inventadas; los nombres de empresas guatemaltecas solo le dan realismo al redactor).
-
----
+![Calidad por tarea](docs/diagrams/benchmark.png)
 
 ## Estructura
 
