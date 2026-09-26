@@ -2,6 +2,7 @@
 
 - **Demo:** [Rango en Cloud Run](https://rango-611681112050.us-central1.run.app)
 - **Artículo:** [¿Un Ollama en la nube sigue siendo local? Gemma contra Qwen en un split brain](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit)
+- **Enunciado:** [ENUNCIADO.md](../ENUNCIADO.md)
 - **Benchmark:** [BENCHMARK.md](BENCHMARK.md) (GPU L4) · [bench/BENCHMARK-cpu.md](bench/BENCHMARK-cpu.md) (CPU)
 
 Generador de **carta de interés** (carta de presentación para acompañar el CV) + **nota privada de negociación salarial**, con "cerebro dividido" en tres niveles de confianza:
@@ -181,7 +182,7 @@ npm run dev
 **(b) Contra el Ollama privado de Cloud Run.** Opción recomendada, sin tokens en archivos: un proxy autenticado de gcloud.
 
 ```bash
-gcloud run services proxy ollama-coverletter --region us-central1 --port 11434
+gcloud run services proxy ollama-coverletter --region europe-west4 --port 11434
 # y en .env.local: OLLAMA_URL=http://localhost:11434
 ```
 

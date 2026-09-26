@@ -2,6 +2,7 @@
 
 - **Demo:** [sobre-carta.vercel.app](https://sobre-carta.vercel.app)
 - **Artículo:** [¿Cómo sé que mi app no filtra tu salario? Validar un split brain con 78 datos trampa](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit)
+- **Enunciado:** [ENUNCIADO.md](../ENUNCIADO.md)
 - **Validación:** [VALIDACION.md](VALIDACION.md) · **Prueba didáctica:** [DIDACTICA.md](DIDACTICA.md) · **Temas para próximos artículos:** [TEMAS.md](TEMAS.md)
 
 Generador de **cartas de interés** con una **nota privada de negociación**, construido como PWA

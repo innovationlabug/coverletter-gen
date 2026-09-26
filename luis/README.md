@@ -2,6 +2,7 @@
 
 - **Demo:** [carta-y-copia.vercel.app](https://carta-y-copia.vercel.app)
 - **Artículo:** [Tres APIs y un secreto: cómo armé un generador de cartas de interés con split brain](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit)
+- **Enunciado:** [ENUNCIADO.md](../ENUNCIADO.md)
 
 PWA en Next.js (App Router, runtime Node) que, a partir de tu situación real —incluido tu salario actual—, genera:
 

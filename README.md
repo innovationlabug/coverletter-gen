@@ -15,16 +15,18 @@ cumplen las mismas condiciones mínimas y cada una profundiza en un área distin
 
 ## El reto (resumen)
 
+Enunciado completo: [ENUNCIADO.md](ENUNCIADO.md).
+
 La persona cuenta su situación con franqueza: qué hace hoy, **cuánto gana**, qué quiere hacer, cuánto quiere
 ganar y, si quiere, pega la oferta. La app devuelve:
 
 1. **La carta de interés**, lista para enviar con el CV.
 2. **Una nota privada de negociación**: qué tan realista es la expectativa y cuándo conviene mencionarla. Nunca sale del dispositivo.
 
-Condiciones mínimas que cumplen las tres:
+Condiciones mínimas:
 
 1. Al menos un componente local y un modelo en la nube, con el reparto justificado (privacidad, latencia, costo, disponibilidad, calidad).
-2. **El salario actual nunca sale del dispositivo** — demostrado con una prueba automatizada.
+2. **El salario actual nunca sale del dispositivo** — demostrado con una prueba automatizada. Rango (Cathy) lo reinterpreta a propósito: su Ollama corre en Cloud Run y recibe el salario, que nunca llega a un tercero; con un Ollama en `localhost` se cumple al pie de la letra ([por qué](cathy/README.md#la-decisión-de-la-nube-privada-condición-2-reinterpretada)).
 3. Qué se envía a la nube lo decide **código explícito y testeable**, no un modelo.
 4. **Sin conexión**, la app sigue entregando algo útil.
 
