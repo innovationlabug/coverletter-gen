@@ -27,9 +27,9 @@ Detalles de producto: tokens de diseño en variables CSS con modo claro y oscuro
 
 | Formulario | Esperando | Resultado |
 |---|---|---|
-| ![Formulario](docs/screenshots/ui-form-desktop.png) | ![Esperando: esqueleto de la carta y la nota](docs/screenshots/ui-waiting-desktop.png) | ![Carta y nota privada](docs/screenshots/ui-results-desktop.png) |
+| ![Formulario](docs/screenshots/produccion-formulario.png) | ![Esperando: esqueleto de la carta y la nota](docs/screenshots/ui-waiting-desktop.png) | ![Carta y nota privada (producción, Ollama en GPU y Gemini reales)](docs/screenshots/produccion-resultados.png) |
 
-Versiones móviles (390 px): [`ui-form-mobile.png`](docs/screenshots/ui-form-mobile.png), [`ui-waiting-mobile.png`](docs/screenshots/ui-waiting-mobile.png) y [`ui-results-mobile.png`](docs/screenshots/ui-results-mobile.png). Se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`. Las capturas de producción con modelos reales (versión anterior de la interfaz) siguen en [`produccion-formulario.png`](docs/screenshots/produccion-formulario.png) y [`produccion-resultados.png`](docs/screenshots/produccion-resultados.png).
+Formulario y resultados son capturas de producción con datos reales; la de espera y las `ui-*` se generan con el modelo simulado (textos de prueba). Versiones móviles (390 px): [formulario en producción](docs/screenshots/produccion-formulario-movil.png), [`ui-form-mobile.png`](docs/screenshots/ui-form-mobile.png), [`ui-waiting-mobile.png`](docs/screenshots/ui-waiting-mobile.png) y [`ui-results-mobile.png`](docs/screenshots/ui-results-mobile.png). Se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`. Las capturas de producción con modelos reales (versión anterior de la interfaz) siguen en [`produccion-formulario.png`](docs/screenshots/produccion-formulario.png) y [`produccion-resultados.png`](docs/screenshots/produccion-resultados.png).
 
 ![Arquitectura](docs/diagrams/arquitectura.png)
 

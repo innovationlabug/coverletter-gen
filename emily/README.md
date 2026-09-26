@@ -48,9 +48,9 @@ y en las pruebas; en la sección 3.3 se explica cómo verlo con las herramientas
 
 | Formulario | Carta | Nota privada |
 |---|---|---|
-| ![Formulario de cinco datos](docs/screenshots/ui-desktop-form.png) | ![La carta](docs/screenshots/ui-desktop-letter.png) | ![La nota privada](docs/screenshots/ui-desktop-note.png) |
+| ![Formulario de cinco datos](docs/screenshots/produccion-formulario.png) | ![La carta en línea y la nota privada (producción, modo oscuro)](docs/screenshots/produccion-resultados.jpg) | ![La nota privada (datos de prueba)](docs/screenshots/ui-desktop-note.png) |
 
-Capturas en móvil (390×844): [`ui-mobile-form.png`](docs/screenshots/ui-mobile-form.png) ·
+Formulario y carta son capturas de producción con datos reales; las `ui-*` las genera `scripts/ui-screenshots.ts` con la nube simulada (textos de prueba). Capturas en móvil (390×844): [formulario en producción](docs/screenshots/produccion-formulario-movil.png) · [`ui-mobile-form.png`](docs/screenshots/ui-mobile-form.png) ·
 [`ui-mobile-letter.png`](docs/screenshots/ui-mobile-letter.png) · [`ui-mobile-note.png`](docs/screenshots/ui-mobile-note.png).
 Se regeneran con `npx tsx scripts/ui-screenshots.ts` (build de prueba, nube interceptada; `--dark` para
 modo oscuro). Los íconos y la imagen para redes, con `npx tsx scripts/make-icons.ts`.

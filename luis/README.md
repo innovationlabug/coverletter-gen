@@ -14,9 +14,9 @@ La interfaz está pensada para quien busca trabajo, no para ingenieros: no muest
 
 | Formulario | Carta y nota privada |
 |---|---|
-| ![Formulario](docs/screenshots/ui-desktop-form.png) | ![Carta y nota privada](docs/screenshots/ui-desktop-results.png) |
+| ![Formulario](docs/screenshots/produccion-formulario.png) | ![Carta y nota privada (producción, con Tavily y JSearch reales)](docs/screenshots/produccion-resultados.png) |
 
-Móvil (390 px): [formulario](docs/screenshots/ui-mobile-form.png), [carta y nota](docs/screenshots/ui-mobile-results.png). Escritorio en [modo oscuro](docs/screenshots/ui-desktop-results-dark.png). En producción, con Tavily y JSearch reales: [formulario](docs/screenshots/produccion-formulario.png) y [resultados](docs/screenshots/produccion-resultados.png).
+Capturas de producción con datos reales; en móvil: [formulario](docs/screenshots/produccion-formulario-movil.png). Las capturas `ui-*` las genera `scripts/screenshots.mjs` con las APIs simuladas (sus textos son de prueba): [móvil](docs/screenshots/ui-mobile-results.png), [modo oscuro](docs/screenshots/ui-desktop-results-dark.png). En producción, con Tavily y JSearch reales: [formulario](docs/screenshots/produccion-formulario.png) y [resultados](docs/screenshots/produccion-resultados.png).
 
 **Marca.** "Carta y copia" es el producto: una hoja (la carta, con una "c") sobre su copia al carbón, en un cuadro jade. El mismo trazo se usa en el encabezado, el favicon (`public/icon.svg`), los íconos de la PWA (normal, *maskable* y Apple) y la imagen para compartir de 1200×630 (`public/og.png`); todo sale de `node scripts/make-icons.mjs`. Los metadatos (título, descripción, `og:*`, `twitter:card`, `theme-color` claro/oscuro) y el manifiesto solo nombran el producto.
 
