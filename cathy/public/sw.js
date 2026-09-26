@@ -1,5 +1,5 @@
 /*
- * Service worker de Cathy: app shell offline.
+ * Service worker de Rango: app shell offline.
  * - install: precachea "/" + manifest + íconos, y además lee el HTML de "/" para precachear
  *   los chunks de /_next/static que ese HTML referencia (sus nombres cambian en cada build).
  * - fetch:
@@ -7,8 +7,8 @@
  *     navegación       → network-first; sin red, la copia en caché de "/"
  *     /api/*           → NO se toca (siempre red; offline el cliente cae a heurísticas)
  */
-const VERSION = "cathy-v1";
-const SHELL = ["/", "/manifest.webmanifest", "/icons/icon.svg", "/icons/icon-192.png", "/icons/icon-512.png"];
+const VERSION = "rango-v2";
+const SHELL = ["/", "/manifest.webmanifest", "/favicon.ico", "/icons/icon.svg", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/apple-touch-icon.png"];
 
 async function precache() {
   const cache = await caches.open(VERSION);

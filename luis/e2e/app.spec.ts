@@ -70,6 +70,9 @@ async function fillForm(page: Page) {
   await page.getByLabel("Empresa", { exact: true }).fill("Tigo Guatemala");
   await page.locator("#currentSalary").fill("15000");
   await page.locator("#desiredSalary").fill("19000");
+  // Amounts are grouped as you type.
+  await expect(page.locator("#currentSalary")).toHaveValue("15,000");
+  await expect(page.locator("#desiredSalary")).toHaveValue("19,000");
   await page.getByLabel("Años de experiencia").fill("5");
   // Everything else lives behind one collapsed disclosure; location defaults to Guatemala.
   await expect(page.getByLabel("Tu nombre")).toBeHidden();
@@ -104,13 +107,40 @@ test("validation: empty form points to the first missing field", async ({ page }
   await page.getByRole("button", { name: SUBMIT }).click();
   await expect(page.getByText("Escribe el puesto al que aplicas.")).toBeVisible();
   await expect(page.getByLabel("Puesto al que aplicas")).toBeFocused();
+  await expect(page.getByLabel("Puesto al que aplicas")).toHaveAttribute("aria-invalid", "true");
   await expect(page.getByTestId("letter")).toHaveCount(0);
+});
+
+test("form: inline validation on blur, numeric fields, Enter submits", async ({ page, context }) => {
+  await mockApis(context);
+  await page.goto("/");
+  const years = page.getByLabel("Años de experiencia");
+  await expect(years).toHaveAttribute("inputmode", "numeric");
+  await expect(page.locator("#currentSalary")).toHaveAttribute("inputmode", "decimal");
+  // Letters are dropped; an out-of-range value is flagged when leaving the field.
+  await years.pressSequentially("9x9");
+  await expect(years).toHaveValue("99");
+  await years.blur();
+  await expect(page.getByText("Escribe un número entre 0 y 60.")).toBeVisible();
+  // Tabbing through an empty field never scolds.
+  await page.getByLabel("Empresa", { exact: true }).focus();
+  await page.getByLabel("Empresa", { exact: true }).blur();
+  await expect(page.getByText("Escribe la empresa a la que aplicas.")).toHaveCount(0);
+  // Pasting a formatted amount keeps a clean, grouped number.
+  await page.locator("#currentSalary").fill("Q 1234567");
+  await expect(page.locator("#currentSalary")).toHaveValue("1,234,567");
+
+  await page.getByRole("button", { name: "Llenar con un ejemplo" }).click();
+  await expect(page.locator("#desiredSalary")).toHaveValue("19,000");
+  await page.getByLabel("Puesto al que aplicas").press("Enter");
+  await expect(page.getByTestId("letter")).toBeVisible();
 });
 
 test("online: form → letter with sources + private note, nothing sensitive sent", async ({ page, context }) => {
   const bodies = await mockApis(context);
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Carta y copia" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Carta y copia" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Carta para ellos, nota para ti.");
   await fillForm(page);
   await page.getByRole("button", { name: SUBMIT }).click();
 
@@ -164,7 +194,7 @@ test("offline: app shell loads from the service worker and still produces note +
 
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Carta y copia" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Carta y copia" })).toBeVisible();
   await expect(page.getByTestId("net")).toContainText("Sin conexión");
 
   await fillForm(page);
@@ -254,4 +284,82 @@ test("375 px: no horizontal scroll on the form or the results", async ({ page, c
   await expect(page.getByTestId("note")).toBeVisible();
   await openNoteMore(page);
   expect(await noHScroll()).toBe(true);
+  await page.getByTestId("letter").getByRole("button", { name: "Editar" }).click();
+  expect(await noHScroll()).toBe(true);
+  await page.goto("/esta-pagina-no-existe");
+  expect(await noHScroll()).toBe(true);
+});
+
+test("letter: Copiar shows a confirmation and fills the clipboard; Descargar saves a .txt", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await mockApis(context);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Llenar con un ejemplo" }).click();
+  await page.getByRole("button", { name: SUBMIT }).click();
+  const letter = page.getByTestId("letter");
+  await expect(letter).toBeVisible();
+
+  await letter.getByRole("button", { name: "Copiar" }).click();
+  const toast = page.getByTestId("toast");
+  await expect(toast).toHaveAttribute("role", "status");
+  await expect(toast).toContainText("Copiada");
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toContain("Estimado equipo de selección de Tigo Guatemala:");
+  expect(copied).toContain("Ana Lucía Pérez");
+  await expect(toast).toBeEmpty({ timeout: 5000 });
+
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    letter.getByRole("button", { name: "Descargar" }).click(),
+  ]);
+  expect(download.suggestedFilename()).toBe("carta-tigo-guatemala.txt");
+  const path = await download.path();
+  const { readFile } = await import("node:fs/promises");
+  const text = await readFile(path, "utf8");
+  expect(text).toContain("Estimado equipo de selección de Tigo Guatemala:");
+  expect(text).toContain("Ana Lucía Pérez");
+});
+
+test("privacy explainer opens from the footer and closes with Escape", async ({ page }) => {
+  await page.goto("/");
+  const trigger = page.getByRole("button", { name: "Cómo cuidamos tus datos" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "Cómo cuidamos tus datos" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("se quedan en tu dispositivo");
+  await expect(dialog.getByRole("button", { name: "Entendido" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expectNoInternals(page);
+});
+
+test("404: friendly page with a way back home", async ({ page }) => {
+  const res = await page.goto("/esta-pagina-no-existe");
+  expect(res?.status()).toBe(404);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Esta página no existe.");
+  await expect(page.getByRole("link", { name: "Carta y copia" })).toBeVisible();
+  await page.getByRole("link", { name: "Ir al inicio" }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("button", { name: SUBMIT })).toBeVisible();
+});
+
+test("brand + metadata: product name only, Open Graph image and icons are served", async ({ page, request }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle(/^Carta y copia/);
+  const html = await page.content();
+  expect(html).not.toMatch(/Luis/);
+  const og = await page.locator('meta[property="og:image"]').getAttribute("content");
+  expect(og).toMatch(/\/og\.png$/);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+  await expect(page.locator('meta[name="theme-color"]').first()).toHaveAttribute("content", /#/);
+  for (const url of ["/og.png", "/icon.svg", "/icons/icon-192.png", "/icons/apple-touch-icon.png"]) {
+    expect((await request.get(url)).status(), url).toBe(200);
+  }
+  const manifest = await (await request.get("/manifest.webmanifest")).json();
+  expect(manifest.name).toBe("Carta y copia");
+  expect(JSON.stringify(manifest)).not.toMatch(/Luis/);
 });

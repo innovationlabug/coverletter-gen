@@ -4,14 +4,14 @@ Tres personas del equipo construyeron, cada una por su cuenta, la misma app: un 
 que además entrega una **nota privada de negociación** salarial, con una arquitectura **split brain**
 (una parte corre en el dispositivo de la persona y otra en la nube).
 
-Cada carpeta es un proyecto independiente, con su propio README, pruebas, demo y artículo. Las tres
+Cada carpeta es un proyecto independiente, con su propio README, pruebas, demo y artículo. Las carpetas llevan el nombre de quien la construyó; los productos tienen nombre propio y ninguna interfaz muestra al autor. Las tres
 cumplen las mismas condiciones mínimas y cada una profundiza en un área distinta.
 
-| Carpeta | Persona · área | Qué hace distinto | Demo | Artículo |
-|---|---|---|---|---|
-| [`luis/`](luis/) | Luis · **APIs** | Gemini + **Tavily** (investiga la empresa destino) + **JSearch** (salario de mercado). Documenta autenticación, fallas, costo y datos enviados de cada API. | [coverletter-luis.vercel.app](https://coverletter-luis.vercel.app) | [Tres APIs y un secreto](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit) |
-| [`cathy/`](cathy/) | Cathy · **modelos locales** | **Ollama privado en Cloud Run con GPU L4** + heurísticas. Compara **Gemma 4 E2B vs Qwen 3.5 2B** en calidad, latencia y memoria (CPU y GPU). | [cathy-coverletter…run.app](https://cathy-coverletter-611681112050.us-central1.run.app) | [¿Un Ollama en la nube sigue siendo local?](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit) |
-| [`emily/`](emily/) | Emily · **aprendizajes** | **Gemma 4 E2B en el navegador** (transformers.js) + Gemini vía Firebase AI Logic con App Check. **18 casos de validación** de fugas y calidad, prueba didáctica del README y 3 temas de artículo. | [coverletter-emily.vercel.app](https://coverletter-emily.vercel.app) | [¿Cómo sé que mi app no filtra tu salario?](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit) |
+| Carpeta | Persona · área | Producto | Qué hace distinto | Demo | Artículo |
+|---|---|---|---|---|---|
+| [`luis/`](luis/) | Luis · **APIs** | **Carta y copia** | Gemini + **Tavily** (investiga la empresa destino) + **JSearch** (salario de mercado). Documenta autenticación, fallas, costo y datos enviados de cada API. | [carta-y-copia.vercel.app](https://carta-y-copia.vercel.app) | [Tres APIs y un secreto](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit) |
+| [`cathy/`](cathy/) | Cathy · **modelos locales** | **Rango** | **Ollama privado en Cloud Run con GPU L4** + heurísticas. Compara **Gemma 4 E2B vs Qwen 3.5 2B** en calidad, latencia y memoria (CPU y GPU). | [rango…run.app](https://rango-611681112050.us-central1.run.app) | [¿Un Ollama en la nube sigue siendo local?](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit) |
+| [`emily/`](emily/) | Emily · **aprendizajes** | **Sobre** | **Gemma 4 E2B en el navegador** (transformers.js) + Gemini vía Firebase AI Logic con App Check. **18 casos de validación** de fugas y calidad, prueba didáctica del README y 3 temas de artículo. | [sobre-carta.vercel.app](https://sobre-carta.vercel.app) | [¿Cómo sé que mi app no filtra tu salario?](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit) |
 
 ## El reto (resumen)
 
@@ -54,8 +54,8 @@ están hechos con *diagram-design* (`docs/diagrams/*.html` + `.png`).
 
 | Pieza | Dónde |
 |---|---|
-| Luis y Emily | Vercel (`coverletter-luis`, `coverletter-emily`) |
-| App de Cathy | Cloud Run `cathy-coverletter` (`us-central1`, proyecto `ai-experiments-487722`), cuenta de servicio propia |
+| Carta y copia y Sobre | Vercel: `carta-y-copia.vercel.app` y `sobre-carta.vercel.app` |
+| Rango | Cloud Run `rango` (`us-central1`, proyecto `ai-experiments-487722`), cuenta de servicio propia |
 | Ollama privado | Cloud Run `ollama-coverletter` con **GPU L4** en `europe-west4` (solo invocable por IAM), modelos horneados en la imagen, escala a cero |
 | Gemini | `gemini-3.8-flash`: API key (Luis), Vertex AI (Cathy), Firebase AI Logic + App Check (Emily) |
 

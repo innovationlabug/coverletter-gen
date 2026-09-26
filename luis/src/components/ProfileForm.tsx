@@ -1,6 +1,7 @@
 "use client";
 
-import type { FormErrors, ProfileForm as Form } from "@/lib/profile";
+import { useLayoutEffect, useRef, type KeyboardEvent } from "react";
+import { caretAfterFormat, formatMoneyTyping, type FormErrors, type ProfileForm as Form } from "@/lib/profile";
 import type { Currency } from "@/lib/types";
 
 /** Fields that live inside the "Más detalles" disclosure. */
@@ -13,13 +14,12 @@ export const DETAIL_FIELDS: (keyof Form)[] = [
   "location",
 ];
 
-export function LockIcon() {
-  return (
-    <svg aria-hidden="true" width="11" height="12" viewBox="0 0 11 12" className="lock">
-      <rect x="1" y="5" width="9" height="6.5" rx="1.5" fill="currentColor" />
-      <path d="M3 5V3.6a2.5 2.5 0 0 1 5 0V5" fill="none" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
+/** Cmd/Ctrl + Enter submits from a multi-line field (plain Enter adds a line). */
+function submitOnModEnter(e: KeyboardEvent<HTMLTextAreaElement>) {
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault();
+    e.currentTarget.form?.requestSubmit();
+  }
 }
 
 interface FieldProps {
@@ -27,35 +27,66 @@ interface FieldProps {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
   error?: string;
+  hint?: string;
   placeholder?: string;
   inputMode?: "numeric" | "text" | "decimal";
   autoComplete?: string;
+  maxLength?: number;
   multiline?: number;
   className?: string;
 }
 
-function Field({ id, label, value, onChange, error, placeholder, inputMode, autoComplete, multiline, className }: FieldProps) {
+function Field({
+  id,
+  label,
+  value,
+  onChange,
+  onBlur,
+  error,
+  hint,
+  placeholder,
+  inputMode,
+  autoComplete,
+  maxLength,
+  multiline,
+  className,
+}: FieldProps) {
+  const describedBy = [error ? `${id}-err` : null, hint ? `${id}-hint` : null].filter(Boolean).join(" ") || undefined;
   const common = {
     id,
     name: id,
     value,
     placeholder,
+    onBlur,
     "aria-invalid": error ? true : undefined,
-    "aria-describedby": error ? `${id}-err` : undefined,
+    "aria-describedby": describedBy,
   } as const;
   return (
     <div className={`field${className ? ` ${className}` : ""}`}>
       <label htmlFor={id}>{label}</label>
       {multiline ? (
-        <textarea {...common} rows={multiline} onChange={(e) => onChange(e.target.value)} />
+        <textarea
+          {...common}
+          rows={multiline}
+          onKeyDown={submitOnModEnter}
+          onChange={(e) => onChange(e.target.value)}
+        />
       ) : (
         <input
           {...common}
+          type="text"
           inputMode={inputMode}
+          maxLength={maxLength}
           autoComplete={autoComplete ?? "off"}
           onChange={(e) => onChange(e.target.value)}
         />
+      )}
+      {hint && !error && (
+        <p className="hint" id={`${id}-hint`}>
+          {hint}
+        </p>
       )}
       {error && (
         <p className="error" id={`${id}-err`}>
@@ -66,6 +97,10 @@ function Field({ id, label, value, onChange, error, placeholder, inputMode, auto
   );
 }
 
+/**
+ * Currency + amount in one control. The amount is grouped as you type
+ * ("15000" → "15,000") and the caret stays where you were typing.
+ */
 function MoneyField({
   id,
   currencyId,
@@ -74,6 +109,7 @@ function MoneyField({
   currency,
   onValue,
   onCurrency,
+  onBlur,
   error,
 }: {
   id: "currentSalary" | "desiredSalary";
@@ -83,8 +119,29 @@ function MoneyField({
   currency: Currency;
   onValue: (v: string) => void;
   onCurrency: (c: Currency) => void;
+  onBlur: () => void;
   error?: string;
 }) {
+  const input = useRef<HTMLInputElement>(null);
+  const caret = useRef<number | null>(null);
+
+  useLayoutEffect(() => {
+    const el = input.current;
+    if (el && caret.current !== null && document.activeElement === el) {
+      el.setSelectionRange(caret.current, caret.current);
+    }
+    caret.current = null;
+  }, [value]);
+
+  // Backspace/Delete next to a comma removes the digit, not the (re-added) comma.
+  const skipCommas = (e: KeyboardEvent<HTMLInputElement>) => {
+    const el = e.currentTarget;
+    const at = el.selectionStart ?? 0;
+    if (at !== el.selectionEnd) return;
+    if (e.key === "Backspace" && el.value[at - 1] === ",") el.setSelectionRange(at - 1, at - 1);
+    if (e.key === "Delete" && el.value[at] === ",") el.setSelectionRange(at + 1, at + 1);
+  };
+
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
@@ -92,7 +149,7 @@ function MoneyField({
         <select
           id={currencyId}
           name={currencyId}
-          aria-label={`Moneda: ${label.toLowerCase()}`}
+          aria-label={`Moneda del ${label.toLowerCase()}`}
           value={currency}
           onChange={(e) => onCurrency(e.target.value as Currency)}
         >
@@ -100,16 +157,27 @@ function MoneyField({
           <option value="USD">US$</option>
         </select>
         <input
+          ref={input}
           id={id}
           name={id}
+          type="text"
           inputMode="decimal"
           autoComplete="off"
-          placeholder="al mes"
           value={value}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-err salary-note` : "salary-note"}
-          onChange={(e) => onValue(e.target.value)}
+          onKeyDown={skipCommas}
+          onBlur={onBlur}
+          onChange={(e) => {
+            const raw = e.target.value;
+            const next = formatMoneyTyping(raw);
+            caret.current = caretAfterFormat(raw, e.target.selectionStart ?? raw.length, next);
+            onValue(next);
+          }}
         />
+        <span className="money-unit" aria-hidden="true">
+          al mes
+        </span>
       </div>
       {error && (
         <p className="error" id={`${id}-err`}>
@@ -127,6 +195,7 @@ export function ProfileForm({
   detailsOpen,
   onDetailsOpen,
   onChange,
+  onBlurField,
   onSubmit,
 }: {
   form: Form;
@@ -135,9 +204,11 @@ export function ProfileForm({
   detailsOpen: boolean;
   onDetailsOpen: (open: boolean) => void;
   onChange: <K extends keyof Form>(key: K, value: Form[K]) => void;
+  onBlurField: (key: keyof Form) => void;
   onSubmit: () => void;
 }) {
   const set = (k: keyof Form) => (v: string) => onChange(k, v as never);
+  const blur = (k: keyof Form) => () => onBlurField(k);
   return (
     <form
       className="profile"
@@ -154,6 +225,7 @@ export function ProfileForm({
           label="Puesto al que aplicas"
           value={form.desiredRole}
           onChange={set("desiredRole")}
+          onBlur={blur("desiredRole")}
           error={errors.desiredRole}
           placeholder="Ej. Analista de datos"
         />
@@ -162,6 +234,7 @@ export function ProfileForm({
           label="Empresa"
           value={form.targetCompany}
           onChange={set("targetCompany")}
+          onBlur={blur("targetCompany")}
           error={errors.targetCompany}
           placeholder="Ej. Tigo Guatemala"
         />
@@ -177,6 +250,7 @@ export function ProfileForm({
             currency={form.currentCurrency}
             onValue={set("currentSalary")}
             onCurrency={(c) => onChange("currentCurrency", c)}
+            onBlur={blur("currentSalary")}
             error={errors.currentSalary}
           />
           <MoneyField
@@ -187,11 +261,12 @@ export function ProfileForm({
             currency={form.desiredCurrency}
             onValue={set("desiredSalary")}
             onCurrency={(c) => onChange("desiredCurrency", c)}
+            onBlur={blur("desiredSalary")}
             error={errors.desiredSalary}
           />
         </div>
-        <p className="private-line" id="salary-note">
-          <LockIcon /> Tu salario no sale de tu dispositivo.
+        <p className="hint" id="salary-note">
+          Solo se usa para tu nota privada; no aparece en la carta.
         </p>
       </div>
 
@@ -199,8 +274,10 @@ export function ProfileForm({
         id="yearsExperience"
         label="Años de experiencia"
         value={form.yearsExperience}
-        onChange={set("yearsExperience")}
+        onChange={(v) => onChange("yearsExperience", v.replace(/\D/g, "").slice(0, 2))}
+        onBlur={blur("yearsExperience")}
         inputMode="numeric"
+        maxLength={2}
         error={errors.yearsExperience}
         placeholder="Ej. 5"
         className="field-short"
@@ -226,7 +303,7 @@ export function ProfileForm({
             label="Logros"
             value={form.achievements}
             onChange={set("achievements")}
-            placeholder="Qué lograste y con qué impacto"
+            placeholder="Qué lograste y con qué resultado"
             multiline={3}
           />
           <Field
@@ -234,7 +311,7 @@ export function ProfileForm({
             label="Oferta de trabajo"
             value={form.jobOffer}
             onChange={set("jobOffer")}
-            placeholder="Pega el anuncio"
+            placeholder="Pega aquí el anuncio"
             multiline={3}
           />
           <div className="row">
@@ -243,12 +320,14 @@ export function ProfileForm({
               label="Puesto actual"
               value={form.currentRole}
               onChange={set("currentRole")}
+              autoComplete="organization-title"
             />
             <Field
               id="currentEmployer"
               label="Empleador actual"
               value={form.currentEmployer}
               onChange={set("currentEmployer")}
+              autoComplete="organization"
             />
           </div>
           <Field
@@ -256,14 +335,22 @@ export function ProfileForm({
             label="Ubicación"
             value={form.location}
             onChange={set("location")}
+            onBlur={blur("location")}
             error={errors.location}
+            autoComplete="address-level2"
             placeholder="Ciudad o país"
           />
         </div>
       </details>
 
-      <button type="submit" className="primary" disabled={busy}>
-        {busy ? "Creando…" : "Crear carta y nota"}
+      <button type="submit" className="primary" disabled={busy} aria-busy={busy || undefined}>
+        {busy ? (
+          <>
+            <span className="spinner" aria-hidden="true" /> Creando…
+          </>
+        ) : (
+          "Crear carta y nota"
+        )}
       </button>
     </form>
   );

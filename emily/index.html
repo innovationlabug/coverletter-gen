@@ -2,145 +2,242 @@
 <html lang="es-GT">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Tu carta de interés lista para enviar, y una nota privada para negociar tu salario." />
-    <meta name="theme-color" content="#1c2940" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Sobre · Tu carta de interés, lista para enviar</title>
+    <meta name="description" content="Escribe tu carta de interés en un minuto y recibe una nota privada para negociar tu salario. Tu salario nunca sale de tu dispositivo." />
+    <meta name="application-name" content="Sobre" />
+    <meta name="apple-mobile-web-app-title" content="Sobre" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#eef0ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121826" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sobre" />
+    <meta property="og:locale" content="es_GT" />
+    <meta property="og:title" content="Sobre · Tu carta de interés, lista para enviar" />
+    <meta property="og:description" content="Una carta lista para enviar y una nota privada para negociar tu salario. Tu salario nunca sale de tu dispositivo." />
+    <meta property="og:image" content="__SITE_URL__/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sobre: tu carta de interés, lista para enviar." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sobre · Tu carta de interés, lista para enviar" />
+    <meta name="twitter:description" content="Una carta lista para enviar y una nota privada para negociar tu salario." />
+    <meta name="twitter:image" content="__SITE_URL__/og.png" />
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-    <title>Emily · Carta de interés</title>
+    <link rel="icon" href="/icons/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
   </head>
   <body>
     <a class="skip" href="#contenido">Saltar al contenido</a>
 
-    <p id="offline" class="offline" role="status" data-testid="offline-banner" hidden>
-      Sin conexión. Igual puedes preparar tu carta y tu nota.
-    </p>
+    <div class="shell">
+      <header class="top">
+        <a class="brand" href="/" aria-label="Sobre, ir al inicio">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <clipPath id="mark-env"><rect x="2.5" y="7" width="27" height="18.5" rx="3" /></clipPath>
+            <g clip-path="url(#mark-env)">
+              <rect x="2.5" y="7" width="27" height="18.5" fill="currentColor" />
+              <path d="M1.6 6.2 16 17.4 30.4 6.2Z" class="brand__flap" stroke-width="1.2" stroke-linejoin="round" />
+            </g>
+            <circle cx="16" cy="17.4" r="3.9" class="brand__seal" stroke-width="1.4" />
+          </svg>
+          <span class="brand__name">Sobre</span>
+        </a>
+        <button type="button" class="back" id="editar" data-testid="edit" hidden>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.5 5.5 8l4.5 4.5" /></svg>
+          Cambiar mis datos
+        </button>
+      </header>
 
-    <header class="top">
-      <span class="brand">Emily</span>
-      <button type="button" class="link-btn" id="editar" data-testid="edit" hidden>Cambiar mis datos</button>
-    </header>
+      <p id="offline" class="offline" role="status" data-testid="offline-banner" hidden>
+        <span class="offline__dot" aria-hidden="true"></span>
+        Sin conexión. Igual puedes preparar tu carta y tu nota.
+      </p>
 
-    <main id="contenido">
-      <!-- Paso 1: tus datos -->
-      <section id="paso-datos" class="intake" aria-labelledby="intake-title">
-        <h1 id="intake-title" tabindex="-1">Tu carta de interés, lista para enviar.</h1>
-        <p class="lede">Y una nota privada para negociar tu salario.</p>
-
-        <form id="perfil" class="form" novalidate>
-          <div class="field">
-            <label for="f-puestoDeseado">Puesto al que aplicas</label>
-            <input id="f-puestoDeseado" name="puestoDeseado" required />
+      <main id="contenido">
+        <!-- Paso 1: tus datos -->
+        <section id="paso-datos" class="step intake" aria-labelledby="intake-title">
+          <div class="intake__intro">
+            <h1 id="intake-title" tabindex="-1">Tu carta de interés, lista para enviar.</h1>
+            <p class="lede">Y una nota privada para negociar tu salario.</p>
           </div>
-          <div class="field">
-            <label for="f-empresa">Empresa</label>
-            <input id="f-empresa" name="empresaDestino" autocomplete="off" required />
-          </div>
-          <div class="pair">
-            <div class="field">
-              <label for="f-salarioActual">Salario actual</label>
-              <div class="money">
-                <select name="monedaActual" aria-label="Moneda del salario actual"><option value="GTQ">Q</option><option value="USD">US$</option></select>
-                <input id="f-salarioActual" name="salarioActual" inputmode="decimal" aria-describedby="h-mes" required />
+
+          <form id="perfil" class="form" novalidate>
+            <div class="field" data-field="puestoDeseado">
+              <label for="f-puestoDeseado">Puesto al que aplicas</label>
+              <input id="f-puestoDeseado" name="puestoDeseado" autocomplete="off" autocapitalize="sentences" enterkeyhint="next" required aria-describedby="e-puestoDeseado" />
+              <p class="field__error" id="e-puestoDeseado" hidden></p>
+            </div>
+            <div class="field" data-field="empresaDestino">
+              <label for="f-empresa">Empresa</label>
+              <input id="f-empresa" name="empresaDestino" autocomplete="off" autocapitalize="words" enterkeyhint="next" required aria-describedby="e-empresaDestino" />
+              <p class="field__error" id="e-empresaDestino" hidden></p>
+            </div>
+            <div class="pair">
+              <div class="field" data-field="salarioActual">
+                <label for="f-salarioActual">Salario actual</label>
+                <div class="money">
+                  <span class="money__cur"><select name="monedaActual" aria-label="Moneda del salario actual"><option value="GTQ">Q</option><option value="USD">US$</option></select></span>
+                  <input id="f-salarioActual" name="salarioActual" inputmode="numeric" autocomplete="off" enterkeyhint="next" maxlength="13" required aria-describedby="h-mes e-salarioActual" />
+                </div>
+                <p class="field__error" id="e-salarioActual" hidden></p>
+              </div>
+              <div class="field" data-field="salarioDeseado">
+                <label for="f-salarioDeseado">Salario que quieres</label>
+                <div class="money">
+                  <span class="money__cur"><select name="monedaDeseada" aria-label="Moneda del salario que quieres"><option value="GTQ">Q</option><option value="USD">US$</option></select></span>
+                  <input id="f-salarioDeseado" name="salarioDeseado" inputmode="numeric" autocomplete="off" enterkeyhint="next" maxlength="13" required aria-describedby="h-mes e-salarioDeseado" />
+                </div>
+                <p class="field__error" id="e-salarioDeseado" hidden></p>
               </div>
             </div>
-            <div class="field">
-              <label for="f-salarioDeseado">Salario que quieres</label>
-              <div class="money">
-                <select name="monedaDeseada" aria-label="Moneda del salario que quieres"><option value="GTQ">Q</option><option value="USD">US$</option></select>
-                <input id="f-salarioDeseado" name="salarioDeseado" inputmode="decimal" aria-describedby="h-mes" required />
-              </div>
+            <p class="hint hint--pair" id="h-mes">Al mes. No aparece en la carta: solo lo usamos para tu nota privada.</p>
+            <div class="field field--short" data-field="aniosExperiencia">
+              <label for="f-anios">Años de experiencia</label>
+              <input id="f-anios" name="aniosExperiencia" inputmode="numeric" autocomplete="off" enterkeyhint="go" maxlength="2" required aria-describedby="e-aniosExperiencia" />
+              <p class="field__error" id="e-aniosExperiencia" hidden></p>
             </div>
-          </div>
-          <p class="hint" id="h-mes">Al mes. Tu salario no aparece en la carta y no sale de este dispositivo.</p>
-          <div class="field field--short">
-            <label for="f-anios">Años de experiencia</label>
-            <input id="f-anios" name="aniosExperiencia" inputmode="numeric" required />
-          </div>
 
-          <details class="more" id="mas-detalles">
-            <summary>Más detalles <span class="optional">(opcional)</span></summary>
-            <div class="more__body">
-              <div class="field">
-                <label for="f-nombre">Tu nombre, para la firma</label>
-                <input id="f-nombre" name="nombre" autocomplete="name" />
+            <details class="more" id="mas-detalles">
+              <summary>Más detalles <span class="optional">(opcional)</span></summary>
+              <div class="more__body">
+                <div class="field">
+                  <label for="f-nombre">Tu nombre, para la firma</label>
+                  <input id="f-nombre" name="nombre" autocomplete="name" autocapitalize="words" />
+                </div>
+                <div class="field">
+                  <label for="f-puestoActual">Puesto actual</label>
+                  <input id="f-puestoActual" name="puestoActual" autocomplete="organization-title" />
+                </div>
+                <div class="field">
+                  <label for="f-empleador">Dónde trabajas hoy</label>
+                  <input id="f-empleador" name="empleadorActual" autocomplete="organization" aria-describedby="h-empleador" />
+                  <p class="hint" id="h-empleador">No aparece en la carta.</p>
+                </div>
+                <div class="field">
+                  <label for="f-logros">Tus logros, uno por línea</label>
+                  <textarea
+                    id="f-logros"
+                    name="logros"
+                    rows="4"
+                    placeholder="Automaticé los reportes del equipo y ahorramos 20 horas al mes."
+                  ></textarea>
+                </div>
+                <div class="field">
+                  <label for="f-oferta">La oferta de trabajo</label>
+                  <textarea id="f-oferta" name="oferta" rows="4" aria-describedby="h-oferta"></textarea>
+                  <p class="hint" id="h-oferta">Pégala y la carta se ajusta a lo que piden.</p>
+                </div>
+                <label class="check">
+                  <input type="checkbox" name="soloDispositivo" data-testid="device-only" />
+                  <span>No usar internet para escribir la carta</span>
+                </label>
               </div>
-              <div class="field">
-                <label for="f-puestoActual">Puesto actual</label>
-                <input id="f-puestoActual" name="puestoActual" autocomplete="organization-title" />
-              </div>
-              <div class="field">
-                <label for="f-empleador">Dónde trabajas hoy</label>
-                <input id="f-empleador" name="empleadorActual" autocomplete="organization" aria-describedby="h-empleador" />
-                <p class="hint" id="h-empleador">No aparece en la carta.</p>
-              </div>
-              <div class="field">
-                <label for="f-logros">Tus logros, uno por línea</label>
-                <textarea
-                  id="f-logros"
-                  name="logros"
-                  rows="4"
-                  placeholder="Automaticé los reportes del equipo y ahorramos 20 horas al mes."
-                ></textarea>
-              </div>
-              <div class="field">
-                <label for="f-oferta">La oferta de trabajo</label>
-                <textarea id="f-oferta" name="oferta" rows="4" aria-describedby="h-oferta"></textarea>
-                <p class="hint" id="h-oferta">Pégala y la carta se ajusta a lo que piden.</p>
-              </div>
-              <label class="check">
-                <input type="checkbox" name="soloDispositivo" data-testid="device-only" />
-                <span>No usar internet para escribir la carta</span>
-              </label>
+            </details>
+
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+
+            <div class="actions">
+              <button type="submit" class="btn btn--primary" data-testid="generate">
+                <span class="spinner" aria-hidden="true"></span>
+                <span class="btn__label">Preparar carta y nota</span>
+              </button>
+              <button type="button" class="link-btn link-btn--quiet" id="ejemplo" data-testid="fill-example">Probar con un ejemplo</button>
             </div>
-          </details>
-
-          <p id="form-error" class="form-error" role="alert" hidden></p>
-
-          <div class="actions">
-            <button type="submit" class="btn btn--primary" data-testid="generate">Preparar carta y nota</button>
-            <button type="button" class="link-btn link-btn--quiet" id="ejemplo" data-testid="fill-example">Probar con un ejemplo</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Paso 2: tu carta y tu nota -->
-      <section id="paso-carta" class="results" aria-labelledby="results-title" hidden>
-        <h1 id="results-title" tabindex="-1">Tu carta</h1>
-
-        <div class="toolbar">
-          <fieldset class="versions" id="versions" hidden>
-            <legend class="sr">Versión de la carta</legend>
-            <div class="versions__options">
-              <label data-version="nube" hidden><input type="radio" name="version" value="nube" data-testid="version-nube" /><span>En línea</span></label>
-              <label data-version="local" hidden><input type="radio" name="version" value="local" data-testid="version-local" /><span>En tu dispositivo</span></label>
-              <label data-version="plantilla"><input type="radio" name="version" value="plantilla" data-testid="version-plantilla" /><span>Base</span></label>
-            </div>
-          </fieldset>
-          <button type="button" class="btn btn--quiet btn--small" id="copiar" data-testid="copy" disabled>Copiar</button>
-        </div>
-
-        <p id="letter-notice" class="notice" data-testid="letter-notice" role="status" hidden></p>
-
-        <article id="hoja" class="sheet" aria-label="Carta" aria-live="polite" aria-busy="false" data-testid="letter"></article>
-
-        <section id="nota" class="note" aria-labelledby="nota-title" data-testid="note">
-          <h2 id="nota-title">Tu nota privada</h2>
-          <div id="nota-body"></div>
+          </form>
         </section>
 
-        <div id="modelo" class="offline-line" data-testid="model-card" hidden>
-          <p id="model-desc">
-            <button type="button" class="link-btn" id="model-load" data-testid="model-load"></button>
-            <span id="model-hint"></span>
-          </p>
-          <div class="progress" id="model-progress" hidden>
-            <progress id="model-bar" max="100" value="0" aria-label="Descarga de la versión sin internet"></progress>
-            <span id="model-bytes" aria-live="polite"></span>
+        <!-- Paso 2: tu carta y tu nota -->
+        <section id="paso-carta" class="step results" aria-labelledby="results-title" hidden>
+          <h1 id="results-title" tabindex="-1">Tu carta</h1>
+
+          <div class="results__grid">
+            <div class="letter-col">
+              <fieldset class="versions" id="versions" hidden>
+                <legend class="sr">Versión de la carta</legend>
+                <div class="versions__options">
+                  <label data-version="nube" hidden><input type="radio" name="version" value="nube" data-testid="version-nube" /><span>En línea</span></label>
+                  <label data-version="local" hidden><input type="radio" name="version" value="local" data-testid="version-local" /><span>En tu dispositivo</span></label>
+                  <label data-version="plantilla"><input type="radio" name="version" value="plantilla" data-testid="version-plantilla" /><span>Base</span></label>
+                </div>
+              </fieldset>
+
+              <div class="letter-actions" role="group" aria-label="Acciones de la carta" data-ready="false">
+                <button type="button" class="btn btn--primary btn--small" id="copiar" data-testid="copy" disabled>
+                  <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="7.5" height="8" rx="1.5" /><path d="M10.5 3.5v-.25c0-.7-.55-1.25-1.25-1.25h-5c-.7 0-1.25.55-1.25 1.25v6.5c0 .7.55 1.25 1.25 1.25h.25" /></svg>
+                  Copiar
+                </button>
+                <button type="button" class="btn btn--quiet btn--small" id="descargar" data-testid="download" disabled>
+                  <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v7.5M4.75 6.75 8 10l3.25-3.25M3 13h10" /></svg>
+                  Descargar
+                </button>
+              </div>
+
+              <div class="notice" id="letter-notice-box" hidden>
+                <p id="letter-notice" data-testid="letter-notice" role="status"></p>
+                <button type="button" class="link-btn" id="notice-action" data-testid="notice-action" hidden></button>
+              </div>
+
+              <article id="hoja" class="sheet" aria-label="Carta" aria-live="polite" aria-busy="false" data-testid="letter"></article>
+
+              <div id="modelo" class="offline-line" data-testid="model-card" hidden>
+                <p id="model-desc">
+                  <button type="button" class="link-btn" id="model-load" data-testid="model-load"></button>
+                  <span id="model-hint"></span>
+                </p>
+                <div class="progress" id="model-progress" hidden>
+                  <div class="progress__track"><progress id="model-bar" max="100" value="0" aria-label="Descarga para usar sin internet"></progress></div>
+                  <span id="model-bytes" aria-live="polite"></span>
+                </div>
+              </div>
+            </div>
+
+            <aside id="nota" class="note" aria-labelledby="nota-title" data-testid="note">
+              <div class="note__head">
+                <span class="note__seal" aria-hidden="true"></span>
+                <h2 id="nota-title" tabindex="-1">Tu nota privada</h2>
+              </div>
+              <p class="note__caption">Solo la ves tú. No va en la carta.</p>
+              <div id="nota-body"></div>
+            </aside>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        <!-- Ruta desconocida -->
+        <section id="no-encontrado" class="step lost" aria-labelledby="lost-title" hidden>
+          <p class="lost__code" aria-hidden="true">404</p>
+          <h1 id="lost-title" tabindex="-1">Esta página no existe.</h1>
+          <p class="lede">Puede que el enlace esté incompleto. Tu carta se prepara desde la página principal.</p>
+          <a class="btn btn--primary" href="/">Ir al inicio</a>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <p class="foot__promise">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="3" y="7" width="10" height="7" rx="1.6" /><path d="M5.25 7V5.25a2.75 2.75 0 0 1 5.5 0V7" /></svg>
+          Tu salario nunca sale de este dispositivo.
+        </p>
+        <button type="button" class="link-btn link-btn--quiet" id="privacidad" data-testid="privacy-link" aria-haspopup="dialog">Cómo cuidamos tus datos</button>
+      </footer>
+    </div>
+
+    <dialog id="dlg-privacidad" class="dialog" aria-labelledby="dlg-title" data-testid="privacy-dialog">
+      <div class="dialog__inner">
+        <h2 id="dlg-title">Cómo cuidamos tus datos</h2>
+        <p>Tu salario, tu nombre y dónde trabajas hoy se quedan en este dispositivo: con ellos armamos tu nota privada aquí mismo.</p>
+        <p>Para escribir la carta en línea enviamos solo lo que la carta necesita (el puesto, la empresa, tu experiencia, tus logros y la oferta), y antes quitamos cifras, nombres y datos de contacto.</p>
+        <p>Si después de eso queda algo que parezca privado, no enviamos nada y te dejamos la versión base.</p>
+        <p>No te pedimos una cuenta ni guardamos lo que escribes.</p>
+        <p>Si prefieres que nada salga de tu equipo, abre «Más detalles» y marca «No usar internet para escribir la carta».</p>
+        <form method="dialog" class="dialog__actions">
+          <button class="btn btn--primary btn--small" value="ok">Entendido</button>
+        </form>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" data-testid="toast"></div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

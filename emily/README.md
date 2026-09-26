@@ -1,6 +1,6 @@
 # Emily · carta de interés sin contar lo que ganas
 
-- **Demo:** [coverletter-emily.vercel.app](https://coverletter-emily.vercel.app)
+- **Demo:** [sobre-carta.vercel.app](https://sobre-carta.vercel.app)
 - **Artículo:** [¿Cómo sé que mi app no filtra tu salario? Validar un split brain con 78 datos trampa](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit)
 - **Validación:** [VALIDACION.md](VALIDACION.md) · **Prueba didáctica:** [DIDACTICA.md](DIDACTICA.md) · **Temas para próximos artículos:** [TEMAS.md](TEMAS.md)
 
@@ -15,9 +15,34 @@ Generador de **cartas de interés** con una **nota privada de negociación**, co
 **Tu salario actual nunca sale del dispositivo**, y eso lo prueba una prueba automática
 (`tests/leak.test.ts`). La evaluación de 18 casos está en [`VALIDACION.md`](VALIDACION.md).
 
-La interfaz es deliberadamente mínima: una sola columna, cinco datos a la vista (puesto, empresa,
-salario actual, salario que quieres y años de experiencia) y el resto bajo **Más detalles (opcional)**.
-Tampoco detalla qué se envió a la nube ni qué se tachó. Esa
+### La interfaz: **Sobre**
+
+Para quien la usa, la app se llama **Sobre** (como el sobre de una carta; lema: *"Tu carta de interés,
+lista para enviar."*). La marca es un sobre cerrado con un sello de lacre, y aparece en el encabezado,
+el ícono de la pestaña, los íconos de la PWA (`public/icons/`) y la imagen para redes sociales
+(`public/og.png`, 1200×630). El nombre del proyecto (`emily/`) no aparece en la interfaz.
+
+La interfaz es deliberadamente simple, con acabado de producto:
+
+- **Formulario**: cinco datos a la vista (puesto, empresa, salario actual, salario que quieres y años de
+  experiencia) y el resto bajo **Más detalles (opcional)**. Los montos se formatean al escribir
+  (`15000` → `15,000`, teclado numérico), cada campo dice qué le falta justo debajo, **Enter** envía
+  cuando todo está completo (y si no, salta al siguiente dato que falta).
+- **Carta**: una sola, con el selector de versión solo si hay más de una; **Copiar** (aviso "Copiada") y
+  **Descargar** (`carta-<empresa>.txt`). En el celular, esas dos acciones quedan fijas al pie mientras lees.
+  Mientras se escribe, un esqueleto con la forma de la carta y una sola línea honesta ("Suele tardar menos
+  de un minuto"); si tarda más de 30 s, ofrece la versión base mientras tanto.
+- **Nota privada**: al lado de la carta en pantallas anchas, debajo en el celular; compacta, con **Ver más**.
+- **Errores y sin conexión**: mensajes tranquilos con un siguiente paso (*Intentar de nuevo*, *Revisar mis
+  datos*, *Pedir la versión en línea* cuando vuelve la conexión).
+- **Pie**: *"Tu salario nunca sale de este dispositivo."* y **Cómo cuidamos tus datos**, un diálogo corto
+  en lenguaje simple (sin nombres técnicos).
+- Modo claro y oscuro (según el sistema), contraste AA (bordes de campos ≥ 3:1, texto ≥ 4.5:1), áreas
+  táctiles ≥ 44 px, foco visible, `aria-live` para avisos, animaciones sutiles que respetan
+  *reducir movimiento*, y una página 404 con la marca (`public/404.html` en Vercel; dentro de la app,
+  para rutas servidas por el service worker).
+
+La interfaz tampoco detalla qué se envió a la nube ni qué se tachó. Esa
 explicación vive aquí (secciones [1](#1-qué-corre-dónde-y-por-qué) y [8](#8-qué-es-sensible-y-cómo-se-demuestra))
 y en las pruebas; en la sección 3.3 se explica cómo verlo con las herramientas del navegador.
 
@@ -27,6 +52,8 @@ y en las pruebas; en la sección 3.3 se explica cómo verlo con las herramientas
 
 Capturas en móvil (390×844): [`ui-mobile-form.png`](docs/screenshots/ui-mobile-form.png) ·
 [`ui-mobile-letter.png`](docs/screenshots/ui-mobile-letter.png) · [`ui-mobile-note.png`](docs/screenshots/ui-mobile-note.png).
+Se regeneran con `npx tsx scripts/ui-screenshots.ts` (build de prueba, nube interceptada; `--dark` para
+modo oscuro). Los íconos y la imagen para redes, con `npx tsx scripts/make-icons.ts`.
 
 Otros documentos: [`DIDACTICA.md`](DIDACTICA.md) (prueba de este README con alguien que no conocía el
 proyecto, y qué se corrigió) y [`TEMAS.md`](TEMAS.md) (tres temas que merecen su propio artículo).
@@ -77,8 +104,8 @@ El flujo de un clic en **"Preparar carta y nota"** (`src/lib/orchestrator.ts`):
 
 La UI (`src/main.ts`) muestra una sola carta, en este orden de preferencia: **en línea → en tu
 dispositivo → base**. Los errores se traducen a lenguaje simple (por ejemplo, un `401` de App Check
-se ve como *"No pudimos generar la versión en línea; te dejamos la versión base."*); el detalle
-técnico queda en la consola del navegador con el prefijo `[emily]`.
+se ve como *"No pudimos escribir la versión en línea esta vez. Te dejamos la versión base."*, con un
+botón *Intentar de nuevo*); el detalle técnico queda en la consola del navegador con el prefijo `[sobre]`.
 
 ## Quién puede seguir este README
 
@@ -165,11 +192,11 @@ let s = ""; process.stdin.on("data", (d) => (s += d)).on("end", () => {
 
 El proyecto de Firebase tiene **App Check en modo obligatorio** para Firebase AI Logic. Sin App Check
 la carta de la nube falla con `401 Firebase App Check token is invalid`: la app muestra *"No pudimos
-generar la versión en línea; te dejamos la versión base."* y el resto funciona igual. Hay dos opciones:
+escribir la versión en línea esta vez. Te dejamos la versión base."* y el resto funciona igual. Hay dos opciones:
 
 - **Clave de reCAPTCHA Enterprise (recomendada, sirve en desarrollo y en producción):** ya existe una
   clave de sitio para la app web **`coverletter-emily`**, que acepta los dominios
-  `coverletter-emily.vercel.app` y `localhost`. No está en el repositorio; obtenla así (o pídesela a la dueña del proyecto):
+  `sobre-carta.vercel.app`, `coverletter-emily.vercel.app` y `localhost`. No está en el repositorio; obtenla así (o pídesela a la dueña del proyecto):
 
   ```bash
   gcloud recaptcha keys list --project viaticos-spending-mngmt
@@ -203,7 +230,7 @@ Abre **http://localhost:5173**. Pruébala así:
    consejos; el resto está en **Ver más**. Si configuraste Firebase + App Check, la carta es la versión
    *En línea*; si no, la versión *Base*. La nota aparece al instante.
 3. Con el selector de versión (solo aparece si hay más de una) pasa de *En línea* a *Base* y de vuelta;
-   **"Copiar"** copia la que estás viendo.
+   **"Copiar"** copia la que estás viendo (aviso *"Copiada"*) y **"Descargar"** la guarda como `.txt`.
 4. *(Para ver qué salió del dispositivo)* abre las herramientas del navegador → *Network*, filtra por
    `firebasevertexai` y vuelve a preparar la carta: en el cuerpo de la petición no aparece `Q15,000`, ni
    "Banco Industrial", ni "Ana López", y tu nombre viaja como `{{NOMBRE}}`.
@@ -230,7 +257,8 @@ npm run typecheck                # TypeScript estricto
 | `tests/unit/negotiation.test.ts` | brecha %, bandas, conversión USD↔GTQ, rango de la oferta (regex), reglas de cuándo mencionarlo |
 | `tests/unit/template.test.ts` | carta plantilla (250–400 palabras, sin datos sensibles) y verificaciones de carta |
 | `tests/leak.test.ts` | **orquestador completo** para 4 perfiles, con (A) el límite de la nube espiado y (B) el SDK real de Firebase con `fetch` simulado: el salario en todas sus formas y el empleador nunca aparecen en lo que sale |
-| `tests/e2e/app.spec.ts` | en desktop y móvil: flujo completo (formulario de cinco datos con *Más detalles* plegado, sin scroll horizontal, una sola carta visible, selector de versión, nota privada con *Ver más*, descarga opcional del modelo simulado; la nube interceptada no recibe salario, empleador ni nombres), carta y nota con solo los cinco datos visibles, bloqueo por la compuerta, error `401` de la nube explicado en lenguaje simple, formulario incompleto, y **`context.setOffline(true)` + recarga** → nota y carta base siguen funcionando |
+| `tests/e2e/app.spec.ts` | en desktop y móvil: flujo completo (formulario de cinco datos con *Más detalles* plegado, sin scroll horizontal, una sola carta visible, selector de versión, nota privada con *Ver más*, descarga opcional del modelo simulado; la nube interceptada no recibe salario, empleador ni nombres), carta y nota con solo los cinco datos visibles (montos formateados al escribir, Enter envía), bloqueo por la compuerta (con *Revisar mis datos*), error `401` de la nube explicado en lenguaje simple (con *Intentar de nuevo*), formulario incompleto (mensaje por campo), **`context.setOffline(true)` + recarga** → nota y carta base siguen funcionando, **Copiar** (aviso *Copiada* y contenido del portapapeles) y **Descargar** (`.txt`), marca *Sobre* sin el nombre de la creadora (página, título, manifiesto, diálogo de privacidad) y página 404 |
+| `tests/unit/format.test.ts` | formato de montos al escribir (cursor, pegado con centavos, símbolos) y nombre del archivo descargado |
 
 Las e2e usan un build especial (`VITE_TEST_MODE=1`) donde el modelo local es un sustituto instantáneo
 (no descarga 2.3 GB) y el endpoint de Firebase AI Logic se intercepta con `page.route`, de modo que corre
@@ -376,10 +404,11 @@ emily/
 │   │   ├── cloud.ts  firebase.ts          # Firebase AI Logic + App Check
 │   │   └── local-model.ts  local-model-meta.ts  local-llm-client.ts
 │   ├── worker/                 # Web Worker del modelo local
-│   └── ui/example.ts           # perfil de ejemplo (ficticio)
+│   └── ui/                     # example.ts (perfil ficticio) · format.ts (montos al escribir, nombre del .txt)
 ├── tests/                      # vitest (unit + leak) y Playwright (e2e)
 ├── eval/                       # evaluación: fixtures, run.ts, report.ts, CRITERIOS.md, results/
-├── scripts/                    # verificaciones manuales (modelo en Node/navegador, llamada real a la nube, íconos)
+├── public/                     # favicon.svg, icons/ (PWA), og.png (redes sociales), 404.html (Vercel)
+├── scripts/                    # verificaciones manuales (modelo en Node/navegador, llamada real a la nube), make-icons.ts, ui-screenshots.ts
 ├── docs/decisiones.md          # decisiones y errores reales
 ├── docs/screenshots/ui-*.png   # capturas de la interfaz (desktop 1440×900 y móvil 390×844)
 ├── DIDACTICA.md  TEMAS.md      # prueba didáctica del README · temas para artículos
@@ -391,12 +420,15 @@ emily/
 Es un sitio estático: `npm run build` genera `dist/`. En Vercel: framework *Vite*, comando `npm run build`,
 salida `dist`, y las variables `VITE_FIREBASE_*` (+ `VITE_RECAPTCHA_ENTERPRISE_KEY`) en *Environment Variables*.
 **No** definas `VITE_APPCHECK_DEBUG_TOKEN` en Vercel. `vercel.json` evita que el service worker quede cacheado.
+Las etiquetas Open Graph usan una URL absoluta para `og.png`: en Vercel se toma sola de
+`VERCEL_PROJECT_PRODUCTION_URL` (o define `SITE_URL`, p. ej. un dominio propio de *Sobre*). Las rutas
+desconocidas reciben `public/404.html` con estado 404.
 
 ## 12. Solución de problemas
 
 | Síntoma | Causa | Solución |
 |---|---|---|
-| La app dice *"No pudimos generar la versión en línea; te dejamos la versión base."* y la consola muestra `401 … Firebase App Check token is invalid` | El proyecto exige App Check para Firebase AI Logic | Sección [3.2](#32-app-check-obligatorio-para-la-versión-en-línea-en-este-proyecto): `VITE_RECAPTCHA_ENTERPRISE_KEY` (o un token de depuración en dev) |
+| La app dice *"No pudimos escribir la versión en línea esta vez. Te dejamos la versión base."* y la consola muestra `401 … Firebase App Check token is invalid` | El proyecto exige App Check para Firebase AI Logic | Sección [3.2](#32-app-check-obligatorio-para-la-versión-en-línea-en-este-proyecto): `VITE_RECAPTCHA_ENTERPRISE_KEY` (o un token de depuración en dev) |
 | Nunca aparece la versión *En línea*, ni mensaje de error | Falta `.env.local` o alguna `VITE_FIREBASE_*` (sin configuración la app no intenta la nube), o marcaste *Más detalles → No usar internet* | Paso [3.1](#31-configurar-firebase-para-la-carta-de-la-nube); reinicia `npm run dev` después de editar `.env.local` |
 | `npm ci` muestra *"install scripts blocked"* (npm 12) | npm 12 bloquea scripts de instalación por defecto | No hace falta aprobarlos: `onnxruntime-node` y `esbuild` ya traen sus binarios. Si algo falla, `npm install-scripts approve <paquete>` |
 | `npm ci` falla con `EACCES … _cacache` | Caché de npm con permisos de otro usuario | `npm ci --cache /tmp/npm-cache` (o arregla los permisos de `~/.npm`) |

@@ -98,3 +98,31 @@ export function formToProfile(f: ProfileForm): Profile {
     jobOffer: f.jobOffer,
   };
 }
+
+/**
+ * Format an amount while the user types: keeps digits and one decimal point,
+ * groups thousands with commas ("15000" → "15,000", "Q 1500.5" → "1,500.5").
+ * `parseMoneyInput` reads the result back unchanged.
+ */
+export function formatMoneyTyping(raw: string): string {
+  const s = raw.replace(/[^\d.]/g, "");
+  const dot = s.indexOf(".");
+  const intRaw = dot === -1 ? s : s.slice(0, dot);
+  const int = intRaw.replace(/^0+(?=\d)/, "").slice(0, 9);
+  const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (dot === -1) return grouped;
+  const dec = s.slice(dot + 1).replace(/\./g, "").slice(0, 2);
+  return `${grouped || "0"}.${dec}`;
+}
+
+/** Where the caret should land after formatting: after the same count of digits/dots. */
+export function caretAfterFormat(raw: string, caret: number, formatted: string): number {
+  const keep = raw.slice(0, caret).replace(/[^\d.]/g, "").length;
+  if (keep === 0) return 0;
+  let seen = 0;
+  for (let i = 0; i < formatted.length; i++) {
+    if (/[\d.]/.test(formatted[i])) seen++;
+    if (seen === keep) return i + 1;
+  }
+  return formatted.length;
+}

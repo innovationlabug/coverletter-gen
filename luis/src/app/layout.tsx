@@ -12,19 +12,54 @@ const serif = Newsreader({
   display: "swap",
 });
 
+const TITLE = "Carta y copia";
+const DESCRIPTION =
+  "Tu carta de interés lista para enviar y una nota privada con cuánto pedir de salario. Tu salario nunca sale de tu dispositivo.";
+
+/** Absolute base for Open Graph URLs: the deployment's own host, or localhost. */
+function siteUrl(): URL {
+  const host = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  return new URL(host ? `https://${host}` : "http://localhost:3000");
+}
+
 export const metadata: Metadata = {
-  title: "Carta y copia — carta de interés con nota privada",
-  description:
-    "Genera tu carta de interés con IA y una nota privada de negociación salarial que nunca sale de tu dispositivo.",
-  applicationName: "Carta y copia",
-  appleWebApp: { capable: true, title: "Carta y copia", statusBarStyle: "default" },
-  icons: { icon: "/icons/icon-192.png", apple: "/icons/icon-192.png" },
+  metadataBase: siteUrl(),
+  title: { default: `${TITLE} · Carta de interés y nota salarial`, template: `%s · ${TITLE}` },
+  description: DESCRIPTION,
+  applicationName: TITLE,
+  appleWebApp: { capable: true, title: TITLE, statusBarStyle: "default" },
+  formatDetection: { telephone: false },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: { url: "/icons/apple-touch-icon.png", sizes: "180x180" },
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_GT",
+    siteName: TITLE,
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Carta y copia: carta para ellos, nota para ti." }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og.png"],
+  },
 };
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f7f6" },
-    { media: "(prefers-color-scheme: dark)", color: "#131a1d" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f7f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#121917" },
   ],
 };
 

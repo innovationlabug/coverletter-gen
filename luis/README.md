@@ -1,6 +1,6 @@
 # Carta y copia — generador de cartas de interés "split-brain" (Luis · APIs)
 
-- **Demo:** [coverletter-luis.vercel.app](https://coverletter-luis.vercel.app)
+- **Demo:** [carta-y-copia.vercel.app](https://carta-y-copia.vercel.app)
 - **Artículo:** [Tres APIs y un secreto: cómo armé un generador de cartas de interés con split brain](https://docs.google.com/document/d/1UZEGQl8GFLdBWTVXL1-3dNgW7zBD2fjXyxd5PWXmhUA/edit)
 
 PWA en Next.js (App Router, runtime Node) que, a partir de tu situación real —incluido tu salario actual—, genera:
@@ -14,16 +14,29 @@ La interfaz está pensada para quien busca trabajo, no para ingenieros: no muest
 
 | Formulario | Carta y nota privada |
 |---|---|
-| ![Formulario](docs/screenshots/ui-desktop-form.png) | ![Carta y nota privada (producción, con Tavily y JSearch reales)](docs/screenshots/produccion-resultados.png) |
+| ![Formulario](docs/screenshots/ui-desktop-form.png) | ![Carta y nota privada](docs/screenshots/ui-desktop-results.png) |
 
-Móvil (390 px): [formulario](docs/screenshots/ui-mobile-form.png), [carta y nota](docs/screenshots/ui-mobile-results.png). Escritorio en [modo oscuro](docs/screenshots/ui-desktop-results-dark.png).
+Móvil (390 px): [formulario](docs/screenshots/ui-mobile-form.png), [carta y nota](docs/screenshots/ui-mobile-results.png). Escritorio en [modo oscuro](docs/screenshots/ui-desktop-results-dark.png). En producción, con Tavily y JSearch reales: [formulario](docs/screenshots/produccion-formulario.png) y [resultados](docs/screenshots/produccion-resultados.png).
 
-- **Una sola columna**: título corto, una línea de subtítulo y el formulario.
-- **Cinco campos a la vista**: puesto, empresa, salario actual, salario que quieres (Q o US$) y años de experiencia. Nombre, logros, oferta pegada, puesto y empleador actual y ubicación (por defecto "Guatemala") van plegados en "Más detalles (opcional)". Una sola línea de privacidad: "Tu salario no sale de tu dispositivo." "Llenar con un ejemplo" es un enlace pequeño bajo el botón.
-- **Un solo estado de carga** ("Investigando la empresa…" → "Escribiendo tu carta…").
-- **Resultados**: primero la carta (editable, botón *Copiar*, fuentes como notas al pie). Luego la nota privada: veredicto en una línea ("Realista · pides 27 % más"), la barra del mercado solo si hay datos, "Si te piden un número" con el rango (una sola vez) y dos consejos. Todo lo demás va en "Ver más".
-- **Fallas en lenguaje simple**: si la IA no responde, "No pudimos contactar al servicio; te dejamos una versión base que puedes editar". Sin conexión, un aviso pequeño arriba.
-- Tema claro y oscuro (`prefers-color-scheme`), móvil primero, sin scroll horizontal a 375 px (lo verifica un e2e).
+**Marca.** "Carta y copia" es el producto: una hoja (la carta, con una "c") sobre su copia al carbón, en un cuadro jade. El mismo trazo se usa en el encabezado, el favicon (`public/icon.svg`), los íconos de la PWA (normal, *maskable* y Apple) y la imagen para compartir de 1200×630 (`public/og.png`); todo sale de `node scripts/make-icons.mjs`. Los metadatos (título, descripción, `og:*`, `twitter:card`, `theme-color` claro/oscuro) y el manifiesto solo nombran el producto.
+
+**Formulario.**
+- Una columna: título, una línea de subtítulo y **cinco campos a la vista**: puesto, empresa, salario actual, salario que quieres (Q o US$) y años de experiencia. Nombre, logros, oferta pegada, puesto y empleador actual y ubicación van plegados en "Más detalles (opcional)".
+- Los montos se agrupan mientras escribes (`15000` → `15,000`, sin mover el cursor), con teclado numérico en móvil (`inputmode`), sufijo "al mes" y `autocomplete` donde tiene sentido (nombre, puesto y empleador actuales). Años: solo dígitos.
+- Validación en línea al salir de un campo (nunca en un campo vacío que solo recorriste) y al enviar: el foco va al primer error. Enter envía; en los campos largos, Ctrl/⌘ + Enter.
+- "Llenar con un ejemplo" y "Borrar datos" son enlaces pequeños bajo el botón.
+
+**Resultados.**
+- Carga honesta: "Investigando la empresa…" → "Escribiendo tu carta…" con "Paso 1 de 2 / 2 de 2", una barra de progreso y un esqueleto de la carta del mismo tamaño (sin saltos de diseño).
+- La carta es una hoja en serif con tres acciones: **Editar** (en el mismo lugar; Esc o Ctrl/⌘ + Enter para terminar), **Descargar** (`carta-<empresa>.txt`) y **Copiar**, que confirma con un aviso breve ("Copiada. Ya puedes pegarla en tu correo.") anunciado por lectores de pantalla. Las fuentes van al pie.
+- La nota privada es la copia al carbón: veredicto en una línea ("Realista · pides 27 % más"), la barra del mercado solo si hay datos, "Si te piden un número" y dos consejos. Todo lo demás, en "Ver más".
+- Fallas en lenguaje simple y con salida: si la IA no responde, "No pudimos contactar al servicio; te dejamos una versión base que puedes editar". Si algo falla del todo, "Intentar de nuevo" o "Volver a mis datos". Sin conexión, una etiqueta discreta en el encabezado.
+
+**Marco.** Pie mínimo con "Tu salario nunca sale de tu dispositivo." y "Cómo cuidamos tus datos", que abre una explicación corta y sin tecnicismos (`<dialog>` nativo: Esc cierra y el foco vuelve al enlace). Página 404 (`app/not-found.tsx`) y pantalla de error (`app/error.tsx`) con la misma marca y un camino de regreso.
+
+**Sistema.** Tokens en `globals.css` (color, tipografía, espaciado de 4 px, radios, sombras, curvas y duraciones), Newsreader + Hanken Grotesk vía `next/font`, tema claro y oscuro, contraste AA (incluidos bordes de campos a 3:1 y *placeholders*), anillos de foco visibles, objetivos táctiles de 44 px, movimiento sutil que se apaga con `prefers-reduced-motion`, y sin scroll horizontal a 375 px (lo verifica un e2e). La interfaz no muestra proveedores, estados de API ni payloads.
+
+Las capturas `ui-*.png` se regeneran con `node scripts/screenshots.mjs` contra `next start -p 3100` (APIs mockeadas).
 
 ## Qué hace
 
@@ -151,7 +164,7 @@ Pruebas:
 - `tests/router.test.ts`: allowlist exacta por destino, redacción en texto libre y bloqueo de residuos en campos estructurados.
 - `tests/leak.test.ts`: **la prueba de la condición 2.** Mockea `fetch` global, ejecuta `generate()` con las **rutas reales** en el medio y captura cada solicitud en los dos saltos (navegador → ruta y ruta → Tavily/JSearch/Gemini). Busca el salario actual y el deseado en todas sus formas escritas, el empleador (sin tildes) y el nombre. Incluye un perfil con el salario pegado en "logros" (se redacta) y uno con empresa destino = empleador (se bloquea). Se verificó que la prueba **falla** si se desactiva la redacción del router.
 - `tests/apis-failure.test.ts`: timeouts, 429 → reintento → éxito, 500 dos veces → plantilla, 403 de JSearch → nota sin benchmark, offline → plantilla, caché de 7 días y `localStorage` que lanza excepciones.
-- `e2e/app.spec.ts` (Playwright contra `next build && next start`): validación; formulario → carta + nota con las rutas mockeadas, revisando **por intercepción de red** que ningún cuerpo enviado contenga salarios, empleador ni nombre; `context.setOffline(true)` + recarga → la app carga desde el service worker, entrega nota + carta base y no sale ninguna petición; benchmark desde caché offline; JSearch 403 → nota sin mercado con mensaje simple; Gemini falla → carta base con aviso simple; a 375 px no hay scroll horizontal (formulario y resultados). Todas verifican además que la UI no muestre nombres de proveedores, códigos HTTP ni payloads.
+- `e2e/app.spec.ts` (Playwright contra `next build && next start`): validación (al enviar y en línea al salir del campo, campos numéricos, Enter envía); formulario → carta + nota con las rutas mockeadas, revisando **por intercepción de red** que ningún cuerpo enviado contenga salarios, empleador ni nombre; `context.setOffline(true)` + recarga → la app carga desde el service worker, entrega nota + carta base y no sale ninguna petición; benchmark desde caché offline; JSearch 403 → nota sin mercado con mensaje simple; Gemini falla → carta base con aviso simple; a 375 px no hay scroll horizontal (formulario, resultados, edición y 404); **Copiar** muestra el aviso y llena el portapapeles; **Descargar** guarda `carta-tigo-guatemala.txt` con la carta; la explicación de privacidad abre y cierra con Esc; 404 con regreso al inicio; metadatos (`og:image`, `twitter:card`, manifiesto e íconos) sin nombres de personas. Todas verifican además que la UI no muestre nombres de proveedores, códigos HTTP ni payloads.
 
 ## Cómo correr la app
 

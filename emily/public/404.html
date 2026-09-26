@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es-GT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página no encontrada · Sobre</title>
+    <meta name="robots" content="noindex" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        --desk: #eef0ea;
+        --ink: #1b2740;
+        --ink-soft: #525d73;
+        --on-ink: #f7f6f1;
+        --seal: #7d2338;
+        --flap: #3b4e75;
+        --focus: #2b59a3;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --desk: #121826;
+          --ink: #e7eaf0;
+          --ink-soft: #a6afc1;
+          --on-ink: #121826;
+          --seal: #e3899c;
+          --flap: #c2c9d7;
+          --focus: #8fb0ff;
+          color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--desk);
+        color: var(--ink);
+        font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+        font-size: 1.0625rem;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 72rem; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem); }
+      header { min-height: 4.5rem; display: flex; align-items: center; }
+      .brand { display: inline-flex; align-items: center; gap: 0.55rem; color: var(--ink); text-decoration: none; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; }
+      .brand svg { width: 1.9rem; height: 1.9rem; }
+      main { padding: clamp(3rem, 10vw, 7rem) 0 4rem; max-width: 34rem; }
+      .code { margin: 0 0 0.5rem; font-size: 0.9rem; letter-spacing: 0.14em; color: var(--seal); font-weight: 600; }
+      h1 { margin: 0; font-size: clamp(2.15rem, 1.6rem + 2.2vw, 3.25rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.025em; }
+      p.lede { margin: 0.9rem 0 0; color: var(--ink-soft); font-size: 1.25rem; line-height: 1.4; }
+      a.btn { display: inline-flex; align-items: center; min-height: 3rem; margin-top: 2rem; padding: 0.7rem 1.5rem; border-radius: 8px; background: var(--ink); color: var(--on-ink); font-weight: 600; text-decoration: none; }
+      a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <a class="brand" href="/" aria-label="Sobre, ir al inicio">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <clipPath id="m"><rect x="2.5" y="7" width="27" height="18.5" rx="3" /></clipPath>
+            <g clip-path="url(#m)">
+              <rect x="2.5" y="7" width="27" height="18.5" fill="currentColor" />
+              <path d="M1.6 6.2 16 17.4 30.4 6.2Z" fill="var(--flap)" stroke="var(--desk)" stroke-width="1.2" stroke-linejoin="round" />
+            </g>
+            <circle cx="16" cy="17.4" r="3.9" fill="var(--seal)" stroke="var(--desk)" stroke-width="1.4" />
+          </svg>
+          Sobre
+        </a>
+      </header>
+      <main>
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Esta página no existe.</h1>
+        <p class="lede">Puede que el enlace esté incompleto. Tu carta se prepara desde la página principal.</p>
+        <a class="btn" href="/">Ir al inicio</a>
+      </main>
+    </div>
+  </body>
+</html>

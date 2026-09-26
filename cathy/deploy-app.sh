@@ -11,7 +11,7 @@ cd "$(dirname "$0")"
 PROJECT="${PROJECT:-ai-experiments-487722}"
 REGION="${REGION:-us-central1}"
 REPO="${REPO:-coverletter}"
-SERVICE="${SERVICE:-cathy-coverletter}"
+SERVICE="${SERVICE:-rango}"
 OLLAMA_SERVICE="${OLLAMA_SERVICE:-ollama-coverletter}"
 # Ollama vive donde hay cuota de GPU L4 (europe-west4); la app puede estar en otra región.
 OLLAMA_REGION="${OLLAMA_REGION:-europe-west4}"

@@ -1,6 +1,6 @@
 # Cathy — carta dividida con modelos locales
 
-- **Demo:** [cathy-coverletter en Cloud Run](https://cathy-coverletter-611681112050.us-central1.run.app)
+- **Demo:** [Rango en Cloud Run](https://rango-611681112050.us-central1.run.app)
 - **Artículo:** [¿Un Ollama en la nube sigue siendo local? Gemma contra Qwen en un split brain](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit)
 - **Benchmark:** [BENCHMARK.md](BENCHMARK.md) (GPU L4) · [bench/BENCHMARK-cpu.md](bench/BENCHMARK-cpu.md) (CPU)
 
@@ -15,13 +15,21 @@ Le cuentas tu situación tal cual (puesto, empleador, **salario actual**, puesto
 1. **Carta de interés** lista para enviar.
 2. **Nota privada**: brecha salarial, banda (conservador → agresivo), cómo se compara con el rango publicado, **cuándo mencionar la expectativa** y un borrador en prosa escrito por el modelo local. Las cifras de la nota salen de las heurísticas, nunca del modelo, y cualquier número del borrador que no coincida con lo calculado se subraya con un aviso en lenguaje llano.
 
-La interfaz está pensada para quien busca trabajo, no para quien la construyó: una sola columna y cinco datos a la vista (puesto que buscas, empresa, salario actual, salario que quieres pedir y años de experiencia). Nombre, puesto y empresa actuales, logros y oferta van plegados en **"Más detalles (opcional)"**; si no pones tu nombre, la carta firma "Tu nombre" para que lo cambies. Al generar, el formulario se pliega a una línea con "Editar datos", la espera es una sola línea con una barra fina, y luego aparece la carta (con "Copiar") y debajo la nota privada: veredicto, tres cifras (hoy, lo que pides, diferencia) y a lo más dos consejos; el borrador del modelo y el resto quedan en "Ver más". La UI **no** muestra tiers, modelos ni métricas; la arquitectura se explica aquí y en el artículo.
+### La interfaz: Rango
 
-| Formulario | Resultado |
-|---|---|
-| ![Formulario](docs/screenshots/ui-form-desktop.png) | ![Carta y nota privada (producción, Ollama en GPU y Gemini reales)](docs/screenshots/produccion-resultados.png) |
+De cara a quien la usa, la app se llama **Rango** ("Tu carta y cuánto pedir"); "Cathy" queda solo como nombre interno del repo y del despliegue. La marca es un rango `[ • ]` con dos puntos dentro —lo que ganas hoy y lo que vas a pedir— y se repite en el favicon, los íconos de la PWA, la imagen para compartir (`public/og.png`, 1200×630) y una pequeña barra en la nota privada que ubica ambos montos frente al rango de la oferta.
 
-Versiones móviles (390 px): [`ui-form-mobile.png`](docs/screenshots/ui-form-mobile.png) y [`ui-results-mobile.png`](docs/screenshots/ui-results-mobile.png). Se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`.
+La interfaz está pensada para quien busca trabajo, no para quien la construyó: una sola columna y cinco datos a la vista (puesto que buscas, empresa, salario actual, salario que quieres pedir y años de experiencia). Nombre, puesto y empresa actuales, logros y oferta van plegados en **"Más detalles (opcional)"**; si no pones tu nombre, la carta firma "[Tu nombre]", lo resalta y te recuerda cambiarlo. Los montos se formatean mientras escribes (teclado numérico en el celular), Enter envía, y los errores aparecen en el campo: los de formato al salir de él y los de "falta este dato" solo después de intentar enviar.
+
+Al generar, el formulario se pliega a un encabezado con el puesto, la empresa y "Editar datos". Mientras se prepara todo se ve el esqueleto de la carta y de la nota con una sola línea de texto (y, si el servidor privado está arrancando, "Puede tardar hasta un minuto la primera vez"): nunca una pantalla en blanco. Luego aparece la carta con **Copiar** (aviso "Copiada") y **Descargar** (`.txt`), y debajo la nota privada: veredicto, tres cifras (hoy, lo que pides, diferencia), la barra de rango y a lo más dos consejos; el borrador del modelo y el resto quedan en "Ver más". Si la carta completa no se pudo redactar, se entrega una versión básica con un aviso tranquilo y "vuelve a intentarlo"; sin conexión, lo mismo con una línea que lo explica. El pie dice "Tu salario nunca aparece en tu carta." y abre **"Cómo cuidamos tus datos"**, una explicación de cinco frases sin jerga. Hay páginas propias de 404 y de error.
+
+Detalles de producto: tokens de diseño en variables CSS con modo claro y oscuro, contraste AA medido, anillos de foco visibles, áreas táctiles de 44 px, `aria-live` para resultados y avisos, movimiento breve que respeta `prefers-reduced-motion`, y metadatos completos (título, descripción, Open Graph, Twitter, `theme-color`, manifiesto). La UI **no** muestra tiers, modelos ni métricas; la arquitectura se explica aquí y en el artículo.
+
+| Formulario | Esperando | Resultado |
+|---|---|---|
+| ![Formulario](docs/screenshots/ui-form-desktop.png) | ![Esperando: esqueleto de la carta y la nota](docs/screenshots/ui-waiting-desktop.png) | ![Carta y nota privada](docs/screenshots/ui-results-desktop.png) |
+
+Versiones móviles (390 px): [`ui-form-mobile.png`](docs/screenshots/ui-form-mobile.png), [`ui-waiting-mobile.png`](docs/screenshots/ui-waiting-mobile.png) y [`ui-results-mobile.png`](docs/screenshots/ui-results-mobile.png). Se regeneran con `SCREENSHOTS=1 npx playwright test screenshots`. Las capturas de producción con modelos reales (versión anterior de la interfaz) siguen en [`produccion-formulario.png`](docs/screenshots/produccion-formulario.png) y [`produccion-resultados.png`](docs/screenshots/produccion-resultados.png).
 
 ![Arquitectura](docs/diagrams/arquitectura.png)
 
@@ -179,7 +187,7 @@ gcloud run services proxy ollama-coverletter --region us-central1 --port 11434
 
 Alternativa: `OLLAMA_URL=https://ollama-coverletter-….run.app` y `OLLAMA_TOKEN=$(gcloud auth print-identity-token)` exportado en tu shell (expira en 1 h).
 
-**Producción** (Cloud Run): `./deploy-app.sh` crea la cuenta de servicio `coverletter-cathy-app`, le da `roles/aiplatform.user` y `roles/run.invoker` **solo** sobre `ollama-coverletter`, construye con Cloud Build y despliega `cathy-coverletter` (pública) con las variables de entorno. El Ollama se despliega aparte con `ollama/deploy.sh`.
+**Producción** (Cloud Run): `./deploy-app.sh` crea la cuenta de servicio `coverletter-cathy-app`, le da `roles/aiplatform.user` y `roles/run.invoker` **solo** sobre `ollama-coverletter`, construye con Cloud Build y despliega `rango` (pública) con las variables de entorno. El Ollama se despliega aparte con `ollama/deploy.sh`.
 
 Variables: `OLLAMA_URL`, `OLLAMA_MODEL` (modelo que usa la app; la UI no lo expone), `OLLAMA_TOKEN` (solo dev), `OLLAMA_TIMEOUT_MS` (default 300000), `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION=global`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GEMINI_MODEL` (default `gemini-3.8-flash`).
 
@@ -195,7 +203,7 @@ npm run bench            # benchmark real (necesita OLLAMA_URL y ADC para el jue
 ```
 
 - **`tests/leak.test.ts`** corre el orquestador real con `fetch` simulado para los 12 perfiles de `bench/inputs/` (con el salario y el empleador además escondidos en los logros, y con un "Ollama" que devuelve requisitos que repiten el salario). Captura cada petición y verifica que el salario (actual y deseado, en todas sus formas: `15000`, `15,000`, `15.000`, `Q15,000`, `Q 15 000`, `15 mil`, `15k`…) y el empleador aparezcan **solo** en `/api/ollama/*` y **nunca** en `/api/letter`. Tiene control positivo (sí los encuentra en `/api/ollama/negotiation`) y se validó por mutación: si se apaga el redactor, fallan 13 pruebas. Además prueba la ruta del servidor con `@google/genai` simulado: aunque un cliente modificado esconda el salario en los logros, lo que llega a Gemini ya está redactado; un campo extra da 400 y el residuo da 422.
-- **e2e**: flujo completo (solo cinco campos a la vista, espera de una línea con aviso cuando el modelo privado tarda, carta antes que la nota, prosa del modelo plegada en "Ver más", aviso de cifras solo cuando aplica, "Editar datos", y que la UI no muestre jerga como "Ollama", "GPU" o "tier"), solo con los cinco datos esenciales, "Usar un ejemplo" antes de que cargue la app, formulario incompleto, sin scroll horizontal a 375 px, fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
+- **e2e**: flujo completo (solo cinco campos a la vista, espera con esqueleto y aviso cuando el modelo privado tarda, carta antes que la nota, prosa del modelo plegada en "Ver más", aviso de cifras solo cuando aplica, "Editar datos", y que la UI no muestre jerga como "Ollama", "GPU" o "tier" ni el nombre "Cathy"), solo con los cinco datos esenciales, "Usar un ejemplo" antes de que cargue la app (`/?ejemplo`), formulario incompleto, montos con formato + Enter + validación al salir del campo, Copiar (aviso "Copiada" y portapapeles) y Descargar (`carta-<empresa>.txt`), firma "[Tu nombre]" resaltada con carta básica y "vuelve a intentarlo", marca y metadatos (título, Open Graph, manifiesto, `og.png`, favicon), "Cómo cuidamos tus datos", 404, sin scroll horizontal a 375 px, fallback sin Ollama y **offline**: `context.setOffline(true)` + recarga → la app carga desde el service worker y entrega nota heurística + carta de plantilla sin ninguna petición a `/api/*`.
 - **Benchmark**: ver [`BENCHMARK.md`](BENCHMARK.md). Flags: `--runs N`, `--inputs N`, `--models a,b`, `--tasks negotiation,requirements`, `--no-cold`, `--no-judge`, `--dry`, y `--from bench/results/X.json [--rejudge]` para recalcular calidad y juez sin volver a generar.
 
 ### Resultado del benchmark (corrida real en GPU L4, 12 perfiles, 3 corridas tibias)
@@ -215,7 +223,9 @@ src/lib/orchestrator.ts  flujo del cliente (online/offline, fallbacks, bitácora
 src/lib/prompts.ts    prompts (los usa la app Y el benchmark)
 src/app/api/ollama/[task]/route.ts   proxy a Ollama (ID token, stream, timeout 300 s)
 src/app/api/letter/route.ts          Gemini vía Vertex (zod strict + redactor + residuo)
-public/sw.js          service worker (app shell offline)
+src/components/       UI de Rango (formulario, carta, nota, encabezado y pie)
+src/lib/brand.ts      nombre, lema y textos de marca (UI, metadatos, manifiesto)
+public/               sw.js (app shell offline), og.png, favicon.ico e íconos de la PWA
 bench/                benchmark gemma4:e2b-it-qat vs qwen3.5:2b
 ollama/               Dockerfile + deploy del Ollama privado
 docs/decisiones.md    decisiones y errores reales

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 /** Canned Gemini response returned by the intercepted Firebase AI Logic endpoint. */
 const CLOUD_LETTER =
@@ -39,7 +40,7 @@ test('flujo completo: una carta a la vista, nota privada, versiones y descarga o
     await expect(page.locator(`[name=${name}]`)).toBeHidden();
   }
   await page.getByTestId('fill-example').click();
-  await page.getByText('Más detalles').click();
+  await page.locator('summary', { hasText: 'Más detalles' }).click();
   await expect(page.locator('textarea[name=oferta]')).toBeVisible();
   await expect(page.locator('textarea[name=oferta]')).toHaveValue(/Telus International/);
   // no horizontal scroll, on desktop and on the phone
@@ -107,7 +108,7 @@ test('el control final bloquea el envío si queda algo sensible', async ({ page 
   await page.goto('/');
   await page.getByTestId('fill-example').click();
   // a count that equals the salary survives the generic redactor; the gate knows the salary
-  await page.getByText('Más detalles').click();
+  await page.locator('summary', { hasText: 'Más detalles' }).click();
   await page.locator('textarea[name=logros]').fill('Mi app llegó a 15,000 usuarios activos.');
   await page.getByTestId('generate').click();
   await expect(page.getByTestId('letter-template')).toBeVisible();
@@ -117,6 +118,10 @@ test('el control final bloquea el envío si queda algo sensible', async ({ page 
   // only one letter exists, so there is nothing to switch
   await expect(page.locator('#versions')).toBeHidden();
   expect(bodies).toHaveLength(0);
+  // next step: back to the form, on the field that holds the figure
+  await page.getByTestId('notice-action').click();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Tu carta de interés');
+  await expect(page.locator('textarea[name=logros]')).toBeFocused();
 });
 
 test('si la nube falla, se explica en lenguaje simple y queda la versión base', async ({ page }) => {
@@ -130,9 +135,17 @@ test('si la nube falla, se explica en lenguaje simple y queda la versión base',
   await page.goto('/');
   await page.getByTestId('fill-example').click();
   await page.getByTestId('generate').click();
-  await expect(page.getByTestId('letter-notice')).toHaveText('No pudimos generar la versión en línea; te dejamos la versión base.');
+  await expect(page.getByTestId('letter-notice')).toHaveText(
+    'No pudimos escribir la versión en línea esta vez. Te dejamos la versión base.',
+  );
   await expect(page.getByTestId('letter-template')).toBeVisible();
   await expect(page.getByText(/App Check|401/)).toHaveCount(0);
+  // a calm next step: try again (it fails again here, and says so again)
+  await expect(page.getByTestId('notice-action')).toHaveText('Intentar de nuevo');
+  await page.getByTestId('notice-action').click();
+  await expect(page.getByTestId('letter-notice')).toHaveText(
+    'No pudimos escribir la versión en línea esta vez. Te dejamos la versión base.',
+  );
 });
 
 test('sin conexión: tras recargar, la nota y la carta base siguen funcionando', async ({ page, context }) => {
@@ -164,11 +177,17 @@ test('sin conexión: tras recargar, la nota y la carta base siguen funcionando',
 test('sin datos: el formulario dice qué falta, sin salir de la página', async ({ page }) => {
   await page.goto('/');
   await page.getByTestId('generate').click();
-  await expect(page.locator('#form-error')).toHaveText(
-    'Te falta completar: el puesto al que aplicas, la empresa, tu salario actual, el salario que quieres, tus años de experiencia.',
-  );
+  await expect(page.locator('#form-error')).toHaveText('Faltan 5 datos para preparar tu carta.');
+  // each field says what it needs, right under it, and is announced with the field
+  await expect(page.locator('#e-puestoDeseado')).toHaveText('Escribe el puesto al que aplicas.');
+  await expect(page.locator('#e-aniosExperiencia')).toContainText('0 si recién empiezas');
   await expect(page.locator('input[name=puestoDeseado]')).toBeFocused();
   await expect(page.locator('input[name=puestoDeseado]')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('input[name=puestoDeseado]')).toHaveAttribute('aria-describedby', /e-puestoDeseado/);
+  // fixing a field clears its message as you type
+  await page.locator('input[name=puestoDeseado]').fill('Contadora');
+  await expect(page.locator('#e-puestoDeseado')).toBeHidden();
+  await expect(page.locator('input[name=puestoDeseado]')).not.toHaveAttribute('aria-invalid', 'true');
   // the optional fields never block
   await expect(page.locator('input[name=nombre]')).not.toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#paso-datos')).toBeVisible();
@@ -181,12 +200,67 @@ test('solo los cinco datos visibles bastan para una carta y una nota', async ({ 
   await page.locator('[name=puestoDeseado]').fill('Contadora');
   await page.locator('[name=empresaDestino]').fill('Cementos Progreso');
   await page.locator('[name=salarioActual]').fill('9,000');
-  await page.locator('[name=salarioDeseado]').fill('10,500');
+  await page.locator('[name=salarioDeseado]').pressSequentially('10500');
+  // money is formatted as you type
+  await expect(page.locator('[name=salarioDeseado]')).toHaveValue('10,500');
   await page.locator('[name=aniosExperiencia]').fill('4');
-  await page.getByTestId('generate').click();
+  // Enter submits once everything is there
+  await page.locator('[name=aniosExperiencia]').press('Enter');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Tu carta para Cementos Progreso');
   await expect(page.getByTestId('letter-cloud')).toBeVisible();
   await expect(page.getByTestId('note').locator('.verdict')).toHaveText('Razonable');
   expect(bodies).toHaveLength(1);
   expect(bodies[0]).not.toContain('9,000');
+});
+
+test('copiar avisa con "Copiada" y descargar baja la carta en .txt', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await mockCloud(page, []);
+  await page.goto('/');
+  await page.getByTestId('fill-example').click();
+  await page.getByTestId('generate').click();
+  const letter = page.getByTestId('letter-cloud');
+  await expect(letter).toContainText('María José Castillo');
+  const shown = (await letter.locator('.letter__text').textContent())!;
+
+  await page.getByTestId('copy').click();
+  await expect(page.getByTestId('toast')).toHaveText('Copiada');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(shown);
+
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByTestId('download').click()]);
+  expect(download.suggestedFilename()).toBe('carta-telus-international.txt');
+  const saved = readFileSync((await download.path())!, 'utf8');
+  expect(saved.replace(/\r\n/g, '\n')).toBe(shown);
+});
+
+test('marca "Sobre": sin el nombre de la creadora en la página, el título ni el manifiesto', async ({ page, request }) => {
+  await mockCloud(page, []);
+  await page.goto('/');
+  await expect(page).toHaveTitle(/^Sobre/);
+  await expect(page.locator('.brand')).toContainText('Sobre');
+  const html = async () => (await page.content()) + (await page.evaluate(() => document.body.innerText));
+  expect(await html()).not.toMatch(/emily/i);
+  const manifest = await (await request.get('/manifest.webmanifest')).json();
+  expect(manifest.name).toMatch(/^Sobre/);
+  expect(manifest.short_name).toBe('Sobre');
+  expect(JSON.stringify(manifest)).not.toMatch(/emily/i);
+  // also after generating a letter, and in the privacy explainer
+  await page.getByTestId('fill-example').click();
+  await page.getByTestId('generate').click();
+  await expect(page.getByTestId('letter-cloud')).toBeVisible();
+  await page.getByTestId('privacy-link').click();
+  await expect(page.getByTestId('privacy-dialog')).toBeVisible();
+  await expect(page.getByTestId('privacy-dialog')).not.toContainText(/Gemini|Gemma|App Check|Firebase|modelo/);
+  expect(await html()).not.toMatch(/emily/i);
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('privacy-dialog')).toBeHidden();
+  await expect(page.getByTestId('privacy-link')).toBeFocused();
+});
+
+test('una ruta desconocida muestra una página amable con salida al inicio', async ({ page }) => {
+  await page.goto('/no-existe');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Esta página no existe.');
+  await expect(page).toHaveTitle(/no encontrada/);
+  await page.getByRole('link', { name: 'Ir al inicio', exact: true }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Tu carta de interés');
 });

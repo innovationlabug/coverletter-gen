@@ -3,7 +3,9 @@ import { test, type Page } from "@playwright/test";
 /**
  * Capturas de la UI para el README / revisión de diseño. No es una prueba: solo corre con
  *   SCREENSHOTS=1 npx playwright test screenshots
- * y escribe docs/screenshots/ui-{form,results}-{desktop,mobile}.png. Las APIs se simulan igual que en flow.spec.ts.
+ * y escribe docs/screenshots/ui-{form,waiting,results}-{desktop,mobile}.png. Las APIs se simulan igual que en flow.spec.ts.
+ * Con SCREENSHOTS_DIR=… se escriben en otra carpeta (útil para revisar sin tocar las del README);
+ * con SCREENSHOTS_DARK=1 se capturan en modo oscuro.
  */
 test.skip(!process.env.SCREENSHOTS, "solo con SCREENSHOTS=1");
 
@@ -46,19 +48,28 @@ const SIZES = [
   { name: "mobile", width: 390, height: 844 },
 ];
 
+const DIR = process.env.SCREENSHOTS_DIR || "docs/screenshots";
+
 for (const size of SIZES) {
   test(`capturas ${size.name}`, async ({ page }) => {
+    test.setTimeout(90_000);
+    if (process.env.SCREENSHOTS_DARK) await page.emulateMedia({ colorScheme: "dark" });
     await page.setViewportSize({ width: size.width, height: size.height });
-    const shot = (name: string, fullPage = false) => page.screenshot({ path: `docs/screenshots/ui-${name}-${size.name}.png`, fullPage });
+    const shot = (name: string, fullPage = false) => page.screenshot({ path: `${DIR}/ui-${name}-${size.name}.png`, fullPage, animations: "disabled" });
 
-    await mock(page, 1500);
+    await mock(page, 6000);
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     await shot("form");
 
     await page.getByTestId("load-example").click();
     await page.getByTestId("run").click();
+    await page.getByTestId("waking").waitFor({ timeout: 8000 });
+    await page.mouse.move(0, 0);
+    await shot("waiting");
+
     await page.getByTestId("letter-text").waitFor({ timeout: 20000 });
+    await page.waitForTimeout(700);
     await page.evaluate(() => window.scrollTo(0, 0));
     await shot("results", true);
   });

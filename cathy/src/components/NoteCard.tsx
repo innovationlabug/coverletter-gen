@@ -23,6 +23,40 @@ function Highlighted({ text, flagged }: { text: string; flagged: string[] }) {
   );
 }
 
+/**
+ * La idea de la marca, en pequeño: dónde estás hoy, dónde vas a pedir y, si la oferta lo publica,
+ * el rango que ofrecen. Todo en quetzales al mes. Es decorativo: las cifras exactas están al lado.
+ */
+function RangeBar({ facts }: { facts: NegotiationFacts }) {
+  const r = facts.offerRange;
+  const lo = r?.minGTQMonthly ?? null;
+  const hi = r?.maxGTQMonthly ?? null;
+  const values = [facts.currentGTQ, facts.desiredGTQ, lo, hi].filter((v): v is number => v != null && Number.isFinite(v));
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  const pad = span * 0.12;
+  const pos = (v: number) => `${(((v - (min - pad)) / (span + 2 * pad)) * 100).toFixed(2)}%`;
+  const [a, b] = [facts.currentGTQ, facts.desiredGTQ].sort((x, y) => x - y);
+  const band = lo != null || hi != null ? { from: lo ?? min - pad, to: hi ?? max + pad } : null;
+  return (
+    <div className="range-bar" aria-hidden data-testid="range-bar">
+      <div className="rb-track">
+        {band && <span className="rb-band" style={{ left: pos(band.from), right: `calc(100% - ${pos(band.to)})` }} />}
+        <span className="rb-jump" style={{ left: pos(a), right: `calc(100% - ${pos(b)})` }} />
+        <span className="rb-dot rb-now" style={{ left: pos(facts.currentGTQ) }} />
+        <span className="rb-dot rb-ask" style={{ left: pos(facts.desiredGTQ) }} />
+      </div>
+      {band && (
+        <p className="rb-caption">
+          <span className="rb-swatch" />
+          Rango de la oferta
+        </p>
+      )}
+    </div>
+  );
+}
+
 function quoteList(items: string[]): string {
   const q = items.map((s) => `“${s}”`);
   return q.length <= 1 ? q.join("") : `${q.slice(0, -1).join(", ")} y ${q[q.length - 1]}`;
@@ -39,25 +73,36 @@ export function NoteCard({ note, facts, draft }: { note: HeuristicNote; facts: N
   const flagged = draft.kind === "ready" ? [...new Set(draft.flagged)] : [];
 
   return (
-    <section className="note" data-testid="note" aria-labelledby="note-title">
-      <h2 id="note-title">Tu nota privada</h2>
+    <section className="note reveal" data-testid="note" aria-labelledby="note-title">
+      <div className="note-head">
+        <h2 id="note-title">Tu nota privada</h2>
+        <span className="private-tag">Solo para ti</span>
+      </div>
 
       <p className="verdict" data-testid="note-headline">
         {note.headline}
       </p>
       <p className="verdict-sub">{note.advice}</p>
 
-      <dl className="figures" aria-label="Montos mensuales">
-        {figures.map((f) => (
-          <div key={f.label}>
-            <dt>{f.label}</dt>
-            <dd>{f.value}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="figures">
+        <dl aria-label="Montos mensuales">
+          {figures.map((f, i) => (
+            <div key={f.label}>
+              <dt>
+                {i < 2 && <span className={i === 0 ? "key key-now" : "key key-ask"} aria-hidden />}
+                {f.label}
+              </dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <RangeBar facts={facts} />
+      </div>
 
       <ul className="tips">
-        <li data-testid="timing">Cuándo decirlo: {note.timing.moment}</li>
+        <li data-testid="timing">
+          <strong>Cuándo decirlo:</strong> {note.timing.moment}
+        </li>
         {note.rangeNote && <li>{note.rangeNote}</li>}
       </ul>
 

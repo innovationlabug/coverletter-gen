@@ -43,6 +43,8 @@ const TECH_WORDS = ["Ollama", "Gemini", "Vertex", "GPU", "tier", "T0", "T1", "T2
 async function expectNoTechWords(page: Page) {
   const text = await page.locator("body").innerText();
   for (const w of TECH_WORDS) expect(text, `la UI no debería decir "${w}"`).not.toContain(w);
+  // el nombre de quien la construyó tampoco: el producto se llama Rango
+  expect(text).not.toMatch(/cathy/i);
 }
 
 test("flujo completo: formulario corto, espera de una línea, carta y nota privada", async ({ page }) => {
@@ -68,8 +70,12 @@ test("flujo completo: formulario corto, espera de una línea, carta y nota priva
 
   // mientras el modelo privado "despierta": una línea y una barra, nada más
   await expect(page.getByTestId("waiting")).toContainText("Preparando tu carta y tu nota");
+  // nunca una pantalla en blanco: el esqueleto de la carta y la nota ocupa su lugar
+  await expect(page.locator(".skeleton-letter")).toBeVisible();
+  await expect(page.locator(".skeleton-note")).toBeVisible();
   await expect(page.locator("form")).toHaveCount(0); // el formulario se pliega
-  await expect(page.getByTestId("recap")).toContainText("Analista de BI Senior · Cervecería Centro Americana");
+  await expect(page.getByTestId("recap").getByRole("heading", { level: 1 })).toHaveText("Analista de BI Senior");
+  await expect(page.getByTestId("recap")).toContainText("Cervecería Centro Americana");
   await expect(page.getByTestId("letter")).toHaveCount(0);
   await expect(page.getByTestId("note")).toHaveCount(0);
   await expect(page.getByTestId("waking")).toContainText("hasta un minuto la primera vez", { timeout: 6000 });
@@ -210,7 +216,7 @@ test("offline: tras recargar sin red la app carga (service worker) y da nota con
   });
   await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 15000 });
   // que el precache termine antes de cortar la red
-  await page.waitForFunction(async () => (await (await caches.open("cathy-v1")).keys()).length > 5, null, { timeout: 15000 });
+  await page.waitForFunction(async () => (await (await caches.open("rango-v2")).keys()).length > 5, null, { timeout: 15000 });
 
   await context.setOffline(true);
   await page.reload();
@@ -229,4 +235,102 @@ test("offline: tras recargar sin red la app carga (service worker) y da nota con
   await expectNoTechWords(page);
   expect(apiCalls).toEqual([]);
   await context.setOffline(false);
+});
+
+test("marca Rango en todo lo visible: título, encabezado, metadatos, manifiesto; ni rastro de \"Cathy\"", async ({ page, request }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle("Rango · Tu carta y cuánto pedir");
+  await expect(page.getByRole("banner")).toContainText("Rango");
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /Rango/);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /^http:\/\/localhost:\d+\/og\.png$/);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+  await expect(page.locator('meta[name="theme-color"]').first()).toHaveAttribute("content", /#/);
+  const html = await page.content();
+  expect(html).not.toMatch(/cathy/i);
+  const manifest = await (await request.get("/manifest.webmanifest")).text();
+  expect(manifest).toContain('"short_name":"Rango"');
+  expect(manifest).not.toMatch(/cathy/i);
+  expect((await request.get("/og.png")).headers()["content-type"]).toBe("image/png");
+  expect((await request.get("/favicon.ico")).ok()).toBe(true);
+  await expectNoTechWords(page);
+});
+
+test("\"Cómo cuidamos tus datos\" abre una explicación corta y sin jerga", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("contentinfo")).toContainText("Tu salario nunca aparece en tu carta.");
+  await expect(page.getByTestId("privacy")).toBeHidden();
+  await page.getByTestId("privacy-toggle").click();
+  await expect(page.getByTestId("privacy-toggle")).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByTestId("privacy")).toBeVisible();
+  await expect(page.getByTestId("privacy")).toContainText("Nunca recibe tu salario");
+  await expectNoTechWords(page);
+});
+
+test("montos: se formatean al escribir, Enter envía y los errores de formato se avisan al salir del campo", async ({ page }) => {
+  await mockApis(page);
+  await page.goto("/");
+  const current = page.locator("input[name=currentSalary]");
+  await expect(current).toHaveAttribute("inputmode", "numeric");
+  await current.pressSequentially("15000");
+  await expect(current).toHaveValue("15,000");
+  await page.locator("input[name=yearsExperience]").pressSequentially("7a");
+  await expect(page.locator("input[name=yearsExperience]")).toHaveValue("7");
+  await page.fill("input[name=desiredSalary]", "mucho");
+  await page.locator("input[name=desiredRole]").focus();
+  await expect(page.locator("#desiredSalary-error")).toContainText("Escribe el monto así");
+  await expect(page.getByText("Falta este dato")).toHaveCount(0); // antes de enviar no se regaña por lo vacío
+  await page.fill("input[name=desiredSalary]", "17500");
+  await expect(page.locator("#desiredSalary-error")).toHaveCount(0);
+  await page.fill("input[name=desiredRole]", "Analista de BI Senior");
+  await page.fill("input[name=targetCompany]", "Cervecería Centro Americana");
+  await page.locator("input[name=targetCompany]").press("Enter");
+  await expect(page.getByTestId("letter-text")).toBeVisible({ timeout: 15000 });
+});
+
+test("resultados: Copiar muestra \"Copiada\" y Descargar baja la carta en .txt", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await mockApis(page);
+  await page.goto("/");
+  await page.getByTestId("load-example").click();
+  await page.getByTestId("run").click();
+  await expect(page.getByTestId("letter-text")).toBeVisible({ timeout: 15000 });
+
+  await page.getByTestId("copy-letter").click();
+  await expect(page.getByTestId("toast")).toHaveText("Copiada");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(LETTER);
+  await expect(page.getByTestId("toast")).toBeHidden({ timeout: 5000 });
+
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByTestId("download-letter").click()]);
+  expect(download.suggestedFilename()).toBe("carta-cerveceria-centro-americana.txt");
+  const path = await download.path();
+  const { readFile } = await import("node:fs/promises");
+  expect((await readFile(path, "utf8")).trim()).toBe(LETTER);
+});
+
+test("sin nombre, la firma queda como [Tu nombre] resaltado y con aviso", async ({ page }) => {
+  await page.route("**/api/ollama/*", (route) => route.fulfill({ status: 503, contentType: "application/json", body: "{}" }));
+  await page.route("**/api/letter", (route) => route.fulfill({ status: 500, contentType: "application/json", body: "{}" }));
+  await page.goto("/");
+  await page.fill("input[name=desiredRole]", "Analista");
+  await page.fill("input[name=targetCompany]", "Tigo");
+  await page.fill("input[name=currentSalary]", "9000");
+  await page.fill("input[name=desiredSalary]", "11000");
+  await page.fill("input[name=yearsExperience]", "3");
+  await page.getByTestId("run").click();
+  // la carta de respaldo sale igual, con un aviso tranquilo y una salida clara
+  await expect(page.getByTestId("letter")).toHaveAttribute("data-source", "template");
+  await expect(page.getByTestId("letter-basic")).toContainText("versión básica");
+  await expect(page.getByTestId("retry")).toBeVisible();
+  await expect(page.locator(".letter-text mark.placeholder")).toHaveText("[Tu nombre]");
+  await expect(page.getByTestId("name-hint")).toContainText("[Tu nombre]");
+});
+
+test("404: página propia, con la marca y un camino de vuelta", async ({ page }) => {
+  const res = await page.goto("/no-existe");
+  expect(res?.status()).toBe(404);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Esta página no existe");
+  await expect(page.getByRole("banner")).toContainText("Rango");
+  await expectNoTechWords(page);
+  await page.getByTestId("home-link").click();
+  await expect(page.locator("input[name=desiredRole]")).toBeVisible();
 });
