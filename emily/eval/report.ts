@@ -79,13 +79,13 @@ function leakSection(r: Results): string[] {
   const out: string[] = [];
   out.push('## 2. Fugas de datos sensibles (router + redactor + compuerta)', '');
   out.push(
-    `Se corrió el **código real** de \`src/lib/router.ts\` (\`buildCloudPayload\`) sobre los ${s.cases} perfiles, con ${s.canaries} datos trampa plantados. ` +
-      'Un dato trampa "se fuga" si aparece en el texto exacto que saldría hacia la nube (comparación sin mayúsculas ni tildes, separadores de miles colapsados, con límites de palabra; ' +
-      'para números de 6+ dígitos también se buscan los dígitos seguidos). "Fuga parcial" = sobrevive un apellido o una palabra distintiva del dato trampa.',
+    `Se corrió el **código real** de \`src/lib/router.ts\` (\`buildCloudPayload\`) sobre los ${s.cases} perfiles, con ${s.canaries} datos ficticios escondidos. ` +
+      'Un dato ficticio "se fuga" si aparece en el texto exacto que saldría hacia la nube (comparación sin mayúsculas ni tildes, separadores de miles colapsados, con límites de palabra; ' +
+      'para números de 6+ dígitos también se buscan los dígitos seguidos). "Fuga parcial" = sobrevive un apellido o una palabra distintiva del dato ficticio.',
     '',
   );
   out.push('### 2.1 Recall por tipo', '');
-  out.push('| Tipo | Datos trampa | Atrapados por el redactor | Fugas | Fugas parciales | Recall final |');
+  out.push('| Tipo | Datos ficticios | Atrapados por el redactor | Fugas | Fugas parciales | Recall final |');
   out.push('|---|---:|---:|---:|---:|---:|');
   for (const t of SENSITIVE_TYPES) {
     const x = s.byType[t];
@@ -96,8 +96,8 @@ function leakSection(r: Results): string[] {
     `| **Total** | **${s.canaries}** | **${Math.round(s.recallRedactor * s.canaries)}** | **${Object.values(s.byType).reduce((a, x) => a + x.fugas, 0)}** | **${Object.values(s.byType).reduce((a, x) => a + x.parciales, 0)}** | **${pct(s.recallFinal)}** |`,
     '',
   );
-  out.push('### 2.2 Por dificultad del dato trampa', '');
-  out.push('| Dificultad | Datos trampa | Atrapados | Recall |', '|---|---:|---:|---:|');
+  out.push('### 2.2 Por dificultad del dato ficticio', '');
+  out.push('| Dificultad | Datos ficticios | Atrapados | Recall |', '|---|---:|---:|---:|');
   for (const d of ['fácil', 'media', 'difícil']) {
     const x = s.byDifficulty[d];
     if (x) out.push(`| ${d} | ${x.total} | ${x.atrapadosFinal} | ${pct(x.atrapadosFinal / x.total)} |`);
@@ -117,11 +117,11 @@ function leakSection(r: Results): string[] {
     for (const c of blocked) out.push(`- \`${c.id}\`: ${c.residual.map((x) => `${x.type} "${esc(x.match)}" (regla ${x.rule})`).join('; ')}`);
     out.push('');
   }
-  out.push('### 2.4 Datos trampa que se fugaron y por qué', '');
+  out.push('### 2.4 Datos ficticios que se fugaron y por qué', '');
   const leaked = r.leaks.cases.flatMap((c) => c.canaries.filter((k) => k.final !== 'atrapado').map((k) => ({ c, k })));
   if (!leaked.length) out.push('Ninguno.', '');
   else {
-    out.push('| Caso | Tipo | Dato trampa | Dificultad | Resultado | Por qué se escapó |', '|---|---|---|---|---|---|');
+    out.push('| Caso | Tipo | Dato ficticio | Dificultad | Resultado | Por qué se escapó |', '|---|---|---|---|---|---|');
     for (const { c, k } of leaked) {
       out.push(`| \`${c.id}\` | ${TYPE_ES[k.type]} | "${esc(k.value)}" | ${k.dificultad} | ${k.final === 'fuga' ? 'fuga' : `parcial ("${esc(k.evidencia ?? '')}")`} | ${esc(k.nota)}: ${WHY[k.type]} |`);
     }
@@ -132,7 +132,7 @@ function leakSection(r: Results): string[] {
     out.push('### 2.5 ¿Las fugas terminaron escritas en la carta?', '');
     out.push(
       'Un dato que se escapa del redactor no solo llega a Google: el modelo puede **escribirlo en la carta**, que luego se envía a un tercero. ' +
-        `De ${leaked.length} datos trampa fugados, **${prop.length}** aparecen en la carta de la nube:`,
+        `De ${leaked.length} datos ficticios fugados, **${prop.length}** aparecen en la carta de la nube:`,
       '',
     );
     if (prop.length) for (const x of prop) out.push(`- \`${x.id}\` ${TYPE_ES[x.type]} "${esc(x.value)}" → en la carta: "${esc(x.snippet)}"`);
@@ -146,7 +146,7 @@ function leakSection(r: Results): string[] {
   const others = r.leaks.cases.flatMap((c) => c.otherRedactions.map((o) => ({ id: c.id, ...o })));
   out.push(
     '',
-    `Además hubo ${others.length} tachaduras que no corresponden a ningún dato trampa (no cuentan como falso positivo, pero se listan para inspección): ` +
+    `Además hubo ${others.length} tachaduras que no corresponden a ningún dato ficticio (no cuentan como falso positivo, pero se listan para inspección): ` +
       (others.length ? others.map((o) => `\`${o.id}\` ${o.type} "${esc(o.match)}"`).join('; ') : 'ninguna') +
       '. La mayoría son rangos salariales de la oferta: no son del usuario, pero la carta no los necesita.',
     '',
@@ -253,13 +253,13 @@ function findings(r: Results): string[] {
     `- **El salario actual nunca salió** como campo ni en ninguna de sus formas numéricas conocidas (${s.currentSalaryAnyFormLeaks} de ${s.sentCases} casos enviados). Lo que sí se escapó fueron **formas coloquiales** escritas en texto libre: el redactor determinista no entiende el contexto.`,
   );
   out.push(
-    `- Recall final ${pct(s.recallFinal)} sobre ${s.canaries} datos trampa; los tipos más débiles: ${worst
+    `- Recall final ${pct(s.recallFinal)} sobre ${s.canaries} datos ficticios; los tipos más débiles: ${worst
       .slice(0, 3)
       .map((w) => `${TYPE_ES[w.t]} (${pct(w.rec)})`)
       .join(', ')}. Por dificultad: ${['fácil', 'media', 'difícil']
       .filter((d) => s.byDifficulty[d])
       .map((d) => `${d} ${pct(s.byDifficulty[d].atrapadosFinal / s.byDifficulty[d].total)}`)
-      .join(', ')}. Las fugas se concentran en datos trampa diseñados como difíciles: el resultado es honesto, no un 100 % de vitrina.`,
+      .join(', ')}. Las fugas se concentran en datos ficticios diseñados como difíciles: el resultado es honesto, no un 100 % de vitrina.`,
   );
   out.push(
     `- Falsos positivos: ${s.falsePositives} de ${s.allowedTotal} textos permitidos. La primera corrida de esta evaluación encontró 7 casos bloqueados por error y 2 falsos positivos causados por el propio redactor (ver \`docs/decisiones.md\`); se corrigieron y quedaron como pruebas de regresión.`,
@@ -267,7 +267,7 @@ function findings(r: Results): string[] {
   if (r.quality) {
     const prop = propagated(r);
     out.push(
-      `- **${prop.length} de los datos trampa fugados terminaron escritos en la carta de la nube** (${prop.map((x) => `"${x.value}"`).join(', ') || 'ninguno'}): el modelo no solo los recibió, los usó. El redactor protege a Google y también al destinatario de la carta.`,
+      `- **${prop.length} de los datos ficticios fugados terminaron escritos en la carta de la nube** (${prop.map((x) => `"${x.value}"`).join(', ') || 'ninguno'}): el modelo no solo los recibió, los usó. El redactor protege a Google y también al destinatario de la carta.`,
     );
     const q = r.quality.summary;
     const best = [...SOURCES].sort((a, b) => (q.judgeOverall[b] || 0) - (q.judgeOverall[a] || 0));
@@ -300,8 +300,8 @@ export function renderReport(r: Results): string {
   );
   out.push('## 1. Método', '');
   out.push(
-    `- **${r.meta.fixtures.length} perfiles ficticios** (\`eval/fixtures/*.json\`) con sabor guatemalteco: junior y senior, técnicos y no técnicos, con y sin oferta, ofertas en español e inglés, texto desordenado. Cada perfil lista sus **datos trampa** (datos sensibles plantados, con tipo y dificultad) y una lista \`allowed\` de textos no sensibles que deben sobrevivir (para medir falsos positivos).`,
-    '- **Fugas**: se ejecuta el router real (`buildCloudPayload`: lista blanca → redactor → compuerta final) y se busca cada dato trampa en el texto exacto que saldría a la nube. Si la compuerta bloquea, no sale nada y el dato trampa cuenta como atrapado.',
+    `- **${r.meta.fixtures.length} perfiles ficticios** (\`eval/fixtures/*.json\`) con sabor guatemalteco: junior y senior, técnicos y no técnicos, con y sin oferta, ofertas en español e inglés, texto desordenado. Cada perfil lista sus **datos ficticios** (datos sensibles inventados, con tipo y dificultad) y una lista \`allowed\` de textos no sensibles que deben sobrevivir (para medir falsos positivos).`,
+    '- **Fugas**: se ejecuta el router real (`buildCloudPayload`: lista blanca → redactor → compuerta final) y se busca cada dato ficticio en el texto exacto que saldría a la nube. Si la compuerta bloquea, no sale nada y el dato ficticio cuenta como atrapado.',
     `- **Calidad**: para cada perfil se generan tres cartas: (a) **local**, \`${r.meta.localModel.id}\` con transformers.js en Node (mismo id de modelo, dtype, plantilla de chat y constructor de prompt que el navegador); (b) **nube**, \`${r.meta.cloudModel.model}\` con el mismo prompt que arma el router, llamado vía ${r.meta.cloudModel.via} (proyecto \`${r.meta.cloudModel.project}\`, región \`${r.meta.cloudModel.location}\`) en lugar de ${r.meta.cloudModel.appVia}, porque Firebase AI Logic es un SDK de navegador protegido con App Check y no se puede invocar desde un script de Node; el modelo y el prompt son los mismos; (c) **plantilla** determinista como línea base.`,
     `- **Calificación**: 6 criterios (ver [\`eval/CRITERIOS.md\`](eval/CRITERIOS.md)), cada uno con una regla determinista y con un juez \`${r.meta.judge.model}\` a temperatura ${r.meta.judge.temperature}, a ciegas: cartas etiquetadas A/B/C con **posiciones balanceadas** (las 6 permutaciones, 3 casos cada una: cada fuente cae 6 veces en cada posición).`,
     ...(r.quality

@@ -4,19 +4,19 @@
 
 ## 1. Método
 
-- **18 perfiles ficticios** (`eval/fixtures/*.json`) con sabor guatemalteco: junior y senior, técnicos y no técnicos, con y sin oferta, ofertas en español e inglés, texto desordenado. Cada perfil lista sus **datos trampa** (datos sensibles plantados, con tipo y dificultad) y una lista `allowed` de textos no sensibles que deben sobrevivir (para medir falsos positivos).
-- **Fugas**: se ejecuta el router real (`buildCloudPayload`: lista blanca → redactor → compuerta final) y se busca cada dato trampa en el texto exacto que saldría a la nube. Si la compuerta bloquea, no sale nada y el dato trampa cuenta como atrapado.
+- **18 perfiles ficticios** (`eval/fixtures/*.json`) con sabor guatemalteco: junior y senior, técnicos y no técnicos, con y sin oferta, ofertas en español e inglés, texto desordenado. Cada perfil lista sus **datos ficticios** (datos sensibles inventados, con tipo y dificultad) y una lista `allowed` de textos no sensibles que deben sobrevivir (para medir falsos positivos).
+- **Fugas**: se ejecuta el router real (`buildCloudPayload`: lista blanca → redactor → compuerta final) y se busca cada dato ficticio en el texto exacto que saldría a la nube. Si la compuerta bloquea, no sale nada y el dato ficticio cuenta como atrapado.
 - **Calidad**: para cada perfil se generan tres cartas: (a) **local**, `onnx-community/gemma-4-E2B-it-qat-mobile-ONNX` con transformers.js en Node (mismo id de modelo, dtype, plantilla de chat y constructor de prompt que el navegador); (b) **nube**, `gemini-3.8-flash` con el mismo prompt que arma el router, llamado vía @google/genai (Vertex AI, ADC) (proyecto `ai-experiments-487722`, región `global`) en lugar de Firebase AI Logic (GoogleAIBackend), porque Firebase AI Logic es un SDK de navegador protegido con App Check y no se puede invocar desde un script de Node; el modelo y el prompt son los mismos; (c) **plantilla** determinista como línea base.
 - **Calificación**: 6 criterios (ver [`eval/CRITERIOS.md`](eval/CRITERIOS.md)), cada uno con una regla determinista y con un juez `gemini-3.8-flash` a temperatura 0, a ciegas: cartas etiquetadas A/B/C con **posiciones balanceadas** (las 6 permutaciones, 3 casos cada una: cada fuente cae 6 veces en cada posición).
 - Cartas reutilizadas de la caché `.cache/eval-letters` (generadas en una corrida anterior con el mismo prompt): local 18/18, nube 17/18. Latencias y tokens son los de la generación original.
 
 ## 2. Fugas de datos sensibles (router + redactor + compuerta)
 
-Se corrió el **código real** de `src/lib/router.ts` (`buildCloudPayload`) sobre los 18 perfiles, con 78 datos trampa plantados. Un dato trampa "se fuga" si aparece en el texto exacto que saldría hacia la nube (comparación sin mayúsculas ni tildes, separadores de miles colapsados, con límites de palabra; para números de 6+ dígitos también se buscan los dígitos seguidos). "Fuga parcial" = sobrevive un apellido o una palabra distintiva del dato trampa.
+Se corrió el **código real** de `src/lib/router.ts` (`buildCloudPayload`) sobre los 18 perfiles, con 78 datos ficticios escondidos. Un dato ficticio "se fuga" si aparece en el texto exacto que saldría hacia la nube (comparación sin mayúsculas ni tildes, separadores de miles colapsados, con límites de palabra; para números de 6+ dígitos también se buscan los dígitos seguidos). "Fuga parcial" = sobrevive un apellido o una palabra distintiva del dato ficticio.
 
 ### 2.1 Recall por tipo
 
-| Tipo | Datos trampa | Atrapados por el redactor | Fugas | Fugas parciales | Recall final |
+| Tipo | Datos ficticios | Atrapados por el redactor | Fugas | Fugas parciales | Recall final |
 |---|---:|---:|---:|---:|---:|
 | Salario / montos | 26 | 24 | 2 | 0 | 92 % |
 | Empleador actual | 15 | 13 | 2 | 0 | 87 % |
@@ -28,9 +28,9 @@ Se corrió el **código real** de `src/lib/router.ts` (`buildCloudPayload`) sobr
 | NIT | 3 | 3 | 0 | 0 | 100 % |
 | **Total** | **78** | **66** | **12** | **0** | **85 %** |
 
-### 2.2 Por dificultad del dato trampa
+### 2.2 Por dificultad del dato ficticio
 
-| Dificultad | Datos trampa | Atrapados | Recall |
+| Dificultad | Datos ficticios | Atrapados | Recall |
 |---|---:|---:|---:|
 | fácil | 44 | 44 | 100 % |
 | media | 20 | 20 | 100 % |
@@ -43,9 +43,9 @@ Se corrió el **código real** de `src/lib/router.ts` (`buildCloudPayload`) sobr
 - Nombre declarado del empleador actual dentro del payload enviado: 0 de 18 casos.
 - Falsos positivos (textos no sensibles de la lista `allowed` que el redactor tachó): **0 de 101**.
 
-### 2.4 Datos trampa que se fugaron y por qué
+### 2.4 Datos ficticios que se fugaron y por qué
 
-| Caso | Tipo | Dato trampa | Dificultad | Resultado | Por qué se escapó |
+| Caso | Tipo | Dato ficticio | Dificultad | Resultado | Por qué se escapó |
 |---|---|---|---|---|---|
 | `01-junior-soporte-tigo` | Empleador actual | "TIGO" | difícil | fuga | marca de 4 letras en mayúsculas; el nombre declarado es "Tigo Guatemala": el redactor solo conoce el nombre declarado (exacto, con typos, acrónimo, sin espacios y palabras distintivas de 5+ letras); apodos o marcas cortas no derivables del nombre se escapan |
 | `06-vendedor-texto-desordenado` | Nombres de personas | "don Beto" | difícil | fuga | apodo con "don" en minúscula, sin apellido: solo se reconocen personas presentadas con un cargo (jefe, gerente, compañera…) o un título (Lic., Ing.…) y escritas con mayúscula inicial |
@@ -62,7 +62,7 @@ Se corrió el **código real** de `src/lib/router.ts` (`buildCloudPayload`) sobr
 
 ### 2.5 ¿Las fugas terminaron escritas en la carta?
 
-Un dato que se escapa del redactor no solo llega a Google: el modelo puede **escribirlo en la carta**, que luego se envía a un tercero. De 12 datos trampa fugados, **5** aparecen en la carta de la nube:
+Un dato que se escapa del redactor no solo llega a Google: el modelo puede **escribirlo en la carta**, que luego se envía a un tercero. De 12 datos ficticios fugados, **5** aparecen en la carta de la nube:
 
 - `07-nombres-minuscula` Nombres de personas "Carlos Méndez" → en la carta: "urante este tiempo, junto con Carlos Méndez, rediseñamos los turnos de tr"
 - `07-nombres-minuscula` Nombres de personas "ana lópez" → en la carta: "esultados motivó que mi jefa, Ana López, me nominara al reconocimient"
@@ -75,7 +75,7 @@ Un dato que se escapa del redactor no solo llega a Google: el modelo puede **esc
 Ningún texto de la lista `allowed` fue tachado.
 
 
-Además hubo 10 tachaduras que no corresponden a ningún dato trampa (no cuentan como falso positivo, pero se listan para inspección): `02-analista-datos-bi` salary "Q18,000"; `02-analista-datos-bi` salary "Q22,000"; `04-disenadora-usd-oferta-ingles` salary "USD 4,000"; `04-disenadora-usd-oferta-ingles` salary "4,800"; `08-dev-remoto-oferta-ingles` salary "$3,500"; `08-dev-remoto-oferta-ingles` salary "$4,000"; `11-barista-falsos-positivos` employer "Barista"; `14-direcciones` address "carretera a El Salvador"; `18-mezcla-typos-bam` salary "USD 3,500"; `18-mezcla-typos-bam` salary "4,200". La mayoría son rangos salariales de la oferta: no son del usuario, pero la carta no los necesita.
+Además hubo 10 tachaduras que no corresponden a ningún dato ficticio (no cuentan como falso positivo, pero se listan para inspección): `02-analista-datos-bi` salary "Q18,000"; `02-analista-datos-bi` salary "Q22,000"; `04-disenadora-usd-oferta-ingles` salary "USD 4,000"; `04-disenadora-usd-oferta-ingles` salary "4,800"; `08-dev-remoto-oferta-ingles` salary "$3,500"; `08-dev-remoto-oferta-ingles` salary "$4,000"; `11-barista-falsos-positivos` employer "Barista"; `14-direcciones` address "carretera a El Salvador"; `18-mezcla-typos-bam` salary "USD 3,500"; `18-mezcla-typos-bam` salary "4,200". La mayoría son rangos salariales de la oferta: no son del usuario, pero la carta no los necesita.
 
 ## 3. Calidad de la carta: local vs nube vs plantilla
 
@@ -156,9 +156,9 @@ Riesgo de **auto-preferencia**: el juez es el mismo modelo que escribió la cart
 ## 4. Hallazgos
 
 - **El salario actual nunca salió** como campo ni en ninguna de sus formas numéricas conocidas (0 de 18 casos enviados). Lo que sí se escapó fueron **formas coloquiales** escritas en texto libre: el redactor determinista no entiende el contexto.
-- Recall final 85 % sobre 78 datos trampa; los tipos más débiles: Nombres de personas (55 %), Correo (80 %), Teléfono (83 %). Por dificultad: fácil 100 %, media 100 %, difícil 14 %. Las fugas se concentran en datos trampa diseñados como difíciles: el resultado es honesto, no un 100 % de vitrina.
+- Recall final 85 % sobre 78 datos ficticios; los tipos más débiles: Nombres de personas (55 %), Correo (80 %), Teléfono (83 %). Por dificultad: fácil 100 %, media 100 %, difícil 14 %. Las fugas se concentran en datos ficticios diseñados como difíciles: el resultado es honesto, no un 100 % de vitrina.
 - Falsos positivos: 0 de 101 textos permitidos. La primera corrida de esta evaluación encontró 7 casos bloqueados por error y 2 falsos positivos causados por el propio redactor (ver `docs/decisiones.md`); se corrigieron y quedaron como pruebas de regresión.
-- **5 de los datos trampa fugados terminaron escritos en la carta de la nube** ("Carlos Méndez", "ana lópez", "Luis Fernando Ajú", "Cerve", "Ricardo Arzú"): el modelo no solo los recibió, los usó. El redactor protege a Google y también al destinatario de la carta.
+- **5 de los datos ficticios fugados terminaron escritos en la carta de la nube** ("Carlos Méndez", "ana lópez", "Luis Fernando Ajú", "Cerve", "Ricardo Arzú"): el modelo no solo los recibió, los usó. El redactor protege a Google y también al destinatario de la carta.
 - Calidad (juez 1–5): Local (Gemma 4 E2B) 3.25, Nube (gemini-3.8-flash) 4.83, Plantilla 4.20. Reglas deterministas (proporción de criterios cumplidos): local 83 %, nube 94 %, plantilla 97 %. Mejor según el juez: **Nube (gemini-3.8-flash)**.
 - Juez − reglas (escala 1–5): local -1.08, nube 0.06, plantilla -0.69. El juez es **más severo que las reglas con las cartas que no escribió** y coincide con ellas en la suya. Hay dos lecturas y los datos no alcanzan para separarlas: auto-preferencia, o reglas demasiado permisivas (no ven palabras rotas, relleno genérico ni frases copiadas; ver los comentarios del juez en `eval/results/`). Lo prudente: tratar la ventaja de la nube en *tono* y *español* como probable pero inflada, y la de *ajuste a la oferta* como real (las cartas locales casi no usan los logros concretos).
 - Reglas vs juez: el acuerdo es bajo en Ajuste a la oferta (44 %), Tono profesional (52 %), Español correcto (65 %); en esos criterios la regla y el juez miden cosas distintas o uno de los dos se equivoca (ver 3.1).

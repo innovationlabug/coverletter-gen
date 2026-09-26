@@ -1,7 +1,7 @@
 # Emily · carta de interés sin contar lo que ganas
 
 - **Demo:** [sobre-carta.vercel.app](https://sobre-carta.vercel.app)
-- **Artículo:** [¿Cómo sé que mi app no filtra tu salario? Validar un split brain con 78 datos trampa](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit)
+- **Artículo:** [Escondí 78 datos privados ficticios para probar que mi app de IA no filtra tu salario](https://docs.google.com/document/d/1sAsfRQllg164OX_fE5ogyDlLKuEZYzil4UbPY0OPntA/edit)
 - **Enunciado:** [ENUNCIADO.md](../ENUNCIADO.md)
 - **Validación:** [VALIDACION.md](VALIDACION.md) · **Prueba didáctica:** [DIDACTICA.md](DIDACTICA.md) · **Temas para próximos artículos:** [TEMAS.md](TEMAS.md)
 
@@ -279,14 +279,14 @@ Salida esperada de `npm run eval -- --leaks-only` (termina con esta línea):
 Recall redactor 84.6 % · recall final 84.6 % · FP 0/101 · salario actual en payload: 0 casos
 ```
 
-- **12 fugas** en la lista de casos: es lo esperado, no un fallo. Son datos trampa *difíciles* plantados a propósito
+- **12 fugas** en la lista de casos: es lo esperado, no un fallo. Son datos ficticios *difíciles* escondidos a propósito
   (apodos como "don Beto", "doce y medio", correos deletreados) y están explicados en [`VALIDACION.md`](VALIDACION.md) §2.4.
 - **0 falsos positivos** de 101 textos que no deben tacharse.
 - **`salario actual en payload: 0 casos`** es el número que **nunca** debe cambiar: si alguna vez es mayor que 0,
   hay una fuga real del salario actual.
 - Escribe `eval/results/<fecha>-leaks.json` y `.md` (ignorados por git); no toca `VALIDACION.md`.
 
-- Casos: `eval/fixtures/*.json` (perfil + `canaries`, los datos trampa, con tipo y dificultad + `allowed`).
+- Casos: `eval/fixtures/*.json` (perfil + `canaries`, los datos ficticios, con tipo y dificultad + `allowed`).
 - Criterios de calidad y sesgos del juez: [`eval/CRITERIOS.md`](eval/CRITERIOS.md).
 - Resultados crudos: `eval/results/<fecha>.json`. Reporte: **[`VALIDACION.md`](VALIDACION.md)** (se regenera solo; también con `npm run eval:report`).
 - Opciones: `--only=01,07` · `--device=cpu` · `--fresh` (ignora la caché de cartas en `.cache/eval-letters`) · `--skip-local` · `--skip-cloud` · `--skip-judge`.

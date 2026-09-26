@@ -1,7 +1,7 @@
 # Cathy — carta dividida con modelos locales
 
 - **Demo:** [Rango en Cloud Run](https://rango-611681112050.us-central1.run.app)
-- **Artículo:** [¿Un Ollama en la nube sigue siendo local? Gemma contra Qwen en un split brain](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit)
+- **Artículo:** [Gemma o Qwen: cómo elegí un modelo de IA pequeño para una app que conoce tu salario](https://docs.google.com/document/d/1ZR7J2gqSNL025JrLaMi--NN_nbui1wuwpNvb3y-VlE8/edit)
 - **Enunciado:** [ENUNCIADO.md](../ENUNCIADO.md)
 - **Benchmark:** [BENCHMARK.md](BENCHMARK.md) (GPU L4) · [bench/BENCHMARK-cpu.md](bench/BENCHMARK-cpu.md) (CPU)
 

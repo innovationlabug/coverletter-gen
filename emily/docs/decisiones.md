@@ -46,13 +46,13 @@ La configuración web de Firebase es pública por diseño, pero la regla del pro
 
 ## 4. Lo que encontró la evaluación en su primera corrida (y corregimos)
 
-La primera corrida de `npm run eval -- --leaks-only` (salida guardada en `docs/.run0-leaks-baseline.txt`) encontró errores **del redactor, no de los datos trampa**:
+La primera corrida de `npm run eval -- --leaks-only` (salida guardada en `docs/.run0-leaks-baseline.txt`) encontró errores **del redactor, no de los datos ficticios**:
 
 | Hallazgo | Causa | Arreglo |
 |---|---|---|
 | **7 de 18 casos bloqueados** sin motivo real | La compuerta revisa el prompt completo, y el patrón de personas usaba `\s+`, que cruza saltos de línea: "Puesto al que aplica: Coordinadora de enfermería⏎**Empresa** destino" se leía como *cargo + nombre*. El error estaba en **nuestra propia plantilla de prompt**. | Los patrones de personas y direcciones usan `[ \t]` (no cruzan líneas). Prueba de regresión. |
 | "Lead Product Designer" tachado como persona | "lead" estaba en la lista de cargos | Se quitó; prueba de regresión |
-| "Residenciales Los Álamos" (dato trampa **fácil**) se fugó | Palabras clave de zona en minúscula y sin bandera `i` | Palabra clave insensible a mayúsculas; prueba de regresión |
+| "Residenciales Los Álamos" (dato ficticio **fácil**) se fugó | Palabras clave de zona en minúscula y sin bandera `i` | Palabra clave insensible a mayúsculas; prueba de regresión |
 | La empresa destino "Café Calle Real" tachada como dirección | Nada distinguía una empresa de una calle | **Textos públicos declarados** (empresa destino y puesto deseado) quedan protegidos: una detección que cae entera dentro de ellos se descarta. Prueba de regresión. |
 
 Resultado, antes → después:
@@ -73,7 +73,7 @@ También encontró (en la parte de calidad):
 
 ### Segunda corrida (la completa, con cartas y juez)
 
-- **Las fugas se escriben en la carta.** El dato trampa difícil "ana lópez" (en minúscula) se escapó del redactor, y Gemini lo devolvió **capitalizado dentro de la carta**: "Ana López". Lo mismo con "Ricardo Arzú" (el cargo "CEO" no está en la lista de cargos): la carta dice "Ejecutivo Ricardo Arzú". Un nombre de tercero que se escapa no solo llega a Google, **termina en un documento que se envía a otra empresa**. El reporte ahora cuenta cuántas fugas llegan a la carta (sección 2.5 de `VALIDACION.md`).
+- **Las fugas se escriben en la carta.** El dato ficticio difícil "ana lópez" (en minúscula) se escapó del redactor, y Gemini lo devolvió **capitalizado dentro de la carta**: "Ana López". Lo mismo con "Ricardo Arzú" (el cargo "CEO" no está en la lista de cargos): la carta dice "Ejecutivo Ricardo Arzú". Un nombre de tercero que se escapa no solo llega a Google, **termina en un documento que se envía a otra empresa**. El reporte ahora cuenta cuántas fugas llegan a la carta (sección 2.5 de `VALIDACION.md`).
 - **Confusión entre posición y calidad en el juez.** El orden "aleatorio" con semilla dejó la carta de la nube en la posición C en 12 de 18 casos, y C tuvo el promedio más alto (4.56 vs 3.73–3.94). Con eso no se puede separar el sesgo de posición de la calidad. Se cambió a una asignación **balanceada**: las 6 permutaciones, 3 casos cada una, así cada fuente cae 6 veces en A, 6 en B y 6 en C.
 - **Falsos positivos de las reglas de carta** (no del router): "cien mil descargas" contado como salario; "Café Calle Real" (la empresa destino) como dirección; "Ingeniero React Native Senior" como persona. Y uno del redactor: "un **mil**lón" coincidía con "un mil". Arreglados y con pruebas de regresión.
 - La plantilla escribía "; y Hice …" e "y implementé" (el juez lo señaló): ahora baja la inicial de más verbos comunes y usa "e" antes de sonido /i/.

@@ -38,7 +38,7 @@ const leakSummary = summarizeLeaks(leakCases);
 for (const c of leakCases) {
   const bad = c.canaries.filter((k) => k.final !== 'atrapado');
   console.log(
-    `${c.blocked ? 'BLOQUEADO' : 'enviado  '} ${c.id.padEnd(38)} datos trampa ${c.canaries.length - bad.length}/${c.canaries.length}` +
+    `${c.blocked ? 'BLOQUEADO' : 'enviado  '} ${c.id.padEnd(38)} datos ficticios ${c.canaries.length - bad.length}/${c.canaries.length}` +
       (bad.length ? `  fugas: ${bad.map((k) => `${k.type}:"${k.value}"`).join(', ')}` : '') +
       (c.falsePositives.length ? `  FP: ${c.falsePositives.join(', ')}` : ''),
   );
