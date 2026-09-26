@@ -107,7 +107,7 @@ curl -N -X POST http://localhost:3000/api/ollama/requirements \
 Directo a Ollama en Cloud Run (útil para depurar; necesitas `roles/run.invoker`):
 
 ```bash
-OLLAMA_URL=$(gcloud run services describe ollama-coverletter --region us-central1 --format 'value(status.url)')
+OLLAMA_URL=$(gcloud run services describe ollama-coverletter --region europe-west4 --format 'value(status.url)')
 curl -N "$OLLAMA_URL/api/chat" \
   -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
   -d '{"model":"qwen3.5:2b","think":false,"stream":true,"options":{"temperature":0},

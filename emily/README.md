@@ -197,7 +197,7 @@ escribir la versión en línea esta vez. Te dejamos la versión base."* y el res
 
 - **Clave de reCAPTCHA Enterprise (recomendada, sirve en desarrollo y en producción):** ya existe una
   clave de sitio para la app web **`coverletter-emily`**, que acepta los dominios
-  `sobre-carta.vercel.app`, `coverletter-emily.vercel.app` y `localhost`. No está en el repositorio; obtenla así (o pídesela a la dueña del proyecto):
+  `sobre-carta.vercel.app` y `localhost`. No está en el repositorio; obtenla así (o pídesela a la dueña del proyecto):
 
   ```bash
   gcloud recaptcha keys list --project viaticos-spending-mngmt
