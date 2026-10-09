@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluación de Proyecto — Carta Split Brain (Cathy)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    .tab-btn.active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      font-weight: 600;
+    }
+    .badge-ok { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-warn { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-info { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-6 md:p-10 max-w-6xl mx-auto space-y-8">
+
+  <!-- HEADER -->
+  <header class="bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 md:p-8 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--border)] pb-6">
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold badge-ok">ENTREGABLE COMPLETO · SOBRESALIENTE</span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-medium badge-info">Área: Modelos Locales (Ollama)</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Evaluación de Proyecto: <span class="font-mono text-xl md:text-2xl">carta-split-brain</span></h1>
+        <p class="text-[var(--muted-foreground)] text-sm mt-1">
+          Autora: <strong>Catherine Batres (Cathy)</strong> · Repo: <code class="text-xs bg-[var(--secondary)] px-1.5 py-0.5 rounded">github.com/CatherineBatres/carta-split-brain</code> · Referencia comparada: <code class="text-xs bg-[var(--secondary)] px-1.5 py-0.5 rounded">coverletter-gen/cathy</code>
+        </p>
+      </div>
+      <div class="flex items-center gap-4 bg-[var(--secondary)] px-5 py-3 rounded-xl border border-[var(--border)] shrink-0">
+        <div class="text-center">
+          <div class="text-xs text-[var(--muted-foreground)] uppercase tracking-wider">Tests (pytest)</div>
+          <div class="text-xl font-bold text-emerald-500">83 / 83</div>
+        </div>
+        <div class="h-8 w-px bg-[var(--border)]"></div>
+        <div class="text-center">
+          <div class="text-xs text-[var(--muted-foreground)] uppercase tracking-wider">Decisiones Doc</div>
+          <div class="text-xl font-bold">D-01–D-34</div>
+        </div>
+        <div class="h-8 w-px bg-[var(--border)]"></div>
+        <div class="text-center">
+          <div class="text-xs text-[var(--muted-foreground)] uppercase tracking-wider">Evaluaciones</div>
+          <div class="text-xl font-bold">166 gen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXECUTIVE SCORECARD -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-6">
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">1. Funcionalidad y Calidad</span>
+          <span class="px-2 py-0.5 rounded text-xs font-bold badge-ok">Excelente</span>
+        </div>
+        <p class="text-sm font-medium mt-1">Cumple el 100% del spec y condiciones mínimas. Arquitectura limpia en 3 niveles de degradación, router con allowlist y guardián fail-closed.</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">2. Aprendizaje Modelos Locales</span>
+          <span class="px-2 py-0.5 rounded text-xs font-bold badge-ok">Profundo</span>
+        </div>
+        <p class="text-sm font-medium mt-1">Aprendizaje real y empírico: cold start vs warm, caché de prompt (TTFT), thermal throttling en laptop, VRAM vs RAM, y límites de obediencia en 4B.</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">3. Comparativa vs Referencia</span>
+          <span class="px-2 py-0.5 rounded text-xs font-bold badge-info">Alineado</span>
+        </div>
+        <p class="text-sm font-medium mt-1">Ignorando Ollama en Cloud Run de la referencia, coinciden en el ganador (Gemma 4), separación reglas/LLM y hallazgos de alucinación/persona.</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">4. Artículo (Contenido/Largo)</span>
+          <span class="px-2 py-0.5 rounded text-xs font-bold badge-ok">Muy Bueno</span>
+        </div>
+        <p class="text-sm font-medium mt-1">~4,950 palabras (~20 min lectura). Didáctico, honesto con errores propios, con 11 imágenes/gráficas. Solo un poco extenso por cubrir ambas evaluaciones.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="flex flex-wrap gap-2 bg-[var(--card)] p-2 rounded-xl border border-[var(--border)] sticky top-2 z-20 shadow-sm">
+    <button onclick="showSection('all')" id="btn-all" class="tab-btn active px-4 py-2 rounded-lg text-sm transition">Vista Completa</button>
+    <button onclick="showSection('sec1')" id="btn-sec1" class="tab-btn px-4 py-2 rounded-lg text-sm transition">1. ¿Hace lo que debe y bien?</button>
+    <button onclick="showSection('sec2')" id="btn-sec2" class="tab-btn px-4 py-2 rounded-lg text-sm transition">2. Aprendizaje de Modelos Locales</button>
+    <button onclick="showSection('sec3')" id="btn-sec3" class="tab-btn px-4 py-2 rounded-lg text-sm transition">3. Contraste con Referencia</button>
+    <button onclick="showSection('sec4')" id="btn-sec4" class="tab-btn px-4 py-2 rounded-lg text-sm transition">4. Evaluación del Artículo</button>
+  </nav>
+
+  <!-- ===================================================================== -->
+  <!-- SECCIÓN 1: ¿HACE LO QUE DEBE Y LO HACE BIEN? -->
+  <!-- ===================================================================== -->
+  <section id="sec1" class="eval-section bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
+    <div class="border-b border-[var(--border)] pb-4">
+      <span class="text-xs font-bold uppercase tracking-wider text-emerald-500">Punto 1 de Evaluación</span>
+      <h2 class="text-xl md:text-2xl font-bold mt-1">1. ¿Hace lo que debe y lo hace bien?</h2>
+      <p class="text-sm text-[var(--muted-foreground)] mt-1">Verificación contra la especificación general, las 4 condiciones mínimas, los requisitos de Cathy y las pruebas en vivo.</p>
+    </div>
+
+    <!-- Checklist de Condiciones Mínimas -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+            <th class="py-3 px-4 font-semibold">Requisito del Spec</th>
+            <th class="py-3 px-4 font-semibold">Estado</th>
+            <th class="py-3 px-4 font-semibold">Cómo lo implementa Cathy</th>
+            <th class="py-3 px-4 font-semibold">Evidencia / Verificación</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border)]">
+          <tr>
+            <td class="py-3 px-4 font-medium">Entradas y 2 Salidas (Carta + Nota Privada)</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Cumple</span></td>
+            <td class="py-3 px-4">Formulario Streamlit en <code class="text-xs">127.0.0.1:8501</code> con 5 campos solo-locales y 6 sanitizables. Devuelve Carta descargable + Nota privada + bloque de <em>Datos Exactos</em> calculados por reglas + panel de transparencia JSON.</td>
+            <td class="py-3 px-4 font-mono text-xs">app.py, splitbrain/orquestador.py</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Condición 1: Componente local + modelo nube justificados (≥2 razones)</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Cumple (5/5)</span></td>
+            <td class="py-3 px-4">Usa las 5 razones del spec (🔒 Privacidad, ⚡ Latencia, 💰 Costo, 📴 Disponibilidad, 🎯 Calidad) para justificar cada tarea en una tabla de arquitectura y en 34 decisiones documentadas.</td>
+            <td class="py-3 px-4 font-mono text-xs">README.md §1, docs/decisiones.md</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Condición 2: Salario actual nunca sale + decide qué más es sensible + test</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Cumple con creces</span></td>
+            <td class="py-3 px-4">Define como sensibles: salario actual y deseado (incluyendo anualizado ×12 y ×14 guatemalteco), nombre, empleador actual, correo, teléfono y DPI (13 dígitos).</td>
+            <td class="py-3 px-4 font-mono text-xs">tests/test_privacidad.py (16 tests parametrizados)</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Condición 3: Decisión hacia la nube explícita y verificable (no por LLM)</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Cumple con creces</span></td>
+            <td class="py-3 px-4">Tres capas deterministas: 1) Allowlist (<code class="text-xs">CAMPOS_NUBE</code> vs <code class="text-xs">CAMPOS_SOLO_LOCAL</code>), 2) Sanitizador regex (<code class="text-xs">sensibles.py</code>), 3) Guardián fail-closed (<code class="text-xs">verificar_payload</code>) que lanza <code class="text-xs">FugaDetectada</code>.</td>
+            <td class="py-3 px-4 font-mono text-xs">splitbrain/router.py, tests/test_router.py</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Condición 4: Sin conexión sigue entregando algo útil</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Cumple (3 niveles)</span></td>
+            <td class="py-3 px-4">Degradación elegante: Carta (Gemini → Ollama → Plantilla determinista sin marcas censuradas) y Nota (Ollama → Reglas deterministas). Funciona incluso sin internet <strong>y</strong> con Ollama apagado.</td>
+            <td class="py-3 px-4 font-mono text-xs">tests/test_offline.py (8 tests)</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Profundidad Cathy: Ollama + Gemma vs Qwen + Heurísticas</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Cumple 100%</span></td>
+            <td class="py-3 px-4">Usa <code class="text-xs">gemma4:e4b</code> vs <code class="text-xs">qwen3.5:4b</code> (~3.0 GB VRAM c/u) vía API REST plana (<code class="text-xs">/api/chat</code>, <code class="text-xs">/api/ps</code>, <code class="text-xs">/api/tags</code>) para medir <code class="text-xs">load_duration</code>, <code class="text-xs">eval_duration</code>, TTFT y VRAM.</td>
+            <td class="py-3 px-4 font-mono text-xs">splitbrain/local_llm.py, bench/*</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DIAGRAMA SVG: ARQUITECTURA DE DEFENSA Y DEGRADACIÓN -->
+    <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-5">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-3">Diagrama de Arquitectura: Las 3 Capas de Privacidad y Degradación en 3 Niveles</h3>
+      <div class="overflow-x-auto">
+        <svg viewBox="0 0 920 340" class="w-full h-auto min-w-[720px]" xmlns="http://www.w3.org/2000/svg">
+          <!-- Perímetro Dispositivo -->
+          <rect x="10" y="10" width="630" height="320" rx="14" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="6,4"/>
+          <text x="25" y="34" fill="#10b981" font-size="13" font-weight="bold" font-family="sans-serif">🖥️ DISPOSITIVO LOCAL (127.0.0.1 — Streamlit + Reglas + Ollama)</text>
+
+          <!-- Perímetro Nube -->
+          <rect x="670" y="10" width="240" height="320" rx="14" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6,4"/>
+          <text x="685" y="34" fill="#3b82f6" font-size="13" font-weight="bold" font-family="sans-serif">☁️ NUBE (Tercero: Gemini API)</text>
+
+          <!-- Entrada Perfil -->
+          <rect x="25" y="55" width="145" height="115" rx="8" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/>
+          <text x="35" y="76" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">Perfil de Entrada</text>
+          <text x="35" y="95" fill="#ef4444" font-size="11" font-family="sans-serif">🔒 nombre, empleador</text>
+          <text x="35" y="111" fill="#ef4444" font-size="11" font-family="sans-serif">🔒 salario_actual/deseado</text>
+          <text x="35" y="129" fill="#3b82f6" font-size="11" font-family="sans-serif">☁️ puesto, empresa</text>
+          <text x="35" y="145" fill="#3b82f6" font-size="11" font-family="sans-serif">☁️ experiencia, logros</text>
+          <text x="35" y="161" fill="#3b82f6" font-size="11" font-family="sans-serif">☁️ oferta_texto</text>
+
+          <!-- Camino Superior: Router + Sanitizador + Guardián -->
+          <rect x="205" y="50" width="205" height="95" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
+          <text x="215" y="70" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">Router Determinista (3 capas)</text>
+          <text x="215" y="88" fill="currentColor" font-size="11" font-family="sans-serif">1. Allowlist (CAMPOS_NUBE)</text>
+          <text x="215" y="104" fill="currentColor" font-size="11" font-family="sans-serif">2. Sanitizador Regex ([[NOMBRE]])</text>
+          <text x="215" y="120" fill="currentColor" font-size="11" font-family="sans-serif">3. Guardián (×1, ×12, ×14)</text>
+          <text x="215" y="136" fill="#10b981" font-size="10" font-weight="bold" font-family="sans-serif">✓ Falla cerrado (FugaDetectada)</text>
+
+          <!-- PayloadNube -->
+          <rect x="445" y="60" width="175" height="75" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="1.5"/>
+          <text x="455" y="80" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">PayloadNube (Limpio)</text>
+          <text x="455" y="98" fill="currentColor" font-size="11" font-family="sans-serif">Sin salarios ni identidad</text>
+          <text x="455" y="114" fill="currentColor" font-size="11" font-family="sans-serif">Con [[NOMBRE]], [MONTO]</text>
+
+          <!-- Gemini Cloud -->
+          <rect x="690" y="55" width="200" height="85" rx="8" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="1.5"/>
+          <text x="705" y="78" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">Gemini Flash (Nube)</text>
+          <text x="705" y="96" fill="currentColor" font-size="11" font-family="sans-serif">Redacta Carta (temp 0.7)</text>
+          <text x="705" y="112" fill="currentColor" font-size="11" font-family="sans-serif">Timeout: 20s</text>
+          <text x="705" y="128" fill="currentColor" font-size="11" font-family="sans-serif">Firma con [[NOMBRE]]</text>
+
+          <!-- Rehidratación y Carta Final -->
+          <rect x="690" y="195" width="200" height="110" rx="8" fill="rgba(16,185,129,0.08)" stroke="#10b981" stroke-width="1.5"/>
+          <text x="702" y="218" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">Degradación de Carta</text>
+          <text x="702" y="238" fill="currentColor" font-size="11" font-family="sans-serif">1º ☁️ Gemini (si online)</text>
+          <text x="702" y="256" fill="currentColor" font-size="11" font-family="sans-serif">2º 🖥️ Ollama (si falla/offline)</text>
+          <text x="702" y="274" fill="currentColor" font-size="11" font-family="sans-serif">3º 📄 Plantilla (sin marcas)</text>
+          <text x="702" y="294" fill="#10b981" font-size="11" font-weight="bold" font-family="sans-serif">→ Rehidratación en Local</text>
+
+          <!-- Camino Inferior: Reglas + Ollama Local -->
+          <rect x="205" y="175" width="205" height="135" rx="8" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1.5"/>
+          <text x="215" y="196" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">Reglas Deterministas (reglas.py)</text>
+          <text x="215" y="214" fill="currentColor" font-size="11" font-family="sans-serif">• % exacto: (des - act) / act</text>
+          <text x="215" y="230" fill="currentColor" font-size="11" font-family="sans-serif">• Banda: 10% / 25% / 40%</text>
+          <text x="215" y="246" fill="currentColor" font-size="11" font-family="sans-serif">• Rango de oferta (regex)</text>
+          <text x="215" y="262" fill="currentColor" font-size="11" font-family="sans-serif">• Árbol "cuándo mencionarlo"</text>
+          <text x="215" y="280" fill="#10b981" font-size="11" font-weight="bold" font-family="sans-serif">→ Bloque "Datos Exactos" UI</text>
+          <text x="215" y="296" fill="#f59e0b" font-size="11" font-weight="bold" font-family="sans-serif">→ Audita nota (cifras/1ª pers)</text>
+
+          <!-- Ollama Local -->
+          <rect x="445" y="175" width="175" height="135" rx="8" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="455" y="196" fill="currentColor" font-size="12" font-weight="bold" font-family="sans-serif">Ollama (gemma4:e4b)</text>
+          <text x="455" y="216" fill="currentColor" font-size="11" font-family="sans-serif">1. Extrae requisitos (JSON)</text>
+          <text x="455" y="234" fill="currentColor" font-size="11" font-family="sans-serif">2. Redacta Nota Privada</text>
+          <text x="455" y="252" fill="currentColor" font-size="11" font-family="sans-serif">3. Respaldo de Carta</text>
+          <text x="455" y="274" fill="#ef4444" font-size="11" font-weight="bold" font-family="sans-serif">🔒 Jamás cruza a la nube</text>
+          <text x="455" y="292" fill="currentColor" font-size="10" font-family="sans-serif">Fallback: nota_por_reglas()</text>
+
+          <!-- Flechas -->
+          <line x1="170" y1="90" x2="205" y2="90" stroke="#3b82f6" stroke-width="2"/>
+          <line x1="410" y1="95" x2="445" y2="95" stroke="#3b82f6" stroke-width="2"/>
+          <line x1="620" y1="95" x2="690" y2="95" stroke="#f59e0b" stroke-width="2.5"/>
+          <text x="632" y="86" fill="#f59e0b" font-size="10" font-weight="bold" font-family="sans-serif">Única salida</text>
+          <line x1="170" y1="145" x2="205" y2="220" stroke="#10b981" stroke-width="2"/>
+          <line x1="410" y1="240" x2="445" y2="240" stroke="#10b981" stroke-width="2"/>
+          <line x1="790" y1="140" x2="790" y2="195" stroke="#3b82f6" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Lo que hace especialmente bien + Detalles técnicos destacables -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--secondary)] space-y-2">
+        <h4 class="font-bold text-sm text-emerald-500 uppercase tracking-wider">✅ Aciertos de Ingeniería Destacables</h4>
+        <ul class="text-sm space-y-2 list-disc pl-5">
+          <li><strong>Test de clasificación obligatoria de campos (<code class="text-xs">test_router.py</code>):</strong> <code class="text-xs">CAMPOS_NUBE | CAMPOS_SOLO_LOCAL == Perfil.nombres_de_campos()</code>. Si alguien añade un campo a <code class="text-xs">Perfil</code> y olvida clasificarlo, la suite falla.</li>
+          <li><strong>Defensa adaptada al contexto local (<code class="text-xs">reglas.py</code>):</strong> Detecta el salario mensual, anualizado ×12 y <strong>anualizado ×14</strong> (Bono 14 + Aguinaldo en Guatemala), más DPI de 13 dígitos y teléfonos locales con excepción explícita para rangos de años (<code class="text-xs">2019-2023</code>).</li>
+          <li><strong>Limpieza de frases censuradas en fallback (<code class="text-xs">D-21</code>):</strong> Descubrió que en modo plantilla offline quedaban frases como <em>"cobro [MONTO]. Tel [TELÉFONO]"</em>, e implementó <code class="text-xs">sin_frases_censuradas()</code> para eliminar oraciones con marcadores ciegos.</li>
+          <li><strong>Honestidad en el panel de transparencia (<code class="text-xs">D-33</code>):</strong> Distingue entre <code class="text-xs">envio_nube</code> (éxito) y <code class="text-xs">envio_intentado</code> (cuando Gemini dio <code class="text-xs">504 DEADLINE_EXCEEDED</code> pero los datos sanitizados sí salieron de la máquina).</li>
+          <li><strong>Test anti-fuga de API keys (<code class="text-xs">test_secretos.py</code>):</strong> Tras pegar por error su API key en <code class="text-xs">.env.example</code> y que GitHub Push Protection la detuviera, programó un test que escanea todo el árbol de archivos buscando patrones <code class="text-xs">AIza...</code>.</li>
+        </ul>
+      </div>
+
+      <div class="p-5 rounded-xl border border-[var(--border)] bg-[var(--secondary)] space-y-2">
+        <h4 class="font-bold text-sm text-amber-500 uppercase tracking-wider">⚠️ Observaciones Menores (Documentadas por ella misma)</h4>
+        <ul class="text-sm space-y-2 list-disc pl-5">
+          <li><strong>Falsos positivos del sanitizador de montos (<code class="text-xs">D-28</code>):</strong> Cualquier número ≥ 1,000 que no sea año (1900–2100) se reemplaza por <code class="text-xs">[MONTO]</code>. Esto convierte <em>"Digitalicé 5,000 predios"</em> en <code class="text-xs">Digitalicé[MONTO] predios</code> (además comiéndose el espacio previo) e <em>"ISO 14001"</em> en <code class="text-xs">ISO[MONTO]</code>. Cathy lo detectó al leer las cartas y diseñó la solución, pero decidió no tocar el sanitizador a mitad del benchmark para no invalidar la comparabilidad entre corridas.</li>
+          <li><strong>Pérdida de género gramatical al ocultar el nombre (<code class="text-xs">D-28</code>):</strong> Al enviar <code class="text-xs">[[NOMBRE]]</code> sin género, en puestos neutros ("QA manual", "Agente bilingüe"), Gemma y Qwen redactaron en masculino para perfiles de mujeres ("motivado"). Gemini usó redacción neutra.</li>
+          <li><strong>Montos escritos en letras:</strong> No convierte palabras como <em>"doce mil quetzales"</em> en texto libre (mitigado poniendo el salario en un <code class="text-xs">number_input</code> dedicado que jamás viaja).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECCIÓN 2: APRENDIZAJE SOBRE MODELOS LOCALES -->
+  <!-- ===================================================================== -->
+  <section id="sec2" class="eval-section bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
+    <div class="border-b border-[var(--border)] pb-4">
+      <span class="text-xs font-bold uppercase tracking-wider text-emerald-500">Punto 2 de Evaluación</span>
+      <h2 class="text-xl md:text-2xl font-bold mt-1">2. ¿Con los experimentos aprendió sobre modelos locales?</h2>
+      <p class="text-sm text-[var(--muted-foreground)] mt-1">Sí, de manera sobresaliente. No se quedó en correr un script y copiar una tabla: tropezó con los problemas reales de correr LLMs en hardware local, diagnosticó las causas y rediseñó su metodología.</p>
+    </div>
+
+    <!-- Los 6 aprendizajes empíricos -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="text-xs font-bold text-blue-400 uppercase">1. Cold Start vs Warm & Keep-Alive</div>
+        <p class="text-sm mt-1">En su primera prueba Qwen tardó 33.5s en el perfil 1 y 13.3s en el perfil 2 porque alternaba modelos por perfil y medía la carga a disco. Aprendió a usar <code class="text-xs">keep_alive: 0</code> para descargar un modelo antes de medir otro, hacer warmup y separar arranque en frío (9–21s) de generación (9.5s / 22.8s).</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="text-xs font-bold text-blue-400 uppercase">2. Prompt Caching y Semillas en Ollama</div>
+        <p class="text-sm mt-1">Descubrió dos sesgos de medición (<code class="text-xs">D-30</code>): 1) con <code class="text-xs">seed: 42</code> fija, las 3 repeticiones producían exactamente el mismo texto (cambió a <code class="text-xs">42 + rep</code>); 2) en las repeticiones 2 y 3 el TTFT caía de ~1.5–3.8s a <strong>0.3s</strong> porque Ollama cacheaba el KV del prompt.</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="text-xs font-bold text-blue-400 uppercase">3. VRAM vs RAM de Proceso (psutil)</div>
+        <p class="text-sm mt-1">Inicialmente midió el RSS del proceso con <code class="text-xs">psutil</code> y obtuvo <strong>97.6 MB</strong> para un modelo de 4B (<code class="text-xs">D-27</code>). Se dio cuenta de que el modelo estaba 100% en la GPU (~3.0 GB VRAM) y cambió a consultar <code class="text-xs">GET /api/ps</code> (<code class="text-xs">size</code> y <code class="text-xs">size_vram</code>).</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="text-xs font-bold text-amber-500 uppercase">4. Thermal Throttling y Apagón Físico</div>
+        <p class="text-sm mt-1">Su laptop se apagó sola a mitad de una corrida de 174 generaciones. Y en una corrida continua de 87 respuestas de Qwen, demostró gráficamente cómo al minuto 10.7 la velocidad cae de golpe de <strong>20.0 tok/s a 6.9 tok/s</strong> durante 10.6 minutos. Rediseñó el benchmark con <code class="text-xs">fsync</code> línea por línea y pausas térmicas.</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="text-xs font-bold text-amber-500 uppercase">5. Igual Tamaño ≠ Igual Velocidad</div>
+        <p class="text-sm mt-1">Comparó <code class="text-xs">gemma4:e4b</code> (3,096 MB en GPU) vs <code class="text-xs">qwen3.5:4b</code> (2,988 MB en GPU) con <code class="text-xs">think: false</code> en ambos. Pese a ocupar casi la misma memoria (3.5% dif), Gemma generó al <strong>doble de velocidad</strong> (41.9–43.9 tok/s vs 20.1–20.5 tok/s) en las 68 comparaciones directas.</p>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)]">
+        <div class="text-xs font-bold text-emerald-500 uppercase">6. Obediencia de Instrucciones en 4B</div>
+        <p class="text-sm mt-1">Comprobó que una rúbrica de forma se satura (30/30 cartas sacan 1.00), pero al leerlas a ciegas los modelos pequeños inventan habilidades de la oferta o cambian de destinatario (Qwen redactó 13/20 notas como carta a RR.HH. revelando el salario actual y comiéndose un cero en <code class="text-xs">Q1,100</code>).</p>
+      </div>
+    </div>
+
+    <!-- VISUALIZACIÓN SVG DE LOS BENCHMARKS DE CATHY -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Gráfica 1: Evaluación A (Cartas: Gemma vs Qwen vs Gemini) -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-5">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">Evaluación A (Cartas): Local vs Nube (Corrida 2)</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-4">10 perfiles × 3 modelos. Mismo prompt (con Regla 6) y temperatura 0.2.</p>
+        <svg viewBox="0 0 460 230" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+          <!-- Ejes y títulos -->
+          <text x="10" y="20" fill="currentColor" font-size="11" font-weight="bold" font-family="sans-serif">Latencia Mediana (s) y Rango</text>
+          <!-- Gemini -->
+          <text x="10" y="52" fill="currentColor" font-size="11" font-family="sans-serif">Gemini (Nube)</text>
+          <rect x="115" y="38" width="80" height="18" rx="4" fill="#1baf7a"/>
+          <line x1="187" y1="47" x2="297" y2="47" stroke="#1baf7a" stroke-width="2" stroke-dasharray="3,2"/>
+          <text x="303" y="51" fill="currentColor" font-size="11" font-family="sans-serif">8.0s (varía 7.2–18.2s)</text>
+
+          <!-- Gemma 4 E4B -->
+          <text x="10" y="84" fill="currentColor" font-size="11" font-family="sans-serif">gemma4:e4b</text>
+          <rect x="115" y="70" width="95" height="18" rx="4" fill="#2a78d6"/>
+          <text x="218" y="83" fill="currentColor" font-size="11" font-family="sans-serif">9.5s (estable 8.9–10.8s · 41.9 tok/s)</text>
+
+          <!-- Qwen 3.5 4B -->
+          <text x="10" y="116" fill="currentColor" font-size="11" font-family="sans-serif">qwen3.5:4b</text>
+          <rect x="115" y="102" width="228" height="18" rx="4" fill="#eb6834"/>
+          <text x="350" y="115" fill="currentColor" font-size="11" font-family="sans-serif">22.8s (20.1 tok/s)</text>
+
+          <!-- Separador -->
+          <line x1="10" y1="138" x2="450" y2="138" stroke="currentColor" stroke-opacity="0.15"/>
+          <text x="10" y="158" fill="currentColor" font-size="11" font-weight="bold" font-family="sans-serif">Calidad Ciega (1–5) vs Cartas que Inventan Habilidades</text>
+
+          <!-- Barras Calidad Ciega -->
+          <text x="10" y="180" fill="currentColor" font-size="11" font-family="sans-serif">Gemini: 4.40/5</text>
+          <rect x="115" y="168" width="176" height="14" rx="3" fill="#1baf7a"/>
+          <text x="300" y="180" fill="currentColor" font-size="11" font-family="sans-serif">Inventa: 3/9 (0/10 estricto)</text>
+
+          <text x="10" y="202" fill="currentColor" font-size="11" font-family="sans-serif">Gemma: 4.20/5</text>
+          <rect x="115" y="190" width="168" height="14" rx="3" fill="#2a78d6"/>
+          <text x="300" y="202" fill="currentColor" font-size="11" font-family="sans-serif">Inventa: 5/10 (2/10 estricto)</text>
+
+          <text x="10" y="224" fill="currentColor" font-size="11" font-family="sans-serif">Qwen: 3.40/5</text>
+          <rect x="115" y="212" width="136" height="14" rx="3" fill="#eb6834"/>
+          <text x="300" y="224" fill="currentColor" font-size="11" font-family="sans-serif">Inventa: 8/10 (5/10 estricto)</text>
+        </svg>
+      </div>
+
+      <!-- Gráfica 2: El hallazgo térmico y la paradoja de la Nota en Evaluación B -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-5">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">Evaluación B (Locales): Efecto Térmico y Paradoja de la Nota</h3>
+        <p class="text-xs text-[var(--muted-foreground)] mb-4">87 respuestas sin pausa (caída térmica) vs 76 respuestas con pausas + lectura de 40 notas.</p>
+        <svg viewBox="0 0 460 230" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+          <text x="10" y="20" fill="currentColor" font-size="11" font-weight="bold" font-family="sans-serif">Velocidad (tok/s) en Laptop: Sin Pausas vs Con Pausas</text>
+          <!-- Fondo zona lenta -->
+          <rect x="195" y="30" width="95" height="75" fill="rgba(239,68,68,0.12)"/>
+          <text x="202" y="44" fill="#ef4444" font-size="10" font-weight="bold" font-family="sans-serif">Throttling (6.9 t/s)</text>
+
+          <!-- Línea Gemma Con Pausas -->
+          <polyline points="30,45 195,44 290,46 420,45" fill="none" stroke="#2a78d6" stroke-width="2.5"/>
+          <text x="35" y="40" fill="#2a78d6" font-size="10" font-weight="bold" font-family="sans-serif">Gemma con pausas (~43.9 tok/s estable)</text>
+
+          <!-- Línea Qwen Sin Pausas (con escalón) -->
+          <polyline points="30,72 195,72 200,96 285,96 292,71 420,71" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>
+          <!-- Línea Qwen Con Pausas -->
+          <polyline points="30,70 195,70 290,70 420,70" fill="none" stroke="#eb6834" stroke-width="2"/>
+          <text x="35" y="65" fill="#eb6834" font-size="10" font-weight="bold" font-family="sans-serif">Qwen (~20.5 tok/s) — sin pausas cae de #56 a #75</text>
+
+          <!-- Separador -->
+          <line x1="10" y1="120" x2="450" y2="120" stroke="currentColor" stroke-opacity="0.15"/>
+          <text x="10" y="140" fill="currentColor" font-size="11" font-weight="bold" font-family="sans-serif">Paradoja en la Nota Privada (20 notas por modelo)</text>
+
+          <!-- Tabla visual compacta -->
+          <text x="10" y="162" fill="currentColor" font-size="11" font-family="sans-serif">Cifras del caso usadas:</text>
+          <text x="185" y="162" fill="#2a78d6" font-size="11" font-weight="bold" font-family="sans-serif">Gemma: 1/20 (omite %)</text>
+          <text x="325" y="162" fill="#eb6834" font-size="11" font-weight="bold" font-family="sans-serif">Qwen: 20/20 (rúbrica 0.89)</text>
+
+          <text x="10" y="184" fill="currentColor" font-size="11" font-family="sans-serif">Escrita a la empresa (error):</text>
+          <text x="185" y="184" fill="#10b981" font-size="11" font-weight="bold" font-family="sans-serif">Gemma: 5/20 (0 con salario)</text>
+          <text x="325" y="184" fill="#ef4444" font-size="11" font-weight="bold" font-family="sans-serif">Qwen: 13/20 (12 con salario)</text>
+
+          <text x="10" y="206" fill="currentColor" font-size="11" font-family="sans-serif">Cifras alteradas/inventadas:</text>
+          <text x="185" y="206" fill="#10b981" font-size="11" font-weight="bold" font-family="sans-serif">Gemma: 0/20</text>
+          <text x="325" y="206" fill="#ef4444" font-size="11" font-weight="bold" font-family="sans-serif">Qwen: 3/20 ("Q1,100" vs 11k)</text>
+
+          <text x="10" y="225" fill="#10b981" font-size="11" font-weight="bold" font-family="sans-serif">→ Solución (D-31): Gemma redacta el consejo + las reglas muestran las cifras exactas debajo.</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECCIÓN 3: COMPARATIVA CON LA IMPLEMENTACIÓN DE REFERENCIA -->
+  <!-- ===================================================================== -->
+  <section id="sec3" class="eval-section bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
+    <div class="border-b border-[var(--border)] pb-4">
+      <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Punto 3 de Evaluación (Ignorando Ollama en Cloud Run)</span>
+      <h2 class="text-xl md:text-2xl font-bold mt-1">3. Contraste frente a tu implementación de referencia (<code class="text-lg">coverletter-gen/cathy</code>)</h2>
+      <p class="text-sm text-[var(--muted-foreground)] mt-1">Dejando de lado la diferencia de infraestructura (laptop local vs Cloud Run GPU L4), es notable cómo ambos proyectos llegaron por caminos independientes a las mismas conclusiones arquitectónicas, y donde difieren es por un hallazgo interesante de tamaño de modelo (2B vs 4B).</p>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)]">
+            <th class="py-3 px-4 font-semibold">Dimensión</th>
+            <th class="py-3 px-4 font-semibold">Tu Referencia (<code class="text-xs">coverletter-gen/cathy</code>)</th>
+            <th class="py-3 px-4 font-semibold">Entrega de Cathy (<code class="text-xs">carta-split-brain</code>)</th>
+            <th class="py-3 px-4 font-semibold">Análisis Comparativo</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border)]">
+          <tr>
+            <td class="py-3 px-4 font-medium">Modelos Evaluados y Ganador</td>
+            <td class="py-3 px-4"><code class="text-xs">gemma4:e2b-it-qat</code> vs <code class="text-xs">qwen3.5:2b</code>.<br><strong>Ganador: Gemma 4 E2B</strong> (1.6× más rápido en GPU: 118 vs 74 tok/s).</td>
+            <td class="py-3 px-4"><code class="text-xs">gemma4:e4b</code> vs <code class="text-xs">qwen3.5:4b</code> (+ Gemini en carta).<br><strong>Ganador: Gemma 4 E4B</strong> (2.1× más rápido: 43.9 vs 20.5 tok/s).</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Misma conclusión</span><br>Ambos apagan <code class="text-xs">think: false</code>, miden <code class="text-xs">/api/ps</code> y eligen Gemma 4 por velocidad y por el riesgo del modo de fallo de Qwen.</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Quién pone las cifras en la Nota Privada</td>
+            <td class="py-3 px-4">Las heurísticas calculan y muestran las 3 cifras y la barra de rango; el LLM solo redacta el borrador y <code class="text-xs">consistency.ts</code> subraya números que no coincidan.</td>
+            <td class="py-3 px-4">Tras descubrir en la Evaluación B que Gemma omitía las cifras y Qwen las alteraba (<code class="text-xs">Q1,100</code>), separó el bloque <strong>Datos Exactos</strong> (por reglas) y creó <code class="text-xs">problemas_en_nota()</code> para avisar.</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Convergencia total</span><br>Cathy llegó exactamente a tu mismo diseño de producto como resultado directo de leer las 40 notas de su experimento (<code class="text-xs">D-31</code>).</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">El fallo de 1ª vs 2ª persona en la Nota</td>
+            <td class="py-3 px-4">En <strong>2B</strong>: Qwen 3.5 2B mantuvo 2ª persona (100%), mientras Gemma 4 E2B cayó en 1ª persona (solo 39% en 2ª persona).</td>
+            <td class="py-3 px-4">En <strong>4B</strong>: Se invirtió porque el prompt de Cathy incluía el recordatorio <em>"No incluyas ninguna cifra salarial en la carta de interés"</em>: Qwen 3.5 4B se confundió y redactó 13/20 notas como un mensaje a RR.HH. revelando el salario.</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-info">Hallazgo muy valioso</span><br>Cathy diagnosticó por qué ocurría en ambos: la confusión de destinatario en modelos pequeños y el efecto colateral del recordatorio en el prompt.</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Evaluación de Calidad (Juez LLM vs Ciega Humana)</td>
+            <td class="py-3 px-4">Rúbrica determinista + <strong>Juez LLM</strong> (<code class="text-xs">gemini-3.8-flash</code> en ambos órdenes A/B y B/A, documentando sesgo de posición).</td>
+            <td class="py-3 px-4">Rúbrica determinista + <strong>Evaluación humana a ciegas</strong> (<code class="text-xs">evaluacion_ciega.csv</code>) + lectura manual exhaustiva. Descartó usar Gemini como juez de la nota (<code class="text-xs">D-14</code>) para no enviar salarios a la nube.</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-ok">Rigor superior en lectura</span><br>Aunque su evaluación humana fue de 1 sola persona, leer las 70 respuestas le permitió descubrir cosas que ni la rúbrica ni un juez automático habrían visto igual.</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4 font-medium">Interfaz de Usuario (UX)</td>
+            <td class="py-3 px-4">Enfocada en el usuario final ("Rango"): limpia, 1 columna, sin jerga técnica ("Ollama", "GPU", "tier") en pantalla.</td>
+            <td class="py-3 px-4">Enfocada en transparencia y demostración pedagógica: muestra en vivo qué modelo escribió qué, el JSON exacto que salió a la nube, los reemplazos y las métricas de latencia/VRAM.</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-semibold badge-info">Enfoques complementarios</span><br>Para una entrega académica/demostrativa, la UI de Cathy (con el selector de ejemplos <code class="text-xs">🎬 Demostración</code> y el inspector de payload) es sumamente didáctica.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECCIÓN 4: EVALUACIÓN DEL ARTÍCULO -->
+  <!-- ===================================================================== -->
+  <section id="sec4" class="eval-section bg-[var(--card)] border border-[var(--border)] rounded-2xl p-6 md:p-8 shadow-sm space-y-6">
+    <div class="border-b border-[var(--border)] pb-4">
+      <span class="text-xs font-bold uppercase tracking-wider text-emerald-500">Punto 4 de Evaluación</span>
+      <h2 class="text-xl md:text-2xl font-bold mt-1">4. ¿El artículo tiene buen contenido y buena longitud?</h2>
+      <p class="text-sm text-[var(--muted-foreground)] mt-1">Análisis de <code class="text-xs">docs/articulo.md</code>: <em>"Tu salario no tiene por qué viajar a la nube: cómo construí una app 'split brain' con modelos locales"</em>.</p>
+    </div>
+
+    <!-- Métricas del Artículo -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-center">
+        <div class="text-xs text-[var(--muted-foreground)] uppercase">Longitud</div>
+        <div class="text-2xl font-bold mt-1">4,946 palabras</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-0.5">501 líneas (~18–20 min lectura)</div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-center">
+        <div class="text-xs text-[var(--muted-foreground)] uppercase">Visuales Incrustados</div>
+        <div class="text-2xl font-bold mt-1">11 imágenes</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-0.5">2 diagramas + 4 gráficas + 5 capturas</div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-center">
+        <div class="text-xs text-[var(--muted-foreground)] uppercase">Tablas de Datos</div>
+        <div class="text-2xl font-bold mt-1">9 tablas</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-0.5">Sintéticas y fáciles de escanear</div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--secondary)] border border-[var(--border)] text-center">
+        <div class="text-xs text-[var(--muted-foreground)] uppercase">Errores Reales Contados</div>
+        <div class="text-2xl font-bold mt-1">12 errores</div>
+        <div class="text-xs text-[var(--muted-foreground)] mt-0.5">El spec pedía "al menos uno"</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <h3 class="font-bold text-base text-emerald-500">🌟 Por qué el contenido es excelente</h3>
+        <ul class="text-sm space-y-2.5 list-disc pl-5">
+          <li><strong>Explicación impecable para principiantes:</strong> Abre con un problema concreto (contarle tu salario a un servidor ajeno) y explica las 5 razones del split brain sin jerga innecesaria, apoyándose en el diagrama de la "única flecha naranja".</li>
+          <li><strong>Hilo narrativo científico ("mis mediciones me dieron la razón, pero por un motivo distinto"):</strong> Plantea su hipótesis ("la nube escribe mejor"), muestra cómo su rúbrica inicial dio triple empate 1.00, y lleva a quien lee paso a paso por el descubrimiento de las alucinaciones de requisitos y el valor de la fidelidad.</li>
+          <li><strong>Transparencia y humildad intelectual poco comunes:</strong> Cuenta con total franqueza cómo calculó mal la mediana, cómo pisó su primera corrida, cómo casi sube su API key a GitHub, cómo midió la RAM del proceso en vez de la VRAM, y cómo su propia guía de calificación ciega olvidó preguntar <em>para quién</em> estaba escrita la nota.</li>
+          <li><strong>La sección "El calor" y "Y un día la nube no contestó":</strong> Son oro pedagógico. Muestran con gráficas reales (<code class="text-xs">calor_qwen.png</code> vs <code class="text-xs">ritmo.png</code>) y con un <code class="text-xs">504 DEADLINE_EXCEEDED</code> espontáneo por qué lo local y la nube tienen costos distintos y complementarios.</li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="font-bold text-base text-amber-500">📏 Evaluación de la longitud y sugerencias editoriales</h3>
+        <ul class="text-sm space-y-2.5 list-disc pl-5">
+          <li><strong>¿Tiene buena longitud?</strong> Con <strong>~4,950 palabras</strong> (~18–20 minutos de lectura), está en el rango de un <em>deep-dive</em> técnico de ingeniería (estilo blog de ingeniería a fondo), algo por encima del artículo típico de Medium/Substack (2,000–3,000 palabras, y el de tu referencia tiene ~3,200 palabras).</li>
+          <li><strong>No tiene "paja":</strong> Lo valioso es que no es largo por rellenar con teoría genérica; cada sección aporta evidencia nueva porque Cathy hizo <strong>dos evaluaciones completas</strong> (Evaluación A: 90 cartas en 3 modelos; Evaluación B: 76 respuestas locales en nota y extracción + corrida térmica de 87 respuestas).</li>
+          <li><strong>Dónde podría recortarse ~20% si busca más agilidad:</strong>
+            <ol class="list-decimal pl-5 mt-1 space-y-1 text-xs text-[var(--muted-foreground)]">
+              <li>La subsección <em>"Errores míos en esta misma sección"</em> (7 viñetas a mitad del artículo) interrumpe un poco el ritmo entre la Evaluación A y la Evaluación B; varios ya se entienden en el flujo principal.</li>
+              <li>Al final de <em>"Y un día la nube no contestó"</em>, repetir la tabla comparativa de ese caso individual con Qwen reitera lo ya demostrado en las secciones de evaluación A y B.</li>
+              <li>Nota menor de entrega: en <code class="text-xs">D-34</code> documentó que decidió dejar el artículo directamente en <code class="text-xs">docs/articulo.md</code> dentro de GitHub (quitando el borrador de Google Docs) para que todas las gráficas y tablas se vieran bien sin depender de un servicio externo.</li>
+            </ol>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function showSection(id) {
+      const sections = document.querySelectorAll('.eval-section');
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-' + id).classList.add('active');
+
+      sections.forEach(sec => {
+        if (id === 'all' || sec.id === id) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

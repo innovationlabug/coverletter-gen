@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reporte Final Interactivo — Evaluación Split-Brain Cover Letter (Cathy · Luis · Emily)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #090d16;
+      --foreground: #f1f5f9;
+      --card: #111827;
+      --card-elevated: #1e293b;
+      --border: #334155;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      line-height: 1.6;
+    }
+    .glass-card {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.72) 0%, rgba(15, 23, 42, 0.92) 100%);
+      border: 1px solid var(--border);
+      border-radius: 0.875rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.84em;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.35rem;
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      color: #e2e8f0;
+    }
+    pre code {
+      display: block;
+      padding: 0.9rem;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+    .nav-tab {
+      transition: all 0.2s ease;
+    }
+    .nav-tab.active {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #ffffff;
+      border-color: #38bdf8;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+    }
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.22s ease-out;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .prio-critico { border-left: 4px solid #ef4444; }
+    .prio-importante { border-left: 4px solid #f59e0b; }
+    .prio-mejora { border-left: 4px solid #38bdf8; }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+
+  <!-- TOP HEADER -->
+  <header class="glass-card p-6 md:p-8">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="badge bg-sky-500/20 text-sky-300 border border-sky-500/40">AUDITORÍA CONSOLIDADA INTERACTIVA</span>
+          <span class="badge bg-purple-500/20 text-purple-300 border border-purple-500/40">ARQUITECTURA SPLIT-BRAIN</span>
+          <span class="badge bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">3 ENTREGAS + REFERENCIAS</span>
+        </div>
+        <h1 class="text-2xl md:text-4xl font-bold text-white tracking-tight">
+          Evaluación de Proyectos: <span class="text-sky-400">Generador de Cover Letter Split-Brain</span>
+        </h1>
+        <p class="text-slate-400 text-sm mt-1 max-w-3xl">
+          Revisión integral de código, pruebas automatizadas, cumplimiento de privacidad, profundidad por área asignada, artículos técnicos y oportunidades de mejora accionables para <strong>Cathy</strong>, <strong>Luis</strong> y <strong>Emily</strong>.
+        </p>
+      </div>
+
+      <!-- SCORE SUMMARY PILLS -->
+      <div class="grid grid-cols-3 gap-3 shrink-0">
+        <button onclick="switchTab('cathy')" class="text-left bg-slate-900/90 hover:bg-slate-800/90 border border-emerald-500/40 rounded-xl p-3.5 transition">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Cathy · Local LLM</div>
+          <div class="text-2xl font-extrabold text-emerald-400 mt-0.5">9.2<span class="text-xs text-slate-500">/10</span></div>
+          <div class="text-[11px] text-emerald-300">Sobresaliente</div>
+        </button>
+        <button onclick="switchTab('luis')" class="text-left bg-slate-900/90 hover:bg-slate-800/90 border border-amber-500/40 rounded-xl p-3.5 transition">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Luis · APIs</div>
+          <div class="text-2xl font-extrabold text-amber-400 mt-0.5">7.0<span class="text-xs text-slate-500">/10</span></div>
+          <div class="text-[11px] text-amber-300">Funcional con brechas</div>
+        </button>
+        <button onclick="switchTab('emily')" class="text-left bg-slate-900/90 hover:bg-slate-800/90 border border-rose-500/40 rounded-xl p-3.5 transition">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Emily · Validación</div>
+          <div class="text-2xl font-extrabold text-rose-400 mt-0.5">5.5<span class="text-xs text-slate-500">/10</span></div>
+          <div class="text-[11px] text-rose-300">Incompleto</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE TAB BAR -->
+    <nav class="flex flex-wrap gap-2 mt-6 pt-5 border-t border-slate-800" aria-label="Secciones del reporte">
+      <button onclick="switchTab('resumen')" id="btn-resumen" class="nav-tab active px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border border-slate-700 bg-slate-900 text-slate-300 hover:text-white">
+        📊 1. Comparativa Global
+      </button>
+      <button onclick="switchTab('cathy')" id="btn-cathy" class="nav-tab px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border border-slate-700 bg-slate-900 text-slate-300 hover:text-white">
+        🟢 2. Cathy (Modelos Locales)
+      </button>
+      <button onclick="switchTab('luis')" id="btn-luis" class="nav-tab px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border border-slate-700 bg-slate-900 text-slate-300 hover:text-white">
+        🟡 3. Luis (APIs Externas)
+      </button>
+      <button onclick="switchTab('emily')" id="btn-emily" class="nav-tab px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border border-slate-700 bg-slate-900 text-slate-300 hover:text-white">
+        🔴 4. Emily (Validación y Didáctica)
+      </button>
+      <button onclick="switchTab('simulador')" id="btn-simulador" class="nav-tab px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border border-slate-700 bg-slate-900 text-slate-300 hover:text-white">
+        🧪 5. Simulador de Fugas en Vivo
+      </button>
+      <button onclick="switchTab('mejoras')" id="btn-mejoras" class="nav-tab px-4 py-2 rounded-lg text-xs md:text-sm font-semibold border border-slate-700 bg-slate-900 text-slate-300 hover:text-white">
+        🚀 6. Oportunidades de Mejora y Feedback
+      </button>
+    </nav>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 1: RESUMEN EJECUTIVO Y COMPARATIVA GLOBAL                         -->
+  <!-- ===================================================================== -->
+  <main id="tab-resumen" class="tab-panel active space-y-6">
+
+    <!-- SVG COMPARATIVE CHART -->
+    <section class="glass-card p-6 md:p-8 space-y-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Mapa Comparativo de Desempeño por Criterio del Spec</h2>
+          <p class="text-xs text-slate-400">Calificación desglosada sobre 10 puntos en los 5 ejes de evaluación del proyecto.</p>
+        </div>
+        <div class="flex items-center gap-4 text-xs">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-emerald-400 inline-block"></span> Cathy (9.2)</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-400 inline-block"></span> Luis (7.0)</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-rose-400 inline-block"></span> Emily (5.5)</span>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 overflow-x-auto">
+        <svg viewBox="0 0 960 310" class="w-full h-auto min-w-[720px]" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid lines -->
+          <line x1="230" y1="30" x2="920" y2="30" stroke="#1e293b" stroke-width="1"/>
+          <line x1="230" y1="260" x2="920" y2="260" stroke="#334155" stroke-width="1"/>
+          <!-- Scale labels -->
+          <text x="230" y="20" fill="#64748b" font-size="10" text-anchor="middle">0</text>
+          <text x="368" y="20" fill="#64748b" font-size="10" text-anchor="middle">2</text>
+          <text x="506" y="20" fill="#64748b" font-size="10" text-anchor="middle">4</text>
+          <text x="644" y="20" fill="#64748b" font-size="10" text-anchor="middle">6</text>
+          <text x="782" y="20" fill="#64748b" font-size="10" text-anchor="middle">8</text>
+          <text x="920" y="20" fill="#64748b" font-size="10" text-anchor="middle">10</text>
+
+          <line x1="368" y1="25" x2="368" y2="260" stroke="#1e293b" stroke-dasharray="3,3"/>
+          <line x1="506" y1="25" x2="506" y2="260" stroke="#1e293b" stroke-dasharray="3,3"/>
+          <line x1="644" y1="25" x2="644" y2="260" stroke="#1e293b" stroke-dasharray="3,3"/>
+          <line x1="782" y1="25" x2="782" y2="260" stroke="#1e293b" stroke-dasharray="3,3"/>
+          <line x1="920" y1="25" x2="920" y2="260" stroke="#1e293b" stroke-dasharray="3,3"/>
+
+          <!-- Row 1: App y Flujo E2E -->
+          <text x="215" y="60" fill="#e2e8f0" font-size="12" font-weight="bold" text-anchor="end">1. App E2E + Modo Offline</text>
+          <rect x="230" y="40" width="648" height="10" rx="3" fill="#22c55e"/>
+          <text x="885" y="49" fill="#4ade80" font-size="10" font-weight="bold">9.4</text>
+          <rect x="230" y="53" width="517" height="10" rx="3" fill="#f59e0b"/>
+          <text x="755" y="62" fill="#fbbf24" font-size="10" font-weight="bold">7.5</text>
+          <rect x="230" y="66" width="483" height="10" rx="3" fill="#f43f5e"/>
+          <text x="720" y="75" fill="#fb7185" font-size="10" font-weight="bold">7.0</text>
+
+          <!-- Row 2: Privacidad y Sanitización -->
+          <text x="215" y="108" fill="#e2e8f0" font-size="12" font-weight="bold" text-anchor="end">2. Privacidad y Sanitización</text>
+          <rect x="230" y="88" width="655" height="10" rx="3" fill="#22c55e"/>
+          <text x="892" y="97" fill="#4ade80" font-size="10" font-weight="bold">9.5</text>
+          <rect x="230" y="101" width="414" height="10" rx="3" fill="#f59e0b"/>
+          <text x="652" y="110" fill="#fbbf24" font-size="10" font-weight="bold">6.0</text>
+          <rect x="230" y="114" width="483" height="10" rx="3" fill="#f43f5e"/>
+          <text x="720" y="123" fill="#fb7185" font-size="10" font-weight="bold">7.0</text>
+
+          <!-- Row 3: Profundidad en su Área -->
+          <text x="215" y="156" fill="#e2e8f0" font-size="12" font-weight="bold" text-anchor="end">3. Profundidad Específica</text>
+          <rect x="230" y="136" width="648" height="10" rx="3" fill="#22c55e"/>
+          <text x="885" y="145" fill="#4ade80" font-size="10" font-weight="bold">9.4</text>
+          <rect x="230" y="149" width="469" height="10" rx="3" fill="#f59e0b"/>
+          <text x="706" y="158" fill="#fbbf24" font-size="10" font-weight="bold">6.8</text>
+          <rect x="230" y="162" width="276" height="10" rx="3" fill="#f43f5e"/>
+          <text x="514" y="171" fill="#fb7185" font-size="10" font-weight="bold">4.0</text>
+
+          <!-- Row 4: Pruebas Automatizadas -->
+          <text x="215" y="204" fill="#e2e8f0" font-size="12" font-weight="bold" text-anchor="end">4. Suite de Pruebas (Tests)</text>
+          <rect x="230" y="184" width="655" height="10" rx="3" fill="#22c55e"/>
+          <text x="892" y="193" fill="#4ade80" font-size="10" font-weight="bold">9.5</text>
+          <rect x="230" y="197" width="448" height="10" rx="3" fill="#f59e0b"/>
+          <text x="686" y="206" fill="#fbbf24" font-size="10" font-weight="bold">6.5</text>
+          <rect x="230" y="210" width="414" height="10" rx="3" fill="#f43f5e"/>
+          <text x="652" y="219" fill="#fb7185" font-size="10" font-weight="bold">6.0</text>
+
+          <!-- Row 5: Artículo y Documentación -->
+          <text x="215" y="252" fill="#e2e8f0" font-size="12" font-weight="bold" text-anchor="end">5. Artículo y Documentación</text>
+          <rect x="230" y="232" width="586" height="10" rx="3" fill="#22c55e"/>
+          <text x="823" y="241" fill="#4ade80" font-size="10" font-weight="bold">8.5</text>
+          <rect x="230" y="245" width="503" height="10" rx="3" fill="#f59e0b"/>
+          <text x="741" y="254" fill="#fbbf24" font-size="10" font-weight="bold">7.3</text>
+          <rect x="230" y="258" width="379" height="10" rx="3" fill="#f43f5e"/>
+          <text x="617" y="267" fill="#fb7185" font-size="10" font-weight="bold">5.5</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- MATRIZ CONSOLIDADA DE CUMPLIMIENTO -->
+    <section class="glass-card p-6 md:p-8 space-y-4">
+      <h2 class="text-xl font-bold text-white">Matriz Consolidada de Cumplimiento del Spec</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs md:text-sm">
+          <thead>
+            <tr class="border-b border-slate-700 text-slate-300 bg-slate-900/90">
+              <th class="p-3.5 font-semibold">Requisito del Reto</th>
+              <th class="p-3.5 font-semibold text-emerald-400">Cathy (Modelos Locales)</th>
+              <th class="p-3.5 font-semibold text-amber-400">Luis (APIs Externas)</th>
+              <th class="p-3.5 font-semibold text-rose-400">Emily (Aprendizajes y Validación)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800 text-slate-300 text-xs">
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Stack y Plataforma</td>
+              <td class="p-3.5">Python + FastAPI + UI Web estática (HTML/JS).</td>
+              <td class="p-3.5">Next.js 16 (App Router) + React 19 + Tailwind v4 en Vercel.</td>
+              <td class="p-3.5">Python + Streamlit local (<code>app.py</code>).</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Condición #1: Componente Local + Nube justificados</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Cumple</span> Heurísticas + Ollama (<code>gemma3:4b</code>) local; Gemini (<code>gemini-2.5-flash</code>) en nube.</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Cumple</span> Parser Regex salarial + matriz local en navegador; Gemini (<code>gemini-3.8-flash</code>) en nube.</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Cumple</span> Privacy Gate + nota local + fallback Ollama; OpenAI (<code>gpt-5.6-luna</code>) en nube.</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Condición #2: El salario actual nunca sale (Sanitización)</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Excelente</span> Allowlist + Regex en texto libre (montos con moneda, sufijos <code>k</code>/<code>mil</code>, salario exacto, email, tel, DPI, empleador).</td>
+              <td class="p-3.5"><span class="badge bg-rose-500/20 text-rose-300">Incompleto</span> Omite llaves JSON, pero <strong>no sanitiza texto libre</strong> (<code>aboutYou</code>, <code>jobOffer</code>) y envía empleador actual vía LinkedIn a Gemini.</td>
+              <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">Parcial</span> Allowlist + Regex básico (atrapa exact match y monedas con símbolo, pero falla con <code>15k</code>, palabras o empleador sin <code>S.A.</code>).</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Condición #3: Pruebas automatizadas de no-fuga</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">83 tests (Pytest)</span> Cubre redactor, fugas en texto libre, heurísticas, modo offline y endpoints.</td>
+              <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">1 test (Playwright)</span> Verifica que <code>payload.currentSalary</code> sea <code>undefined</code> en POST. Sin unit tests.</td>
+              <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">6 tests (Pytest)</span> Pasan con <code>python -m pytest</code>, pero <code>pytest -q</code> (su README) falla con <code>ModuleNotFoundError</code>.</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Condición #4: Modo sin conexión (Offline útil)</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Excelente</span> Degrada de Gemini → Ollama local → Plantilla estructurada que usa los logros del candidato.</td>
+              <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">Básico</span> Devuelve 2 párrafos estáticos que ignoran logros/oferta y rango fijo <code>Q15k-Q25k</code>. Sin Service Worker.</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Bueno</span> Degrada de OpenAI → Ollama → Plantilla determinística en inglés con limpieza de <code>[REDACTED]</code>.</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Requisito de Profundidad Individual</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Cumple 100%</span> Benchmark real <code>gemma3:4b</code> vs <code>qwen3:4b</code> en 5 perfiles × 2 tareas (calidad, latencia 9.6s vs 43.2s por thinking tokens, RAM/VRAM).</td>
+              <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">Cumple ~65%</span> Integró Serper + EnrichLayer (ambas No-IA; faltó la 2da API de IA en código). Documentó costos/auth, pero sin timeouts (<code>AbortController</code>).</td>
+              <td class="p-3.5"><span class="badge bg-rose-500/20 text-rose-300">Cumple ~40%</span> 21/25 archivos idénticos al ZIP base. Corrió 15 casos en OpenAI, pero dejó <code>DIDACTIC_TEST.md</code> y tabla de <code>VALIDATION.md</code> en blanco, sin correr Ollama.</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 font-semibold text-white">Artículo Técnico</td>
+              <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Muy Bueno</span> ~1,450 palabras en <code>docs/articulo.md</code>, hallazgo real de thinking tokens de Qwen3. Falta link externo e imágenes PNG.</td>
+              <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">Corto</span> Publicado en Substack con capturas y excelente historia de WebGPU TDR, pero solo ~580 palabras y casi no habla de APIs.</td>
+              <td class="p-3.5"><span class="badge bg-rose-500/20 text-rose-300">Borrador</span> ~1,150 palabras + 3 temas en <code>ARTICLE.md</code>, pero dejó los 5 placeholders <em>"Captura sugerida 1..5"</em> sin imágenes reales.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: CATHY — MODELOS LOCALES                                        -->
+  <!-- ===================================================================== -->
+  <section id="tab-cathy" class="tab-panel space-y-6">
+    <div class="glass-card p-6 md:p-8 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <span class="badge bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 mb-2">ENTREGA #1 · MODELOS LOCALES CON OLLAMA</span>
+          <h2 class="text-2xl font-bold text-white">Cathy Batres — <code>CatherineBatres/carta-split-brain</code></h2>
+          <p class="text-xs text-slate-400 mt-1">83/83 tests en Pytest pasando en 0.56s · Benchmark real en Apple Silicon comparando <code>gemma3:4b</code> vs <code>qwen3:4b</code>.</p>
+        </div>
+        <div class="text-right">
+          <div class="text-3xl font-extrabold text-emerald-400">9.2 / 10</div>
+          <div class="text-xs text-slate-400">Mejor entrega técnica del grupo</div>
+        </div>
+      </div>
+
+      <!-- SVG DIAGRAM CATHY -->
+      <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-5 overflow-x-auto">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+          Diagrama de Arquitectura de Cathy y Resultados del Benchmark Local (Ollama)
+        </div>
+        <svg viewBox="0 0 1000 320" class="w-full h-auto min-w-[760px]" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="15" width="300" height="290" rx="10" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>
+          <text x="30" y="42" fill="#4ade80" font-size="13" font-weight="bold">1. Compuerta Determinista (Local)</text>
+          <text x="30" y="68" fill="#e2e8f0" font-size="11">• sanitization.py (Allowlist + Regex)</text>
+          <text x="30" y="88" fill="#cbd5e1" font-size="10">• Bloquea: salario exacto, Q/$/USD, 15k/mil,</text>
+          <text x="30" y="104" fill="#cbd5e1" font-size="10">  email, teléfono, DPI, NIT y empleador actual</text>
+          <text x="30" y="128" fill="#e2e8f0" font-size="11">• heuristics.py (Cero IA)</text>
+          <text x="30" y="148" fill="#cbd5e1" font-size="10">• Brecha %, clasificación de salto salarial,</text>
+          <text x="30" y="164" fill="#cbd5e1" font-size="10">  extracción de rango en oferta y timing</text>
+          <rect x="30" y="190" width="270" height="95" rx="6" fill="#052e16" stroke="#16a34a"/>
+          <text x="45" y="212" fill="#4ade80" font-size="11" font-weight="bold">Suite de Pruebas (83 tests)</text>
+          <text x="45" y="232" fill="#dcfce7" font-size="10">✔ test_privacy_gate.py (fugas = 0)</text>
+          <text x="45" y="250" fill="#dcfce7" font-size="10">✔ test_heuristics.py (casos borde)</text>
+          <text x="45" y="268" fill="#dcfce7" font-size="10">✔ test_offline_mode.py (degradación)</text>
+
+          <rect x="350" y="15" width="310" height="290" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+          <text x="365" y="42" fill="#38bdf8" font-size="13" font-weight="bold">2. Benchmark Ollama (Gemma 3 vs Qwen 3)</text>
+          <rect x="365" y="60" width="280" height="105" rx="6" fill="#1e293b" stroke="#22c55e"/>
+          <text x="380" y="82" fill="#4ade80" font-size="11" font-weight="bold">🏆 Ganador: gemma3:4b (3.3 GB VRAM)</text>
+          <text x="380" y="102" fill="#e2e8f0" font-size="10">• Nota negociación: 9.64s | Calidad 4.8/5</text>
+          <text x="380" y="120" fill="#e2e8f0" font-size="10">• Carta fallback: 14.37s | Calidad 4.6/5</text>
+          <text x="380" y="138" fill="#94a3b8" font-size="10">• Pierde en: menor estructuración de viñetas</text>
+
+          <rect x="365" y="180" width="280" height="105" rx="6" fill="#1e293b" stroke="#f59e0b"/>
+          <text x="380" y="202" fill="#fbbf24" font-size="11" font-weight="bold">⚡ Comparado: qwen3:4b (2.5 GB VRAM)</text>
+          <text x="380" y="222" fill="#e2e8f0" font-size="10">• Nota negociación: 43.24s (4.5x más lento)</text>
+          <text x="380" y="240" fill="#e2e8f0" font-size="10">• Carta fallback: 57.58s | Calidad 4.4/5</text>
+          <text x="380" y="258" fill="#fbbf24" font-size="10">• Causa descubierta: bloques &lt;think&gt; ocultos</text>
+
+          <rect x="695" y="15" width="290" height="290" rx="10" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+          <text x="710" y="42" fill="#c084fc" font-size="13" font-weight="bold">3. Nube + Cascada de Respaldo</text>
+          <text x="710" y="70" fill="#e2e8f0" font-size="11">• Nube: Gemini 2.5 Flash (~2.8s)</text>
+          <text x="710" y="90" fill="#cbd5e1" font-size="10">  Recibe solo PublicProfile sanitizado</text>
+          <text x="710" y="110" fill="#cbd5e1" font-size="10">  con placeholder [CANDIDATO]</text>
+          <text x="710" y="140" fill="#e2e8f0" font-size="11">• Reemplazo local post-nube:</text>
+          <text x="710" y="160" fill="#cbd5e1" font-size="10">  Inyecta el nombre real al recibir la carta</text>
+          <text x="710" y="190" fill="#e2e8f0" font-size="11">• Cadena de disponibilidad:</text>
+          <text x="710" y="210" fill="#4ade80" font-size="10">  1º Gemini Cloud → 2º Gemma3 Local →</text>
+          <text x="710" y="228" fill="#4ade80" font-size="10">  3º Plantilla Determinista en español</text>
+        </svg>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-900/70 p-4 rounded-xl border border-emerald-500/30 space-y-2">
+          <div class="font-bold text-emerald-400 text-sm">Lo mejor de la entrega de Cathy</div>
+          <ul class="list-disc pl-4 space-y-1.5 text-slate-300">
+            <li><strong>Aprendizaje real y medible de modelos locales:</strong> Descubrió experimentalmente por qué <code>qwen3:4b</code> tardaba ~43-57s frente a los ~9-14s de <code>gemma3:4b</code> (la generación por defecto de tokens de razonamiento <code>&lt;think&gt;...&lt;/think&gt;</code> en Qwen 3) e implementó limpieza de etiquetas <code>&lt;think&gt;</code>.</li>
+            <li><strong>Separación estricta de modelos de datos:</strong> <code>PrivateInput</code> vs <code>PublicProfile</code> en Pydantic, garantizando por tipos y por redactor que ningún dato privado viaje a Gemini.</li>
+            <li><strong>Artículo muy completo (~1,450 palabras):</strong> Bien escrito, pedagógico y con tablas reales de sus experimentos.</li>
+          </ul>
+        </div>
+        <div class="bg-slate-900/70 p-4 rounded-xl border border-amber-500/30 space-y-2">
+          <div class="font-bold text-amber-400 text-sm">Oportunidades de mejora para Cathy</div>
+          <ul class="list-disc pl-4 space-y-1.5 text-slate-300">
+            <li><strong>Desactivar el modo thinking en Qwen 3 (<code>think: false</code> / <code>/no_think</code>):</strong> En lugar de solo limpiar el bloque <code>&lt;think&gt;</code> con regex después de esperar 45 segundos, pasar <code>"think": False</code> en la API de Ollama reduce la latencia de Qwen 3 en ~75%.</li>
+            <li><strong>Capturas visuales en el artículo y link público:</strong> Sus diagramas en <code>docs/articulo.md</code> son excelentes pero están en ASCII/Mermaid; agregar capturas PNG de la interfaz corriendo y publicarlo en Medium/Substack cerraría el 10/10.</li>
+            <li><strong>Ejecución en paralelo:</strong> Lanzar en paralelo la generación de la carta en Gemini y el consejo local en Ollama con <code>asyncio.gather</code> para reducir el tiempo total de respuesta.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 3: LUIS — APIS EXTERNAS                                           -->
+  <!-- ===================================================================== -->
+  <section id="tab-luis" class="tab-panel space-y-6">
+    <div class="glass-card p-6 md:p-8 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <span class="badge bg-amber-500/20 text-amber-300 border border-amber-500/40 mb-2">ENTREGA #2 · INTEGRACIÓN DE APIS EXTERNAS</span>
+          <h2 class="text-2xl font-bold text-white">Luis — <code>cuprumbot/cover-letter-local</code></h2>
+          <p class="text-xs text-slate-400 mt-1">Despliegue activo en Vercel (<code>cover-letter-six-eta.vercel.app</code>) · Artículo publicado en Substack.</p>
+        </div>
+        <div class="text-right">
+          <div class="text-3xl font-extrabold text-amber-400">7.0 / 10</div>
+          <div class="text-xs text-slate-400">Buen UX y parser local; brechas en privacidad y spec de APIs</div>
+        </div>
+      </div>
+
+      <!-- RESUMEN DE ACIERTOS Y BRECHAS DE LUIS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-900/70 p-4 rounded-xl border border-emerald-500/30 space-y-2">
+          <div class="font-bold text-emerald-400 text-sm">Lo mejor de la entrega de Luis</div>
+          <ul class="list-disc pl-4 space-y-1.5 text-slate-300">
+            <li><strong>App desplegada y rápida en Vercel:</strong> Desacopla la respuesta rápida de Serper (mostrando de inmediato el análisis salarial en <code>ResultsView.tsx</code>) mientras Gemini termina de redactar la carta en segundo plano.</li>
+            <li><strong>Excelente parser heurístico de Glassdoor (<code>getAggregatedMarketRange</code>):</strong> Extrae montos con Regex contextual, convierte USD (×7.8) y EUR (×8.6) a GTQ, normaliza sueldos anuales a mensuales (÷12) y prioriza cubetas GTQ sobre USD para evitar que sueldos de EE.UU. distorsionen el mercado guatemalteco.</li>
+            <li><strong>Anécdota técnica real en Substack:</strong> Explica con gran claridad el fallo de WebGPU por el límite TDR de 2 segundos en Windows (<code>DXGI_ERROR_DEVICE_HUNG</code>) al intentar correr <code>Qwen2.5-1.5B</code> en el navegador.</li>
+          </ul>
+        </div>
+        <div class="bg-slate-900/70 p-4 rounded-xl border border-rose-500/30 space-y-2">
+          <div class="font-bold text-rose-400 text-sm">Brechas técnicas y de especificación en Luis</div>
+          <ul class="list-disc pl-4 space-y-1.5 text-slate-300">
+            <li><strong>Faltó integrar la 2da API de IA en el código:</strong> Integró Gemini + Serper (búsqueda web, No-IA) + Enrich Layer (scraping LinkedIn, No-IA). Dejó las APIs adicionales de IA solo como fragmentos teóricos en <code>API.md</code> (Imagen 3, Audio, Embeddings) sin usarlos en la app.</li>
+            <li><strong>Cero sanitización de texto libre y fuga de empleador actual:</strong> No redacta montos ni PII en <code>aboutYou</code> ni <code>jobOffer</code>, y envía el historial de LinkedIn (incluyendo <code>experiences[].company</code> = empleador actual) directo al prompt de Gemini.</li>
+            <li><strong>Bug HTTP 200 en fallo de LinkedIn + Sin Timeouts:</strong> Si Enrich Layer falla, <code>/api/linkedin</code> devuelve <code>200 OK</code> con <code>{ error: "Failed..." }</code> y <code>/api/generate</code> inyecta ese JSON de error en el prompt de Gemini. Ningún <code>fetch</code> tiene <code>AbortController</code>.</li>
+            <li><strong>Artículo muy corto (~580 palabras):</strong> Apenas dedica 3 viñetas de una línea a las APIs en Substack, omitiendo la excelente tabla de costos, autenticación y fallos que sí puso en su <code>README.md</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 4: EMILY — APRENDIZAJES, VALIDACIÓN Y DIDÁCTICA                   -->
+  <!-- ===================================================================== -->
+  <section id="tab-emily" class="tab-panel space-y-6">
+    <div class="glass-card p-6 md:p-8 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <span class="badge bg-rose-500/20 text-rose-300 border border-rose-500/40 mb-2">ENTREGA #3 · APRENDIZAJES, VALIDACIÓN Y PRUEBA DIDÁCTICA</span>
+          <h2 class="text-2xl font-bold text-white">Emily Curin — <code>EmilyCurin/CoverLetter</code></h2>
+          <p class="text-xs text-slate-400 mt-1">Comparado contra el paquete base <code>/Users/ykro/Downloads/cover-letter-split-brain-emily</code> y tu referencia.</p>
+        </div>
+        <div class="text-right">
+          <div class="text-3xl font-extrabold text-rose-400">5.5 / 10</div>
+          <div class="text-xs text-slate-400">21/25 archivos sin cambios respecto al ZIP inicial</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="bg-slate-900/70 p-4 rounded-xl border border-emerald-500/30 space-y-2">
+          <div class="font-bold text-emerald-400 text-sm">Lo rescatable del código base de Emily</div>
+          <ul class="list-disc pl-4 space-y-1.5 text-slate-300">
+            <li><strong>Arquitectura limpia en Python (`src/`):</strong> Buena separación entre <code>models.py</code>, <code>privacy.py</code>, <code>generator.py</code>, <code>negotiation.py</code> y <code>quality.py</code>, con cascada de 3 niveles (OpenAI → Ollama → Plantilla).</li>
+            <li><strong>Corrida real en OpenAI registrada:</strong> Ejecutó los 15 casos contra <code>gpt-5.6-luna</code> en <code>results/validation_results.json</code> (latencia media 4.14s, puntaje 11.07/12).</li>
+            <li><strong>Tres temas de artículo bien estructurados:</strong> Incluidos al final de <code>ARTICLE.md</code> con prioridad, público, aprendizaje y justificación.</li>
+          </ul>
+        </div>
+        <div class="bg-slate-900/70 p-4 rounded-xl border border-rose-500/30 space-y-2">
+          <div class="font-bold text-rose-400 text-sm">Por qué la entrega está incompleta y dónde falla el código</div>
+          <ul class="list-disc pl-4 space-y-1.5 text-slate-300">
+            <li><strong>Tareas manuales del propio paquete sin hacer:</strong> Dejó <code>DIDACTIC_TEST.md</code> completamente en blanco (con guiones <code>____</code>), la tabla comparativa de <code>VALIDATION.md</code> vacía (`___`), sin evaluación de Ollama y con los 5 placeholders <code>&gt; **Captura sugerida 1..5:**</code> en <code>ARTICLE.md</code>.</li>
+            <li><strong>Fallo inmediato del comando del README (`pytest -q`):</strong> Lanza <code>ModuleNotFoundError: No module named 'src'</code> por no incluir <code>pyproject.toml</code> con <code>pythonpath = ["."]</code>.</li>
+            <li><strong>Bug en <code>scripts/run_validation.py</code> (L100):</strong> Sobrescribe <code>validation_results.json</code> en cada corrida en lugar de acumular modos, borrando los datos de <code>offline</code> cuando corrió <code>cloud</code>.</li>
+            <li><strong>Dataset de 15 casos repetitivo y rúbrica ingenua:</strong> Los 15 perfiles usan la misma oración plantilla en inglés, y <code>score_letter()</code> exige que aparezcan literalmente los primeros 45 caracteres de <code>motivation</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 5: SIMULADOR INTERACTIVO DE SANITIZACIÓN (SPLIT-BRAIN TESTER)     -->
+  <!-- ===================================================================== -->
+  <section id="tab-simulador" class="tab-panel space-y-6">
+    <div class="glass-card p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-800 pb-4">
+        <span class="badge bg-sky-500/20 text-sky-300 border border-sky-500/40 mb-2">HERRAMIENTA INTERACTIVA DE AUDITORÍA</span>
+        <h2 class="text-2xl font-bold text-white">Simulador en Vivo: ¿Qué deja pasar cada implementación hacia la nube?</h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Selecciona un escenario de prueba (o edita el texto libre y los campos) para comparar en tiempo real cómo filtran el texto libre las reglas reales de <strong>Cathy</strong>, <strong>Luis</strong>, <strong>Emily</strong> y <strong>Tu Referencia</strong>.
+        </p>
+      </div>
+
+      <!-- PRESET BUTTONS -->
+      <div class="flex flex-wrap gap-2">
+        <button onclick="loadPreset(1)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-sky-600 text-slate-200 border border-slate-700 transition">
+          Caso 1: Salario con símbolo (Q15,000) + Empleador exacto
+        </button>
+        <button onclick="loadPreset(2)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-sky-600 text-slate-200 border border-slate-700 transition">
+          Caso 2: Salario abreviado ("15k" / "15 mil") + Empleador parcial
+        </button>
+        <button onclick="loadPreset(3)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-sky-600 text-slate-200 border border-slate-700 transition">
+          Caso 3: Nombre de jefe ("Ing. Carlos Méndez") + DPI + Teléfono
+        </button>
+      </div>
+
+      <!-- INPUTS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Nombre declarada en formulario:</label>
+          <input id="sim-name" type="text" value="Ana María López" oninput="runSimulator()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-white"/>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Empleador actual en formulario:</label>
+          <input id="sim-emp" type="text" value="Banco Industrial S.A." oninput="runSimulator()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-white"/>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Salario actual en formulario (GTQ):</label>
+          <input id="sim-sal" type="number" value="15000" oninput="runSimulator()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-white"/>
+        </div>
+        <div class="md:col-span-3">
+          <label class="block text-slate-400 mb-1 font-semibold">Texto libre escrito por el usuario en "Logros / Acerca de ti":</label>
+          <textarea id="sim-text" rows="2" oninput="runSimulator()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white font-mono text-xs">En Banco Industrial gano 15k al mes reportando a mi jefa Ana López. Mi correo es ana@bi.com.gt y mi cel +502 5555-1234.</textarea>
+        </div>
+      </div>
+
+      <!-- 4 OUTPUT CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="bg-slate-950 border border-emerald-500/40 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-emerald-400">🟢 Cathy (<code>src/sanitization.py</code>)</span>
+            <span id="badge-cathy" class="badge bg-emerald-500/20 text-emerald-300">Protegido</span>
+          </div>
+          <pre><code id="out-cathy" class="text-slate-200 whitespace-pre-wrap"></code></pre>
+        </div>
+
+        <div class="bg-slate-950 border border-amber-500/40 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-amber-400">🟡 Luis (<code>CoverLetterForm.tsx</code>)</span>
+            <span id="badge-luis" class="badge bg-rose-500/20 text-rose-300">Sin redactor de texto libre</span>
+          </div>
+          <pre><code id="out-luis" class="text-slate-200 whitespace-pre-wrap"></code></pre>
+        </div>
+
+        <div class="bg-slate-950 border border-rose-500/40 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-rose-400">🔴 Emily (<code>src/privacy.py</code>)</span>
+            <span id="badge-emily" class="badge bg-amber-500/20 text-amber-300">Parcial</span>
+          </div>
+          <pre><code id="out-emily" class="text-slate-200 whitespace-pre-wrap"></code></pre>
+        </div>
+
+        <div class="bg-slate-950 border border-sky-500/40 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-400">🔵 Tu Referencia (<code>src/lib/redact.ts</code>)</span>
+            <span id="badge-ref" class="badge bg-sky-500/20 text-sky-300">Referencia Completa</span>
+          </div>
+          <pre><code id="out-ref" class="text-slate-200 whitespace-pre-wrap"></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 6: OPORTUNIDADES DE MEJORA Y FEEDBACK LISTO PARA COPIAR           -->
+  <!-- ===================================================================== -->
+  <section id="tab-mejoras" class="tab-panel space-y-6">
+    <div class="glass-card p-6 md:p-8 space-y-6">
+      <div class="border-b border-slate-800 pb-4">
+        <h2 class="text-2xl font-bold text-white">Hoja de Ruta de Oportunidades de Mejora por Integrante</h2>
+        <p class="text-xs text-slate-400 mt-1">
+          Priorizadas en <span class="text-rose-400 font-semibold">Crítico</span> (incumplimiento de spec o fuga de privacidad), <span class="text-amber-400 font-semibold">Importante</span> (calidad técnica/resiliencia) y <span class="text-sky-400 font-semibold">Mejora</span> (pulido/UX). Incluye botón para copiar el feedback individual al portapapeles.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- FEEDBACK CATHY -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-emerald-400">1. Cathy (9.2 / 10)</h3>
+              <button onclick="copyFeedback('fb-cathy', this)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs text-sky-300 border border-slate-700">
+                📋 Copiar feedback
+              </button>
+            </div>
+            <div class="space-y-2.5 text-xs text-slate-300">
+              <div class="p-3 rounded bg-slate-950 prio-importante">
+                <div class="font-bold text-amber-400">[Importante] Desactivar thinking tokens en Qwen 3</div>
+                En el benchmark descubriste que <code>qwen3:4b</code> tarda ~43-57s porque genera bloques <code>&lt;think&gt;</code>. En vez de solo limpiar el bloque con regex al final, envía <code>"think": False</code> en el payload de Ollama para medir la latencia justa de Qwen 3 sin razonamiento (~8-11s).
+              </div>
+              <div class="p-3 rounded bg-slate-950 prio-importante">
+                <div class="font-bold text-amber-400">[Importante] Redactar nombres parciales y de terceros</div>
+                <code>sanitization.py</code> redacta el nombre completo exacto del candidato, pero si escribe solo su primer nombre/apellido o el nombre de un jefe (ej. <em>"Ing. Carlos Méndez"</em>) en logros, pasa a la nube.
+              </div>
+              <div class="p-3 rounded bg-slate-950 prio-mejora">
+                <div class="font-bold text-sky-400">[Mejora] Paralelizar llamadas y capturas del artículo</div>
+                Ejecutar en paralelo Gemini (carta) y Ollama (nota de negociación) con <code>asyncio.gather</code>, y añadir capturas reales de la UI web en el artículo.
+              </div>
+            </div>
+          </div>
+          <textarea id="fb-cathy" class="hidden">Excelente trabajo (9.2/10). Cumples de punta a punta las condiciones de Split-Brain, con 83 pruebas automatizadas pasando y un gran hallazgo experimental sobre los tokens <think> de Qwen 3 frente a Gemma 3. Oportunidades de mejora: 1) Probar "think": False en la API de Ollama para comparar Qwen 3 en igualdad de condiciones sin cadena de pensamiento; 2) Ampliar el sanitizador para detectar tokens individuales del nombre/empleador y nombres con título (Ing./Lic.); 3) Ejecutar en paralelo la llamada a Gemini y la nota local en Ollama, y sumar capturas de pantalla reales de la interfaz al artículo.</textarea>
+        </div>
+
+        <!-- FEEDBACK LUIS -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-amber-400">2. Luis (7.0 / 10)</h3>
+              <button onclick="copyFeedback('fb-luis', this)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs text-sky-300 border border-slate-700">
+                📋 Copiar feedback
+              </button>
+            </div>
+            <div class="space-y-2.5 text-xs text-slate-300">
+              <div class="p-3 rounded bg-slate-950 prio-critico">
+                <div class="font-bold text-rose-400">[Crítico] Sanitizar campos de texto libre y LinkedIn</div>
+                Actualmente solo omites las llaves <code>name</code>, <code>currentSalary</code> y <code>desiredSalary</code> del JSON, pero <code>aboutYou</code> y <code>jobOffer</code> se envían crudos a Gemini, y <code>/api/linkedin</code> envía el empleador actual (<code>experiences[].company</code>) al prompt. Agrega un sanitizador Regex antes del envío.
+              </div>
+              <div class="p-3 rounded bg-slate-950 prio-critico">
+                <div class="font-bold text-rose-400">[Crítico] Integrar la 2da API de IA en código + Corregir bug de LinkedIn</div>
+                Tanto Serper como Enrich Layer son APIs de datos/scraping (no de IA), y lo de <code>API.md</code> no está conectado a la app. Además, cuando Enrich Layer falla, <code>/api/linkedin</code> devuelve HTTP 200 con <code>{ error: "Failed..." }</code> y ese objeto se inyecta como historial laboral en el prompt de Gemini.
+              </div>
+              <div class="p-3 rounded bg-slate-950 prio-importante">
+                <div class="font-bold text-amber-400">[Importante] Añadir AbortController y expandir el artículo en Substack</div>
+                Agregar timeouts explícitos en los <code>fetch</code> del backend, y llevar al artículo de Substack (~580 palabras) el análisis de costos, autenticación y fallos de las APIs que sí documentaste en tu <code>README.md</code>.
+              </div>
+            </div>
+          </div>
+          <textarea id="fb-luis" class="hidden">Buen trabajo en el despliegue en Vercel y en el parser heurístico de Glassdoor (7.0/10). Oportunidades clave de mejora: 1) Agregar un sanitizador determinista (Regex) sobre los campos de texto libre (aboutYou y jobOffer) y filtrar el nombre del empleador actual que devuelve LinkedIn antes de armar el prompt de Gemini; 2) Corregir el bug en /api/linkedin donde un fallo de Enrich Layer devuelve HTTP 200 con {error: ...} que termina inyectado en el prompt de Gemini; 3) Integrar en el flujo real una segunda API de IA (lo de API.md quedó solo como ejemplo teórico) y agregar AbortController (timeouts) en las llamadas fetch; 4) Expandir el artículo de Substack (~580 palabras) incorporando la tabla de costos, autenticación y manejo de fallos por API de tu README.</textarea>
+        </div>
+
+        <!-- FEEDBACK EMILY -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-5 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-rose-400">3. Emily (5.5 / 10)</h3>
+              <button onclick="copyFeedback('fb-emily', this)" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs text-sky-300 border border-slate-700">
+                📋 Copiar feedback
+              </button>
+            </div>
+            <div class="space-y-2.5 text-xs text-slate-300">
+              <div class="p-3 rounded bg-slate-950 prio-critico">
+                <div class="font-bold text-rose-400">[Crítico] Completar la Prueba Didáctica y corregir Pytest</div>
+                <code>DIDACTIC_TEST.md</code> se entregó en blanco (`____`). Al seguir el README, <code>pytest -q</code> falla con <code>ModuleNotFoundError: No module named 'src'</code>. Agrega un <code>pyproject.toml</code> con <code>pythonpath = ["."]</code> y realiza la prueba real con otra persona.
+              </div>
+              <div class="p-3 rounded bg-slate-950 prio-critico">
+                <div class="font-bold text-rose-400">[Crítico] Completar la validación Local vs. Nube y arreglar sobrescritura</div>
+                En <code>scripts/run_validation.py</code> (L100), cada corrida sobrescribe <code>validation_results.json</code>. Debes acumular los 3 modos (<code>offline</code>, <code>local</code> con Ollama y <code>cloud</code>) y llenar la tabla comparativa que quedó vacía en <code>VALIDATION.md</code>.
+              </div>
+              <div class="p-3 rounded bg-slate-950 prio-importante">
+                <div class="font-bold text-amber-400">[Importante] Endurecer <code>src/privacy.py</code> y reemplazar placeholders en <code>ARTICLE.md</code></div>
+                Incluir variaciones realistas en los 15 casos (salarios con <code>k</code>/<code>mil</code>, nombres parciales del empleador), corregir la rúbrica en <code>src/quality.py</code> para no exigir subcadena literal de 45 caracteres, y sustituir los 5 <em>"Captura sugerida"</em> por capturas reales.
+              </div>
+            </div>
+          </div>
+          <textarea id="fb-emily" class="hidden">El código base en Streamlit está bien estructurado, pero la entrega quedó con las tareas manuales de tu área sin completar (5.5/10 — 21 de 25 archivos idénticos al ZIP base). Para completar la entrega necesitas: 1) Realizar la prueba didáctica real con otra persona, llenar DIDACTIC_TEST.md y corregir el fallo de `pytest -q` (ModuleNotFoundError: No module named 'src') agregando un pyproject.toml; 2) Corregir scripts/run_validation.py para que no sobrescriba validation_results.json en cada corrida, ejecutar el modo local y llenar la tabla vacía de VALIDATION.md; 3) Mejorar el dataset de 15 casos (que hoy repite la misma oración plantilla) y el redactor src/privacy.py para detectar variantes parciales del empleador y montos como "15k"; 4) Reemplazar los 5 placeholders de "Captura sugerida" en ARTICLE.md por capturas reales y publicar el artículo.</textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      document.getElementById('btn-' + tabId).classList.add('active');
+    }
+
+    function copyFeedback(textareaId, btn) {
+      const text = document.getElementById(textareaId).value;
+      navigator.clipboard.writeText(text);
+      const original = btn.innerText;
+      btn.innerText = '✅ Copiado';
+      setTimeout(() => { btn.innerText = original; }, 1800);
+    }
+
+    const presets = {
+      1: {
+        name: "Ana María López",
+        emp: "Banco Industrial S.A.",
+        sal: "15000",
+        text: "En Banco Industrial S.A. mi salario actual es Q15,000. Mi correo es ana@bi.com.gt y busco crecer."
+      },
+      2: {
+        name: "Ana María López",
+        emp: "Banco Industrial S.A.",
+        sal: "15000",
+        text: "En Banco Industrial gano 15k al mes (quince mil) reportando a mi jefa Ana López. Tel: +502 5555-1234"
+      },
+      3: {
+        name: "Carlos Ruiz",
+        emp: "Tigo Guatemala",
+        sal: "18500",
+        text: "Trabajé en Tigo junto al Ing. Roberto Gómez. Mi DPI es 2345 67890 0101 y gano 18,500 mensuales."
+      }
+    };
+
+    function loadPreset(id) {
+      const p = presets[id];
+      document.getElementById('sim-name').value = p.name;
+      document.getElementById('sim-emp').value = p.emp;
+      document.getElementById('sim-sal').value = p.sal;
+      document.getElementById('sim-text').value = p.text;
+      runSimulator();
+    }
+
+    function escapeRegExp(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function runSimulator() {
+      const name = document.getElementById('sim-name').value.trim();
+      const emp = document.getElementById('sim-emp').value.trim();
+      const sal = parseFloat(document.getElementById('sim-sal').value || "0");
+      const text = document.getElementById('sim-text').value;
+
+      // 1. LUIS: sends free text raw
+      document.getElementById('out-luis').innerText = text + "\n\n// ⚠️ Viaja sin cambios a /api/salary y /api/generate (Gemini)";
+
+      // 2. EMILY: exact match of full_name, current_employer, EMAIL_RE, PHONE_RE, MONEY_PATTERNS, exact numeric salary
+      let emilyOut = text;
+      if (name.length >= 2) emilyOut = emilyOut.replace(new RegExp(escapeRegExp(name), 'gi'), '[REDACTED]');
+      if (emp.length >= 2) emilyOut = emilyOut.replace(new RegExp(escapeRegExp(emp), 'gi'), '[REDACTED]');
+      emilyOut = emilyOut.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '[REDACTED_EMAIL]');
+      emilyOut = emilyOut.replace(/(?<!\w)(?:\+?\d[\d\s().-]{6,}\d)(?!\w)/g, '[REDACTED_PHONE]');
+      emilyOut = emilyOut.replace(/(?:Q|GTQ|US\$|USD|\$)\s*\d[\d,]*(?:\.\d{1,2})?/gi, '[REDACTED_MONEY]');
+      emilyOut = emilyOut.replace(/\b\d[\d,]*(?:\.\d{1,2})?\s*(?:quetzales?|d[oó]lares?|USD|GTQ)\b/gi, '[REDACTED_MONEY]');
+      emilyOut = emilyOut.replace(/\b(?:salario|sueldo|salary|compensation|pay)\b[^\n]{0,30}?\d[\d,]*(?:\.\d{1,2})?/gi, '[REDACTED_MONEY]');
+      if (sal >= 100) {
+        const salComma = sal.toLocaleString('en-US');
+        emilyOut = emilyOut.replace(new RegExp('(?<!\\d)' + escapeRegExp(String(sal)) + '(?!\\d)', 'g'), '[REDACTED_MONEY]');
+        emilyOut = emilyOut.replace(new RegExp('(?<!\\d)' + escapeRegExp(salComma) + '(?!\\d)', 'g'), '[REDACTED_MONEY]');
+      }
+      document.getElementById('out-emily').innerText = emilyOut;
+
+      // 3. CATHY: includes k/mil suffixes, DPI, employer normalization (strips S.A.)
+      let cathyOut = emilyOut;
+      if (emp.length >= 2) {
+        const cleanEmp = emp.replace(/\b(?:S\.?A\.?|Sociedad An[oó]nima|Ltda\.?|Inc\.?)\b/gi, '').trim();
+        if (cleanEmp.length >= 3) {
+          cathyOut = cathyOut.replace(new RegExp(escapeRegExp(cleanEmp), 'gi'), '[EMPLEADOR_ACTUAL]');
+        }
+      }
+      cathyOut = cathyOut.replace(/\b\d+(?:[.,]\d+)?\s*(?:k|mil)\b/gi, '[MONTO_RESERVADO]');
+      cathyOut = cathyOut.replace(/\b\d{4}\s?\d{5}\s?\d{4}\b/g, '[DPI_RESERVADO]');
+      document.getElementById('out-cathy').innerText = cathyOut;
+
+      // 4. REFERENCE: also redacts distinctive words >=4 chars of employer & name tokens & titles (Ing./Lic./jefa)
+      let refOut = cathyOut;
+      if (name.length >= 2) {
+        name.split(/\s+/).filter(w => w.length >= 3).forEach(token => {
+          refOut = refOut.replace(new RegExp('\\b' + escapeRegExp(token) + '\\b', 'gi'), '{{NOMBRE}}');
+        });
+      }
+      if (emp.length >= 2) {
+        emp.split(/\s+/).filter(w => w.length >= 4 && !/^(s\.?a\.?|para|como)$/i.test(w)).forEach(token => {
+          refOut = refOut.replace(new RegExp('\\b' + escapeRegExp(token) + '\\b', 'gi'), '[EMPLEADOR]');
+        });
+      }
+      refOut = refOut.replace(/\b(?:Ing\.|Lic\.|Dr\.|jefe|jefa)\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?/g, '[PERSONA]');
+      refOut = refOut.replace(/\b(?:quince|doce|diez|veinte)\s+mil\b/gi, '[SALARIO]');
+      document.getElementById('out-ref').innerText = refOut;
+    }
+
+    runSimulator();
+  </script>
+</body>
+</html>

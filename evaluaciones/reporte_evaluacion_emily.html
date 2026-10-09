@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluación Técnica — Entrega de Emily (Split-Brain + Aprendizajes y Validación)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #111827;
+      --card-elevated: #1e293b;
+      --border: #334155;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      line-height: 1.6;
+    }
+    .glass-card {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.9) 100%);
+      border: 1px solid var(--border);
+      border-radius: 0.875rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.35rem;
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      color: #e2e8f0;
+    }
+    pre code {
+      display: block;
+      padding: 1rem;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 md:p-10 max-w-7xl mx-auto space-y-10">
+
+  <!-- HEADER -->
+  <header class="glass-card p-8 relative overflow-hidden">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="badge bg-sky-500/20 text-sky-300 border border-sky-500/40">REVISIÓN DE ENTREGA #3</span>
+          <span class="badge bg-purple-500/20 text-purple-300 border border-purple-500/40">ENFOQUE ASIGNADO: APRENDIZAJES, VALIDACIÓN Y DIDÁCTICA</span>
+          <span class="badge bg-rose-500/20 text-rose-300 border border-rose-500/40">ENTREGA INCOMPLETA (CON PLANTILLAS EN BLANCO)</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-white">
+          Evaluación de Proyecto: <span class="text-sky-400">CoverLetter</span> (Emily)
+        </h1>
+        <p class="text-slate-400 mt-2 max-w-3xl text-sm md:text-base">
+          Auditoría técnica del repositorio (<code>EmilyCurin/CoverLetter</code>), ejecución de pruebas y scripts de validación, revisión de la prueba didáctica y artículo, y contraste con tu implementación de referencia (<code>/Users/ykro/code/coverletter-gen/emily</code>).
+        </p>
+        <div class="flex flex-wrap gap-4 mt-4 text-xs text-slate-300">
+          <a href="https://github.com/EmilyCurin/CoverLetter" target="_blank" class="underline hover:text-sky-400">📦 Repo GitHub (EmilyCurin/CoverLetter)</a>
+          <span class="text-rose-400">⚠ Sin link a Demo / Video</span>
+          <span class="text-amber-400">⚠ Artículo solo en ARTICLE.md (con placeholders de capturas)</span>
+        </div>
+      </div>
+
+      <!-- OVERALL SCORE CARD -->
+      <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-5 text-center min-w-[210px] shrink-0">
+        <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Calificación Global</div>
+        <div class="text-5xl font-extrabold text-rose-400 my-2">5.5<span class="text-2xl text-slate-500">/10</span></div>
+        <div class="text-xs text-rose-300 font-medium">Base funcional, tareas de entrega sin completar</div>
+      </div>
+    </div>
+
+    <!-- KPI METRICS ROW -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-800">
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">1. App y Privacidad</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-sky-400">7.0 / 10</span>
+          <span class="text-xs text-emerald-400">6/6 tests pasan</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Buena arquitectura en Streamlit con cascada Cloud → Ollama → Plantilla y doble barrera de privacidad, pero sin link a demo.</p>
+      </div>
+
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">2. Validación (15 casos)</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-amber-400">5.5 / 10</span>
+          <span class="text-xs text-rose-400">Falta Ollama en resultados</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Corrió los 15 casos en OpenAI (<code>gpt-5.6-luna</code>) y plantilla, pero dejó en blanco la tabla de <code>VALIDATION.md</code> y no evaluó Ollama.</p>
+      </div>
+
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">3. Prueba Didáctica</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-rose-400">2.0 / 10</span>
+          <span class="text-xs text-rose-400">Hoja en blanco</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1"><code>DIDACTIC_TEST.md</code> está completamente vacío con líneas <code>____</code> para rellenar, y <code>pytest -q</code> falla siguiendo el README.</p>
+      </div>
+
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">4. Artículo + 3 Temas</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-amber-400">6.0 / 10</span>
+          <span class="text-xs text-amber-300">~1,150 palabras</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Buen hilo conductor y 3 temas priorizados al final, pero dejó los 5 placeholders <em>"Captura sugerida X"</em> sin imágenes reales.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ALERTA CRÍTICA DE AUDITORÍA: TAREAS PENDIENTES EN EL PROPIO REPO -->
+  <section class="bg-rose-950/30 border border-rose-500/50 rounded-xl p-6 space-y-3">
+    <div class="flex items-center gap-2 text-rose-300 font-bold text-base">
+      <span>🚨 Hallazgo Principal: Comparativa exacta entre el ZIP (<code>cover-letter-split-brain-emily</code>) y el Repo Final</span>
+    </div>
+    <p class="text-sm text-slate-300">
+      Al comparar archivo por archivo (<code>diff -ru</code>) la carpeta del ZIP descargado (<code>/Users/ykro/Downloads/cover-letter-split-brain-emily</code>, subida originalmente en el commit <code>012b66d</code>) contra el estado final del repositorio <code>EmilyCurin/CoverLetter</code>, <strong>21 de los 25 archivos son 100% idénticos byte por byte</strong>. Los únicos 4 archivos que cambiaron entre el ZIP base y la entrega final fueron:
+    </p>
+    <ul class="text-xs text-slate-300 list-disc pl-5 space-y-1">
+      <li><code>results/validation_results.json</code>: En el ZIP solo tenía la corrida <code>"offline"</code> (plantilla, 0.0s). En el repo final, Emily corrió <code>python scripts/run_validation.py --mode cloud</code> con OpenAI (<code>gpt-5.6-luna</code>, 4.144s), lo cual sobrescribió el JSON dejando únicamente <code>"cloud"</code> (sin correr <code>"local"</code> con Ollama).</li>
+      <li><code>README.md</code> (L260): Cambió únicamente <code>Puedes salir con Ctrl+C</code> por <code>Puedes salir con Ctrl+d</code>.</li>
+      <li><code>app.py</code> (L110): Agregó un espacio en blanco después de <code>OPENAI_API_KEY= </code>.</li>
+      <li><code>.gitignore</code>: Quitó las 4 líneas finales (<code>results/*.json</code>) para poder hacer commit del resultado de validación.</li>
+    </ul>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs pt-2">
+      <div class="bg-slate-950/90 p-3.5 rounded-lg border border-rose-800/60">
+        <div class="font-bold text-rose-400 mb-1">1. DIDACTIC_TEST.md vacío</div>
+        <p class="text-slate-300">Contiene literalmente <code>Nombre o iniciales: ________</code> y la tabla de fricciones en blanco. No se realizó la prueba didáctica con otra persona.</p>
+      </div>
+      <div class="bg-slate-950/90 p-3.5 rounded-lg border border-rose-800/60">
+        <div class="font-bold text-rose-400 mb-1">2. VALIDATION.md con tabla en blanco</div>
+        <p class="text-slate-300">La tabla comparativa tiene <code>| Nube | ___ | ___ |</code> y <code>| Ollama/Qwen | ___ | ___ |</code> sin llenar, y en <code>validation_results.json</code> falta la corrida de Ollama.</p>
+      </div>
+      <div class="bg-slate-950/90 p-3.5 rounded-lg border border-rose-800/60">
+        <div class="font-bold text-rose-400 mb-1">3. ARTICLE.md con placeholders</div>
+        <p class="text-slate-300">Mantiene 5 bloques <code>&gt; **Captura sugerida 1..5:** ...</code> sin capturas reales y el <code>README.md</code> aún dice <code>git clone TU_URL_DEL_REPO</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: ARQUITECTURA DE LA APP Y PRIVACIDAD -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>1. ¿Hace lo que debe y lo hace bien?</span>
+        <span class="badge bg-sky-500/20 text-sky-300 border border-sky-500/30">Arquitectura y Código</span>
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        Análisis técnico de <code>app.py</code> y los módulos en <code>src/</code> (<code>privacy.py</code>, <code>generator.py</code>, <code>negotiation.py</code>, <code>quality.py</code>).
+      </p>
+    </div>
+
+    <!-- SVG DIAGRAM: ARQUITECTURA DE EMILY -->
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-5 overflow-x-auto">
+      <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+        Diagrama 1: Arquitectura Split-Brain en Python + Streamlit (Emily) y Estado de Componentes
+      </div>
+      <svg viewBox="0 0 1050 430" class="w-full h-auto min-w-[820px]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr-sky" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+          </marker>
+          <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#22c55e" />
+          </marker>
+          <marker id="arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+          </marker>
+        </defs>
+
+        <!-- STREAMLIT UI & PROFILE -->
+        <rect x="20" y="20" width="270" height="390" rx="12" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+        <text x="35" y="48" fill="#38bdf8" font-size="13" font-weight="bold">🖥️ UI LOCAL (app.py - Streamlit)</text>
+
+        <rect x="35" y="65" width="240" height="135" rx="8" fill="#1e293b" stroke="#475569"/>
+        <text x="50" y="88" fill="#f8fafc" font-size="12" font-weight="bold">CandidateProfile (src/models.py)</text>
+        <text x="50" y="108" fill="#f87171" font-size="10">🔒 LOCAL_ONLY_FIELDS (7):</text>
+        <text x="50" y="124" fill="#cbd5e1" font-size="10">full_name, email, phone, current_employer,</text>
+        <text x="50" y="138" fill="#cbd5e1" font-size="10">current_salary, desired_salary, currency</text>
+        <text x="50" y="158" fill="#4ade80" font-size="10">☁️ CLOUD_ALLOWLIST (9):</text>
+        <text x="50" y="174" fill="#cbd5e1" font-size="10">current_role_generic, target_role, skills,</text>
+        <text x="50" y="188" fill="#cbd5e1" font-size="10">achievements, motivation, job_posting...</text>
+
+        <!-- Negotiation Note -->
+        <rect x="35" y="225" width="240" height="165" rx="8" fill="#052e16" stroke="#16a34a"/>
+        <text x="50" y="248" fill="#4ade80" font-size="12" font-weight="bold">🔒 Nota Privada (negotiation.py)</text>
+        <text x="50" y="268" fill="#dcfce7" font-size="10">• 100% determinista en memoria local</text>
+        <text x="50" y="286" fill="#dcfce7" font-size="10">• Calcula uplift = (desired/current - 1)*100</text>
+        <text x="50" y="304" fill="#dcfce7" font-size="10">• 4 bandas simples (&lt;10%, &lt;30%, &lt;60%, &gt;60%)</text>
+        <text x="50" y="326" fill="#fbbf24" font-size="10">⚠ Limitación: No analiza salarios en la</text>
+        <text x="50" y="342" fill="#fbbf24" font-size="10">oferta (job_posting) ni rangos por rol;</text>
+        <text x="50" y="358" fill="#fbbf24" font-size="10">toda la salida está fija en inglés.</text>
+
+        <!-- PRIVACY GATE -->
+        <rect x="330" y="20" width="320" height="390" rx="12" fill="#0f172a" stroke="#22c55e" stroke-width="2"/>
+        <text x="345" y="48" fill="#4ade80" font-size="13" font-weight="bold">🛡️ PRIVACY GATE (src/privacy.py)</text>
+
+        <rect x="345" y="65" width="290" height="140" rx="8" fill="#1e293b" stroke="#334155"/>
+        <text x="360" y="88" fill="#f8fafc" font-size="12" font-weight="bold">Barrera 1 + 2: build_cloud_payload()</text>
+        <text x="360" y="108" fill="#4ade80" font-size="10">✔ Filtra estrictamente por CLOUD_ALLOWLIST</text>
+        <text x="360" y="126" fill="#4ade80" font-size="10">✔ Redacta exact match: full_name, employer, email, phone</text>
+        <text x="360" y="144" fill="#4ade80" font-size="10">✔ Regex EMAIL_RE, PHONE_RE y MONEY_PATTERNS</text>
+        <text x="360" y="162" fill="#4ade80" font-size="10">✔ Redacta variantes numéricas del salario (&ge; 100)</text>
+        <text x="360" y="182" fill="#fbbf24" font-size="10">⚠ No detecta apodos/variaciones del empleador ni</text>
+        <text x="360" y="196" fill="#fbbf24" font-size="10">salarios escritos en palabras o con sufijo "15k"</text>
+
+        <rect x="345" y="225" width="290" height="165" rx="8" fill="#1e293b" stroke="#38bdf8"/>
+        <text x="360" y="248" fill="#38bdf8" font-size="12" font-weight="bold">🔍 Auditor Visual + Firma Local</text>
+        <text x="360" y="268" fill="#cbd5e1" font-size="10">• Muestra en UI el JSON exacto sanitizado</text>
+        <text x="360" y="286" fill="#cbd5e1" font-size="10">• Cuenta redacciones y categorías bloqueadas</text>
+        <text x="360" y="304" fill="#cbd5e1" font-size="10">• add_local_signature(): agrega full_name al</text>
+        <text x="360" y="320" fill="#cbd5e1" font-size="10">final de la carta después de volver de la nube</text>
+        <text x="360" y="344" fill="#4ade80" font-size="10">✔ Buen criterio en DEMO.md: advierte que</text>
+        <text x="360" y="360" fill="#4ade80" font-size="10">Streamlit Cloud rompería la privacidad local</text>
+
+        <!-- GENERATOR CASCADE -->
+        <rect x="690" y="20" width="340" height="390" rx="12" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+        <text x="705" y="48" fill="#c084fc" font-size="13" font-weight="bold">⚡ CASCADA DE GENERACIÓN (generator.py)</text>
+
+        <rect x="710" y="65" width="300" height="90" rx="8" fill="#2e1065" stroke="#9333ea"/>
+        <text x="725" y="87" fill="#e9d5ff" font-size="12" font-weight="bold">Nivel 1: OpenAI Responses API (Nube)</text>
+        <text x="725" y="105" fill="#cbd5e1" font-size="10">• Modelo: gpt-5.6-luna (timeout=25s)</text>
+        <text x="725" y="122" fill="#4ade80" font-size="10">✔ Probado en validation_results.json (15/15)</text>
+        <text x="725" y="139" fill="#cbd5e1" font-size="10">• Latencia media: 4.14s | Puntaje: 11.07/12</text>
+
+        <rect x="710" y="180" width="300" height="90" rx="8" fill="#422006" stroke="#d97706"/>
+        <text x="725" y="202" fill="#fde68a" font-size="12" font-weight="bold">Nivel 2: Ollama Local (Fallback IA)</text>
+        <text x="725" y="220" fill="#cbd5e1" font-size="10">• Modelo: qwen3:4b en localhost:11434 (timeout=90s)</text>
+        <text x="725" y="237" fill="#f87171" font-size="10">✖ NO ejecutado en results/validation_results.json</text>
+        <text x="725" y="254" fill="#f87171" font-size="10">✖ Tabla comparativa en VALIDATION.md vacía</text>
+
+        <rect x="710" y="295" width="300" height="95" rx="8" fill="#1e293b" stroke="#38bdf8"/>
+        <text x="725" y="317" fill="#38bdf8" font-size="12" font-weight="bold">Nivel 3: Plantilla Determinística (Offline)</text>
+        <text x="725" y="335" fill="#cbd5e1" font-size="10">• generate_template() + _drop_redacted_fragments()</text>
+        <text x="725" y="352" fill="#4ade80" font-size="10">✔ Usa rol, empresa, skills, logros y motivación</text>
+        <text x="725" y="369" fill="#4ade80" font-size="10">✔ Elimina oraciones con [REDACTED] automáticamente</text>
+
+        <!-- ARROWS -->
+        <line x1="275" y1="130" x2="340" y2="130" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr-sky)"/>
+        <line x1="635" y1="120" x2="705" y2="110" stroke="#22c55e" stroke-width="2" marker-end="url(#arr-green)"/>
+        <line x1="860" y1="155" x2="860" y2="175" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr-amber)"/>
+        <line x1="860" y1="270" x2="860" y2="290" stroke="#f59e0b" stroke-width="2" marker-end="url(#arr-amber)"/>
+      </svg>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-slate-900/70 border border-emerald-500/30 rounded-xl p-5 space-y-2.5">
+        <h3 class="text-lg font-bold text-emerald-400">Puntos Fuertes del Código</h3>
+        <ul class="space-y-2 text-sm text-slate-300 list-disc pl-5">
+          <li>
+            <strong>Doble barrera de privacidad bien diseñada (<code>src/privacy.py</code>):</strong> A diferencia de Luis, Emily sí implementó tanto un <code>CLOUD_ALLOWLIST</code> explícito de campos como una función <code>sanitize_text()</code> que redacta en los campos de texto libre el nombre del candidato, empleador actual, email, teléfono, patrones monetarios (<code>Q</code>, <code>GTQ</code>, <code>USD</code>, <code>$</code>) y las variantes numéricas con y sin coma del salario actual y deseado.
+          </li>
+          <li>
+            <strong>Degradación elegante en 3 niveles (<code>src/generator.py</code>):</strong> Si falla OpenAI, cae automáticamente a Ollama local; si Ollama no responde, cae a <code>generate_template()</code>, el cual limpia fragmentos con <code>_drop_redacted_fragments()</code> para que nunca aparezca el texto <code>[REDACTED_MONEY]</code> dentro de la carta offline.
+          </li>
+          <li>
+            <strong>Razonamiento arquitectónico correcto sobre Streamlit Cloud (<code>DEMO.md</code>):</strong> Explica con precisión que desplegar una app de Streamlit en la nube viola la premisa de que <em>"el salario nunca sale del dispositivo"</em>, porque el navegador envía todo el formulario al servidor de Streamlit antes de que corra Python.
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-slate-900/70 border border-rose-500/30 rounded-xl p-5 space-y-2.5">
+        <h3 class="text-lg font-bold text-rose-400">Debilidades de la Implementación</h3>
+        <ul class="space-y-2 text-sm text-slate-300 list-disc pl-5">
+          <li>
+            <strong>Sin enlace a Demo:</strong> Aunque en <code>DEMO.md</code> propone enlazar un video corto de 2-4 minutos ejecutando la app localmente o una demo etiquetada para datos ficticios, no incluyó ningún enlace en el repositorio.
+          </li>
+          <li>
+            <strong>Fallo al ejecutar <code>pytest -q</code> según su propio README:</strong> El README y <code>run_tests_windows.bat</code> indican correr <code>pytest -q</code>, lo cual lanza <code>ModuleNotFoundError: No module named 'src'</code> en los 3 archivos de test porque falta configurar <code>pythonpath = .</code> en un <code>pyproject.toml</code> / <code>pytest.ini</code> o usar <code>python -m pytest</code>.
+          </li>
+          <li>
+            <strong>Nota privada de negociación muy elemental (<code>src/negotiation.py</code>):</strong> Solo divide <code>desired_salary / current_salary</code> y asigna una de 4 frases fijas en inglés. No inspecciona la oferta de trabajo ni estima rangos de mercado.
+          </li>
+          <li>
+            <strong>Interfaz, prompts y cartas 100% en inglés:</strong> A pesar de que los perfiles usan empresas en español (<em>Fundación Aprender</em>, <em>Docente STEM</em>) y moneda <code>GTQ</code>, toda la app y las cartas generadas están únicamente en inglés.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AUDITORÍA DE CALIDAD DE CÓDIGO POR MÓDULO Y PRUEBA ADVERSARIAL -->
+    <div class="space-y-4 pt-4 border-t border-slate-800">
+      <h3 class="text-lg font-bold text-sky-400">1.1 Auditoría de Calidad de Código por Módulo y Prueba Adversarial</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-slate-700 text-slate-300 bg-slate-900/80">
+              <th class="p-3 font-semibold">Archivo</th>
+              <th class="p-3 font-semibold">Calidad / Diseño</th>
+              <th class="p-3 font-semibold">Hallazgos Técnicos y Bugs en Código</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800 text-slate-300">
+            <tr>
+              <td class="p-3 font-medium text-white"><code>src/privacy.py</code> (146 líneas)</td>
+              <td class="p-3"><span class="badge bg-emerald-500/20 text-emerald-300">Limpio / Tipado</span></td>
+              <td class="p-3">Usa <code>@dataclass(frozen=True)</code> y tuplas inmutables (<code>CLOUD_ALLOWLIST</code>). Sin embargo: (1) <code>_replace_exact_secret</code> solo busca el string completo exacto (si el empleador es <code>"Banco Industrial S.A."</code> y el usuario escribe <code>"En Banco Industrial..."</code>, no lo redacta); (2) no reconoce sufijos <code>15k</code> ni montos en palabras; (3) <code>MONEY_PATTERNS[2]</code> se come hasta 30 caracteres entre la palabra <code>Salario</code> y el número.</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white"><code>src/generator.py</code> (176 líneas)</td>
+              <td class="p-3"><span class="badge bg-emerald-500/20 text-emerald-300">Bien estructurado</span></td>
+              <td class="p-3">Buena separación de responsabilidades y cadena <code>generate_with_fallback()</code>. Pequeño defecto en <code>_drop_redacted_fragments()</code>: parte el texto por punto (<code>.split(".")</code>), lo cual corta números decimales o abreviaturas como <code>S.A.</code> o <code>St.</code> en la plantilla offline.</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white"><code>src/quality.py</code> (67 líneas)</td>
+              <td class="p-3"><span class="badge bg-amber-500/20 text-amber-300">Heurística frágil</span></td>
+              <td class="p-3">En <code>score_letter()</code>, la métrica <code>motivation_use</code> exige que aparezcan los primeros 45 caracteres exactos (<code>profile.motivation[:45]</code>) para dar 2 puntos. Cuando un LLM en la nube redacta de forma natural y parafrasea la motivación, recibe solo 1 o 0 puntos, premiando a la plantilla estática que copia y pega literal.</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white"><code>scripts/run_validation.py</code> (108 líneas)</td>
+              <td class="p-3"><span class="badge bg-rose-500/20 text-rose-300">Bug de sobrescritura</span></td>
+              <td class="p-3">El README afirma que correr otro modo <em>"agregará las métricas de ambos"</em> en <code>results/validation_results.json</code>. En realidad, la línea 100 hace <code>out_path.write_text(...)</code> sobrescribiendo todo el archivo desde cero. Por eso al correr <code>--mode cloud</code> se borraron las métricas de <code>offline</code> que venían en el ZIP.</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-medium text-white"><code>tests/</code> (3 archivos, 122 líneas)</td>
+              <td class="p-3"><span class="badge bg-amber-500/20 text-amber-300">Falta config Pytest</span></td>
+              <td class="p-3">Los 6 tests pasan con <code>python -m pytest</code>, pero fallan con <code>pytest -q</code> (el comando documentado en el README y en <code>run_tests_windows.bat</code>) por no incluir un archivo <code>pyproject.toml</code> o <code>pytest.ini</code> con <code>pythonpath = .</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-slate-950 border border-amber-700/50 rounded-xl p-4">
+        <div class="text-xs font-semibold text-amber-400 mb-2">
+          🧪 Prueba Adversarial Ejecutada sobre <code>src/privacy.py</code> (Variaciones realistas en español)
+        </div>
+        <pre><code># Entrada de prueba ejecutada contra build_cloud_payload(profile):
+full_name = "Ana María López" | current_employer = "Banco Industrial S.A." | current_salary = 15000
+achievements = "En Banco Industrial gano 15k al mes (quince mil) reportando a mi jefa Ana López. Tel: 5555 1234"
+
+# Salida real de payload["achievements"]:
+"En Banco Industrial gano 15k al mes (quince mil) reportando a mi jefa Ana López. Tel: [REDACTED_PHONE]"
+# -> Se fugaron: "Banco Industrial" (sin S.A.), "15k", "quince mil" y "Ana López" (sin segundo nombre).</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: EVALUACIÓN PROFUNDA DEL ÁREA DE EMILY (VALIDACIÓN, DIDÁCTICA Y TEMAS) -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>2. Evaluación del Área de Profundidad de Emily (Aprendizajes)</span>
+        <span class="badge bg-purple-500/20 text-purple-300 border border-purple-500/30">Validación · Didáctica · 3 Temas</span>
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        Contraste directo entre los 3 requisitos asignados a Emily en el documento de especificación, lo entregado en su repositorio y tu versión de referencia (<code>/Users/ykro/code/coverletter-gen/emily</code>).
+      </p>
+    </div>
+
+    <!-- SUBSECCIÓN 2.1: VALIDACIÓN DE 15 CASOS -->
+    <div class="space-y-4">
+      <h3 class="text-lg font-bold text-sky-400">2.1 Validación: 15 Perfiles Ficticios, Tasa de Fugas y Calidad Local vs. Nube</h3>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs font-semibold text-amber-400 mb-2">
+            📌 Problema A: Dataset de 15 casos generado con una sola plantilla repetida (<code>data/validation_cases.json</code>)
+          </div>
+          <p class="text-xs text-slate-300 mb-2">
+            Los 15 perfiles (<code>V01</code> a <code>V15</code>) tienen exactamente la misma estructura sintáctica en texto libre, variando únicamente el nombre, empresa y número:
+          </p>
+          <pre><code>// En TODOS los 15 casos (V01 a V15) de data/validation_cases.json:
+"achievements": "... My current employer is Colegio Horizonte; my current salary is Q8,500. Contact: case01@example.test.",
+"job_posting": "We are hiring a Education Program Coordinator. Candidate Ana López mentioned desired pay GTQ 12,000. Phone +502 5501 1001..."</code></pre>
+          <p class="text-xs text-slate-400 mt-2">
+            Como <code>sanitize_text()</code> hace <code>re.escape(profile.current_employer)</code> y <code>re.escape(profile.full_name)</code>, obtiene un <strong>120/120 (100%) artificial</strong> porque el texto libre contiene exactamente el mismo string literal del campo estructurado, sin probar casos difíciles (apodos, abreviaturas, salarios como <code>15k</code> o <code>quince mil</code>, nombres de jefes, etc.).
+          </p>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+          <div class="text-xs font-semibold text-rose-400 mb-2">
+            📌 Problema B: Comparación Local (Ollama) vs. Nube incompleta en <code>VALIDATION.md</code> y <code>validation_results.json</code>
+          </div>
+          <p class="text-xs text-slate-300 mb-2">
+            En <code>results/validation_results.json</code> solo quedaron guardados los resultados de <code>cloud</code> (<code>gpt-5.6-luna</code>, media 11.07/12, 4.14s), sin ningún registro de <code>local</code> (Ollama). Y en <code>VALIDATION.md</code> (L77-81) la tabla se entregó sin rellenar:
+          </p>
+          <pre><code>| Sistema | N | Calidad media /12 | Latencia media | Observaciones |
+|---|---:|---:|---:|---|
+| Nube | ___ | ___ | ___ s | ___ |
+| Ollama/Qwen | ___ | ___ | ___ s | ___ |
+| Plantilla | 15 | 11.0 | ~0 s | Siempre disponible, menos natural |</code></pre>
+          <p class="text-xs text-slate-400 mt-2">
+            Además, su rúbrica en <code>src/quality.py</code> evalúa si los primeros 45 caracteres literales de <code>motivation</code> están copiados en la carta (<code>profile.motivation[:45] in text</code>). Como el LLM de la nube parafrasea en vez de copiar literal, ¡pierde puntos frente a la plantilla estática (11.07 vs 11.00)!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSECCIÓN 2.2: PRUEBA DIDÁCTICA -->
+    <div class="space-y-3 pt-4 border-t border-slate-800">
+      <h3 class="text-lg font-bold text-rose-400">2.2 Prueba Didáctica del README (<code>DIDACTIC_TEST.md</code>)</h3>
+      <p class="text-sm text-slate-300">
+        El spec pedía: <em>"Pide a alguien que nunca haya visto tu proyecto que lo corra siguiendo solo tu README. Anota dónde se trabó y corrige el README hasta que funcione sin ayuda."</em>
+      </p>
+      <div class="bg-slate-950 border border-rose-800/60 rounded-xl p-4">
+        <div class="text-xs font-semibold text-rose-300 mb-2">
+          Contenido actual de <code>DIDACTIC_TEST.md</code> en el repositorio de Emily (L9-35):
+        </div>
+        <pre><code>## Persona de prueba
+- Nombre o iniciales: ____________________
+- Fecha: ____________________
+- Sistema operativo: ____________________
+- Experiencia con Python: ninguna / básica / intermedia
+
+## Primer intento
+| Paso | ¿Pudo hacerlo sin ayuda? | Dónde se trabó | Cambio necesario en README |
+|---|---|---|---|
+| Instalar/verificar Python | | | |
+| Ejecutar tests | | | |
+...
+## Cambios hechos al README
+1. ________________________________________________</code></pre>
+        <p class="text-xs text-slate-300 mt-2">
+          <strong>Verificación práctica realizada en nuestra auditoría:</strong> Al seguir el README paso a paso sin ayuda, el comando <code>pytest -q</code> indicado en la sección 11 falla inmediatamente con <code>ModuleNotFoundError: No module named 'src'</code> (requiere <code>python -m pytest -q</code>), lo cual confirma que la prueba didáctica no se llevó a cabo.
+        </p>
+      </div>
+    </div>
+
+    <!-- SUBSECCIÓN 2.3: TRES TEMAS ADICIONALES -->
+    <div class="space-y-3 pt-4 border-t border-slate-800">
+      <h3 class="text-lg font-bold text-amber-400">2.3 Tres Temas Adicionales para Artículos (<code>ARTICLE.md §Tres temas</code>)</h3>
+      <p class="text-sm text-slate-300">
+        Al final de <code>ARTICLE.md</code> (L235-266) incluye los 3 temas ordenados por prioridad con todos los campos solicitados (título, público objetivo, aprendizaje, justificación y evidencia):
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
+          <div class="font-bold text-sky-400 mb-1">Prioridad 1: "Un allowlist no basta: cómo se filtran secretos por campos de texto libre"</div>
+          <p class="text-slate-300">Bien enfocado y respaldado por la arquitectura de doble barrera (allowlist + regex) y los 120 secretos probados.</p>
+        </div>
+        <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
+          <div class="font-bold text-purple-400 mb-1">Prioridad 2: "Tres niveles de fallback para una app de IA: cloud, modelo local y cero modelo"</div>
+          <p class="text-slate-300">Buen tema sobre degradación progresiva, aunque la evidencia citada deja pendiente la comparativa contra Ollama.</p>
+        </div>
+        <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800">
+          <div class="font-bold text-amber-400 mb-1">Prioridad 3: "El README también es una interfaz: cómo probar documentación con una persona nueva"</div>
+          <p class="text-slate-300">Afirma como evidencia que <em>"DIDACTIC_TEST.md registra el primer intento, los puntos de fricción..."</em>, lo cual contradice el archivo en blanco.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: TABLA COMPARATIVA CONTRA TU REFERENCIA -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white">
+        3. Contraste: Entrega de Emily vs. Tu Implementación de Referencia (<code>/coverletter-gen/emily</code>)
+      </h2>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-slate-700 text-slate-300 bg-slate-900/80">
+            <th class="p-3.5 font-semibold">Dimensión</th>
+            <th class="p-3.5 font-semibold">Entrega de Emily (<code>EmilyCurin/CoverLetter</code>)</th>
+            <th class="p-3.5 font-semibold">Tu Referencia (<code>/Users/ykro/code/coverletter-gen/emily</code>)</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800 text-slate-300 text-xs">
+          <tr>
+            <td class="p-3.5 font-medium text-white">Plataforma y Modelos</td>
+            <td class="p-3.5">Python + Streamlit local. Nube: OpenAI (<code>gpt-5.6-luna</code>). Local: Ollama (<code>qwen3:4b</code>) + Plantilla en inglés.</td>
+            <td class="p-3.5">PWA en TypeScript (Vite). Nube: <code>gemini-3.8-flash</code> (Firebase AI Logic + App Check). Local en navegador: WebGPU <code>gemma-4-E2B-it</code> (transformers.js) + Plantilla en español.</td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">Diseño del Dataset de Validación</td>
+            <td class="p-3.5">15 casos en JSON con 120 secretos plantados usando exactamente la misma frase plantilla en inglés en todos los casos.</td>
+            <td class="p-3.5">18 perfiles variados en contexto guatemalteco con 78 datos sensibles clasificados en dificultad <strong>fácil (44), media (20) y difícil (14)</strong> + 101 textos permitidos para medir falsos positivos.</td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">Análisis de Fugas (Recall)</td>
+            <td class="p-3.5">Reporta 120/120 (100%) porque busca coincidencias literales de los mismos campos estructurados. No analiza dónde falla el redactor.</td>
+            <td class="p-3.5">Mide 85% de recall global (100% fácil/media, 14% difícil), documenta cada una de las 12 fugas difíciles (apodos, <em>"doce y medio"</em>, correo deletreado) y demuestra que 5 fugas terminaron escritas en la carta por el LLM.</td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">Evaluación de Calidad Local vs. Nube</td>
+            <td class="p-3.5">Rúbrica determinista básica de 12 puntos en código. Solo ejecutó Nube (11.07/12) y Plantilla (11.0/12); no ejecutó Ollama ni llenó la tabla en <code>VALIDATION.md</code>.</td>
+            <td class="p-3.5">Doble evaluación sobre 18×3 cartas: reglas deterministas + Juez LLM a ciegas con las 6 permutaciones balanceadas (A/B/C), midiendo kappa de Cohen y sesgo de auto-preferencia del juez.</td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">Prueba Didáctica</td>
+            <td class="p-3.5"><code>DIDACTIC_TEST.md</code> entregado como formulario vacío sin realizar la prueba.</td>
+            <td class="p-3.5"><code>DIDACTICA.md</code> documenta 11 fricciones reales encontradas al correr el README en limpio (imagen rota, permisos de Firebase, App Check, salida de <code>--leaks-only</code>) y las correcciones aplicadas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 4: EVALUACIÓN DEL ARTÍCULO -->
+  <section class="glass-card p-8 space-y-4">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>4. Evaluación del Artículo (<code>ARTICLE.md</code>)</span>
+        <span class="badge bg-amber-500/20 text-amber-300 border border-amber-500/30">Borrador sin capturas</span>
+      </h2>
+    </div>
+    <p class="text-sm text-slate-300">
+      El artículo (<em>"Privacidad verificable en una app split brain: por qué el modelo no debe decidir qué sale del dispositivo"</em>) tiene una extensión adecuada (~1,150 palabras incluyendo los 3 temas adicionales) y explica con claridad conceptual por qué un simple allowlist de campos falla cuando existen textareas libres y por qué la frontera de privacidad debe ser determinista y no delegada a un LLM.
+    </p>
+    <p class="text-sm text-slate-300">
+      Sin embargo, se entregó en estado de <strong>borrador sin publicar</strong>: mantiene los 5 marcadores <code>&gt; **Captura sugerida 1..5:**</code> sin ninguna captura de pantalla real y no incluye los resultados comparativos entre el modelo local (Ollama) y el modelo en la nube.
+    </p>
+  </section>
+
+  <!-- SECTION 5: RECOMENDACIONES ACCIONABLES PARA EMILY -->
+  <section class="glass-card p-8 space-y-4 border-l-4 border-l-rose-400">
+    <h2 class="text-xl font-bold text-white">5. Checklist para que Emily complete su entrega</h2>
+    <ol class="space-y-2 text-sm text-slate-300 list-decimal pl-5">
+      <li>
+        <strong>Ejecutar la validación completa incluyendo Ollama (<code>--mode all</code>) y llenar <code>VALIDATION.md</code>:</strong> Aprovechar un entorno con Ollama activo para generar las 15 cartas con <code>qwen3:4b</code>, de modo que <code>results/validation_results.json</code> y la tabla de <code>VALIDATION.md</code> comparen realmente Nube vs. Modelo Local vs. Plantilla.
+      </li>
+      <li>
+        <strong>Realizar de verdad la prueba didáctica y llenar <code>DIDACTIC_TEST.md</code>:</strong> Sentar a otra persona con el README, registrar el fallo de <code>pytest -q</code> (<code>ModuleNotFoundError: No module named 'src'</code>) y el placeholder <code>git clone TU_URL_DEL_REPO</code>, agregar un <code>pyproject.toml</code> con <code>pythonpath = ["."]</code> y documentar el antes y después en <code>DIDACTIC_TEST.md</code>.
+      </li>
+      <li>
+        <strong>Reemplazar los 5 placeholders de <code>ARTICLE.md</code> por capturas reales y publicar el artículo:</strong> Tomar las capturas de la interfaz Streamlit, del auditor de privacidad y de la terminal, y subir el artículo a Medium o Substack.
+      </li>
+      <li>
+        <strong>Incluir Casos Difíciles en <code>validation_cases.json</code>:</strong> Variar la redacción de los secretos plantados en texto libre (por ejemplo, montos como <code>15k</code>, salarios sin símbolo de moneda, o nombres abreviados del empleador) para medir el límite real del sanitizador.
+      </li>
+    </ol>
+  </section>
+
+</body>
+</html>

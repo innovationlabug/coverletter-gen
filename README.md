@@ -1,5 +1,23 @@
 # Cover letter con split brain — tres implementaciones
 
+> **Nota sobre autoría y entregas del equipo:**  
+> Las tres implementaciones contenidas en las carpetas de este repositorio ([`luis/`](luis/), [`cathy/`](cathy/) y [`emily/`](emily/)) corresponden a la **implementación inicial de referencia** desarrollada por **Adrian ([@ykro](https://github.com/ykro))** para explorar y validar las tres áreas del reto.  
+> Posteriormente, cada integrante del equipo construyó y entregó su propia implementación en su respectivo repositorio. Abajo encontrarás los enlaces directos al repositorio de cada integrante, junto con el **reporte interactivo de análisis global** y los **reportes detallados de evaluación** de cada entrega.
+
+## Entregas del equipo y reportes de evaluación
+
+- 📊 **[Ver Reporte Global Interactivo (Comparativa + Simulador + Oportunidades de Mejora)](https://htmlpreview.github.io/?https://github.com/innovationlabug/coverletter-gen/blob/main/evaluaciones/reporte_final_interactivo_split_brain.html)** · *([archivo HTML en el repo](evaluaciones/reporte_final_interactivo_split_brain.html))*
+
+| Integrante | Área de profundidad | Repositorio entregado | Demo / Artículo | Reporte de evaluación detallado |
+|---|---|---|---|---|
+| **Cathy** | **Modelos locales** (Ollama: Gemma 3 vs Qwen 3 + heurísticas) | [CatherineBatres/carta-split-brain](https://github.com/CatherineBatres/carta-split-brain) | [Artículo en el repo](https://github.com/CatherineBatres/carta-split-brain/blob/main/docs/articulo.md) | [Abrir reporte interactivo](https://htmlpreview.github.io/?https://github.com/innovationlabug/coverletter-gen/blob/main/evaluaciones/reporte_evaluacion_cathy.html) · *([HTML](evaluaciones/reporte_evaluacion_cathy.html))* |
+| **Luis** | **APIs externas** (Gemini + Serper + Enrich Layer) | [cuprumbot/cover-letter-local](https://github.com/cuprumbot/cover-letter-local) | [Demo en Vercel](https://cover-letter-six-eta.vercel.app/) · [Artículo en Substack](https://cuprumbot.substack.com/p/split-brain-division-de-tareas-para) | [Abrir reporte interactivo](https://htmlpreview.github.io/?https://github.com/innovationlabug/coverletter-gen/blob/main/evaluaciones/reporte_evaluacion_luis.html) · *([HTML](evaluaciones/reporte_evaluacion_luis.html))* |
+| **Emily** | **Aprendizajes, validación y didáctica** (15 casos + README) | [EmilyCurin/CoverLetter](https://github.com/EmilyCurin/CoverLetter) | [Artículo en el repo](https://github.com/EmilyCurin/CoverLetter/blob/main/ARTICLE.md) | [Abrir reporte interactivo](https://htmlpreview.github.io/?https://github.com/innovationlabug/coverletter-gen/blob/main/evaluaciones/reporte_evaluacion_emily.html) · *([HTML](evaluaciones/reporte_evaluacion_emily.html))* |
+
+---
+
+## Implementaciones de referencia en este repositorio (`@ykro`)
+
 Tres personas del equipo construyeron, cada una por su cuenta, la misma app: un generador de **carta de interés**
 que además entrega una **nota privada de negociación** salarial, con una arquitectura **split brain**
 (una parte corre en el dispositivo de la persona y otra en la nube).
@@ -44,9 +62,10 @@ Además de su área, cada implementación usa un patrón de autenticación disti
 ## Estructura
 
 ```
-luis/    Next.js PWA (Vercel)                      — README, pruebas, docs/diagrams, docs/screenshots
-cathy/   Next.js (Cloud Run) + ollama/ (GPU L4)    — README, BENCHMARK, pruebas, bench/
-emily/   Vite PWA (Vercel) + eval/                 — README, VALIDACION, DIDACTICA, TEMAS, pruebas
+luis/          Next.js PWA (Vercel)                      — README, pruebas, docs/diagrams, docs/screenshots
+cathy/         Next.js (Cloud Run) + ollama/ (GPU L4)    — README, BENCHMARK, pruebas, bench/
+emily/         Vite PWA (Vercel) + eval/                 — README, VALIDACION, DIDACTICA, TEMAS, pruebas
+evaluaciones/  Reportes HTML interactivos (global y por integrante)
 ```
 
 Los artículos viven como Google Docs (enlazados arriba y desde el README de cada carpeta). Todos los diagramas

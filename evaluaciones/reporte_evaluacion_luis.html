@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluación Técnica — Entrega de Luis (Split-Brain + APIs)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #111827;
+      --card-elevated: #1e293b;
+      --border: #334155;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      line-height: 1.6;
+    }
+    .glass-card {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.75) 0%, rgba(17, 24, 39, 0.9) 100%);
+      border: 1px solid var(--border);
+      border-radius: 0.875rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 0.15rem 0.4rem;
+      border-radius: 0.35rem;
+      border: 1px solid rgba(51, 65, 85, 0.7);
+      color: #e2e8f0;
+    }
+    pre code {
+      display: block;
+      padding: 1rem;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+    .tab-btn.active {
+      background-color: #0284c7;
+      color: #ffffff;
+      border-color: #38bdf8;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 md:p-10 max-w-7xl mx-auto space-y-10">
+
+  <!-- HEADER -->
+  <header class="glass-card p-8 relative overflow-hidden">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span class="badge bg-sky-500/20 text-sky-300 border border-sky-500/40">REVISIÓN DE ENTREGA #2</span>
+          <span class="badge bg-purple-500/20 text-purple-300 border border-purple-500/40">ENFOQUE ASIGNADO: APIs EXTERNAS</span>
+          <span class="badge bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">VERCEL DEMO ACTIVO</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-white">
+          Evaluación de Proyecto: <span class="text-sky-400">cover-letter-local</span> (Luis)
+        </h1>
+        <p class="text-slate-400 mt-2 max-w-3xl text-sm md:text-base">
+          Auditoría técnica del repositorio (<code>cuprumbot/cover-letter-local</code>), despliegue en vivo en Vercel, artículo en Substack y contraste directo contra el documento de especificación y la implementación de referencia (<code>/Users/ykro/code/coverletter-gen/luis</code>).
+        </p>
+        <div class="flex flex-wrap gap-4 mt-4 text-xs text-slate-300">
+          <a href="https://cover-letter-six-eta.vercel.app/" target="_blank" class="underline hover:text-sky-400">🌐 Demo Vercel</a>
+          <a href="https://github.com/cuprumbot/cover-letter-local" target="_blank" class="underline hover:text-sky-400">📦 Repo GitHub</a>
+          <a href="https://cuprumbot.substack.com/p/split-brain-division-de-tareas-para" target="_blank" class="underline hover:text-sky-400">📝 Artículo Substack</a>
+        </div>
+      </div>
+
+      <!-- OVERALL SCORE CARD -->
+      <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-5 text-center min-w-[210px] shrink-0">
+        <div class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Calificación Global</div>
+        <div class="text-5xl font-extrabold text-amber-400 my-2">7.0<span class="text-2xl text-slate-500">/10</span></div>
+        <div class="text-xs text-amber-300 font-medium">Funcional con brechas en Spec</div>
+      </div>
+    </div>
+
+    <!-- KPI METRICS ROW -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-800">
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">1. Funcionalidad y Calidad</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-sky-400">7.2 / 10</span>
+          <span class="text-xs text-amber-400">Sin sanitizador de texto libre</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Demo en vivo funciona con Serper + Gemini; buen parser Regex salarial, pero con fugas en texto libre y LinkedIn.</p>
+      </div>
+
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">2. Aprendizaje de APIs</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-amber-400">6.8 / 10</span>
+          <span class="text-xs text-rose-400">Falta 2da API de IA real</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Usa Gemini + Serper + EnrichLayer (ninguna de las 2 adicionales es de IA). Sin timeouts (AbortController) ni retries.</p>
+      </div>
+
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">3. Pruebas y Modo Offline</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-amber-400">6.5 / 10</span>
+          <span class="text-xs text-slate-400">1 test Playwright (54 líneas)</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Fallback offline devuelve plantilla estática de 2 párrafos que ignora los datos del usuario; sin Service Worker.</p>
+      </div>
+
+      <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+        <div class="text-xs text-slate-400">4. Artículo en Substack</div>
+        <div class="flex items-baseline justify-between mt-1">
+          <span class="text-2xl font-bold text-amber-400">6.5 / 10</span>
+          <span class="text-xs text-amber-300">~580 palabras (Corto)</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Excelente anécdota de fallo con WebGPU/TDR, pero muy breve (~2.5 min) y casi no profundiza en las APIs.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECTION 1: ARQUITECTURA DE LUIS Y DIAGRAMAS SVG -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>1. ¿Hace lo que debe y lo hace bien?</span>
+        <span class="badge bg-sky-500/20 text-sky-300 border border-sky-500/30">Arquitectura y Flujo de Datos</span>
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        Análisis del flujo real en el código (<code>CoverLetterForm.tsx</code> → Route Handlers en Next.js → <code>ResultsView.tsx</code>) y verificación en vivo contra <code>https://cover-letter-six-eta.vercel.app</code>.
+      </p>
+    </div>
+
+    <!-- SVG DIAGRAM: ARQUITECTURA REAL DE LUIS Y PUNTOS DE FUGA / BUGS -->
+    <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-5 overflow-x-auto">
+      <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+        Diagrama 1: Flujo Split-Brain Implementado por Luis y Brechas Detectadas en Auditoría
+      </div>
+      <svg viewBox="0 0 1050 470" class="w-full h-auto min-w-[820px]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow-sky" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+          </marker>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#22c55e" />
+          </marker>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+          </marker>
+          <marker id="arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+          </marker>
+        </defs>
+
+        <!-- ZONE 1: BROWSER (CLIENT) -->
+        <rect x="15" y="15" width="355" height="435" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+        <text x="30" y="42" fill="#38bdf8" font-size="13" font-weight="bold">💻 NAVEGADOR DEL USUARIO (React Client)</text>
+
+        <!-- Form Box -->
+        <rect x="30" y="60" width="325" height="125" rx="8" fill="#1e293b" stroke="#334155"/>
+        <text x="45" y="82" fill="#f8fafc" font-size="12" font-weight="bold">CoverLetterForm.tsx</text>
+        <text x="45" y="102" fill="#4ade80" font-size="11">✔ Excluye: name, currentSalary, desiredSalary</text>
+        <text x="45" y="122" fill="#f87171" font-size="11">✖ NO sanitiza texto libre: aboutYou ni jobOffer</text>
+        <text x="45" y="142" fill="#fbbf24" font-size="11">⚠ Envía URL LinkedIn (con slug del nombre)</text>
+        <text x="45" y="162" fill="#94a3b8" font-size="10">safePayload = { jobTitle, company, aboutYou, jobOffer... }</text>
+
+        <!-- Local Regex Engine Box -->
+        <rect x="30" y="210" width="325" height="125" rx="8" fill="#052e16" stroke="#16a34a"/>
+        <text x="45" y="232" fill="#4ade80" font-size="12" font-weight="bold">🧠 Cerebro Local (ResultsView.tsx)</text>
+        <text x="45" y="252" fill="#dcfce7" font-size="11">• getAggregatedMarketRange(serperSnippets)</text>
+        <text x="45" y="270" fill="#bbf7d0" font-size="10">• Regex multi-divisa (GTQ, USD*7.8, EUR*8.6, /mo, /yr)</text>
+        <text x="45" y="288" fill="#bbf7d0" font-size="10">• Prioriza cubeta GTQ sobre USD para evitar sesgo USA</text>
+        <text x="45" y="306" fill="#bbf7d0" font-size="10">• Matriz de 8 reglas: desiredSalary vs Rango + % Aumento</text>
+        <text x="45" y="324" fill="#fbbf24" font-size="10">⚠ No extrae salarios mencionados en jobOffer</text>
+
+        <!-- Offline Fallback Box -->
+        <rect x="30" y="355" width="325" height="78" rx="8" fill="#1e293b" stroke="#475569"/>
+        <text x="45" y="376" fill="#e2e8f0" font-size="11" font-weight="bold">⚡ Fallback Offline (offlineLetter.ts)</text>
+        <text x="45" y="394" fill="#94a3b8" font-size="10">• Plantilla estática de 2 párrafos (solo jobTitle y company)</text>
+        <text x="45" y="412" fill="#f87171" font-size="10">✖ Ignora aboutYou/jobOffer y no tiene Service Worker</text>
+
+        <!-- ZONE 2: NEXT.JS ROUTE HANDLERS -->
+        <rect x="415" y="15" width="285" height="435" rx="12" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+        <text x="430" y="42" fill="#a855f7" font-size="13" font-weight="bold">⚙️ BACKEND NEXT.JS (Vercel)</text>
+
+        <!-- /api/salary -->
+        <rect x="435" y="65" width="245" height="90" rx="8" fill="#1e293b" stroke="#38bdf8"/>
+        <text x="450" y="87" fill="#38bdf8" font-size="12" font-weight="bold">POST /api/salary</text>
+        <text x="450" y="105" fill="#cbd5e1" font-size="10">Arma query: site:glassdoor.com ...</text>
+        <text x="450" y="122" fill="#fbbf24" font-size="10">⚠ Recibe aboutYou y jobOffer sin usarlos</text>
+        <text x="450" y="139" fill="#f87171" font-size="10">✖ Sin timeout (AbortController) ni retry</text>
+
+        <!-- /api/linkedin -->
+        <rect x="435" y="185" width="245" height="105" rx="8" fill="#1e293b" stroke="#f59e0b"/>
+        <text x="450" y="207" fill="#fbbf24" font-size="12" font-weight="bold">POST /api/linkedin</text>
+        <text x="450" y="225" fill="#cbd5e1" font-size="10">Extrae summary + experiences[]</text>
+        <text x="450" y="242" fill="#f87171" font-size="10">🐞 Bug: Si falla (4xx/5xx), devuelve 200 OK</text>
+        <text x="450" y="258" fill="#f87171" font-size="10">con { error: "Failed to fetch..." }</text>
+        <text x="450" y="275" fill="#f87171" font-size="10">✖ Incluye company (empleador actual)</text>
+
+        <!-- /api/generate -->
+        <rect x="435" y="320" width="245" height="110" rx="8" fill="#1e293b" stroke="#a855f7"/>
+        <text x="450" y="342" fill="#c084fc" font-size="12" font-weight="bold">POST /api/generate</text>
+        <text x="450" y="360" fill="#cbd5e1" font-size="10">Borra .name/.first_name de linkedinData</text>
+        <text x="450" y="377" fill="#f87171" font-size="10">✖ Pasa experiences[].company a Gemini</text>
+        <text x="450" y="394" fill="#f87171" font-size="10">✖ Pasa aboutYou y jobOffer crudos a Gemini</text>
+        <text x="450" y="411" fill="#f87171" font-size="10">🐞 Si LinkedIn falló, inyecta el JSON de error</text>
+
+        <!-- ZONE 3: EXTERNAL APIS -->
+        <rect x="745" y="15" width="290" height="435" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+        <text x="760" y="42" fill="#f43f5e" font-size="13" font-weight="bold">☁️ PROVEEDORES EXTERNOS (APIs)</text>
+
+        <!-- Serper API -->
+        <rect x="765" y="65" width="250" height="90" rx="8" fill="#172554" stroke="#3b82f6"/>
+        <text x="780" y="87" fill="#60a5fa" font-size="12" font-weight="bold">1. Serper.dev (Google Search)</text>
+        <text x="780" y="105" fill="#dbeafe" font-size="10">Tipo: API de Búsqueda Web (No-IA)</text>
+        <text x="780" y="122" fill="#93c5fd" font-size="10">Recibe: jobTitle, company, location</text>
+        <text x="780" y="139" fill="#4ade80" font-size="10">✔ Activa y funcionando en Vercel</text>
+
+        <!-- Enrich Layer / Proxycurl -->
+        <rect x="765" y="185" width="250" height="105" rx="8" fill="#422006" stroke="#d97706"/>
+        <text x="780" y="207" fill="#fbbf24" font-size="12" font-weight="bold">2. Enrich Layer (Proxycurl)</text>
+        <text x="780" y="225" fill="#fef3c7" font-size="10">Tipo: Scraping de LinkedIn (No-IA)</text>
+        <text x="780" y="242" fill="#fde68a" font-size="10">Recibe: URL pública de LinkedIn del usuario</text>
+        <text x="780" y="259" fill="#f87171" font-size="10">⚠ No es una API de IA (incumple el requisito</text>
+        <text x="780" y="275" fill="#f87171" font-size="10">de "1 API adicional de IA + 1 de otro tipo")</text>
+
+        <!-- Gemini API -->
+        <rect x="765" y="320" width="250" height="110" rx="8" fill="#2e1065" stroke="#9333ea"/>
+        <text x="780" y="342" fill="#d8b4fe" font-size="12" font-weight="bold">3. Google Gemini (Cloud LLM)</text>
+        <text x="780" y="360" fill="#f3e8ff" font-size="10">Modelo: gemini-3.8-flash (@google/genai)</text>
+        <text x="780" y="377" fill="#e9d5ff" font-size="10">Recibe: Rol, empresa, años, aboutYou,</text>
+        <text x="780" y="394" fill="#e9d5ff" font-size="10">jobOffer + historial laboral de LinkedIn</text>
+        <text x="780" y="411" fill="#4ade80" font-size="10">✔ Activa y funcionando en Vercel</text>
+
+        <!-- ARROWS -->
+        <line x1="355" y1="95" x2="430" y2="95" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+        <line x1="435" y1="130" x2="360" y2="235" stroke="#22c55e" stroke-width="2" marker-end="url(#arrow-green)"/>
+        <line x1="355" y1="135" x2="430" y2="220" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-amber)"/>
+        <line x1="355" y1="160" x2="430" y2="355" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+
+        <line x1="680" y1="110" x2="760" y2="110" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow-sky)"/>
+        <line x1="680" y1="235" x2="760" y2="235" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-amber)"/>
+        <line x1="680" y1="375" x2="760" y2="375" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow-red)"/>
+      </svg>
+    </div>
+
+    <!-- VERIFICACIÓN EN VIVO DE VERCEL -->
+    <div class="bg-emerald-950/30 border border-emerald-700/50 rounded-xl p-5">
+      <h3 class="text-sm font-bold text-emerald-300 uppercase tracking-wider mb-2">
+        ✅ Prueba en Vivo del Despliegue en Vercel (<code>cover-letter-six-eta.vercel.app</code>)
+      </h3>
+      <p class="text-xs text-slate-300 mb-3">
+        Se probaron directamente los endpoints en producción mediante peticiones <code>POST</code> reales:
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+          <div class="font-bold text-sky-400 mb-1">POST /api/salary</div>
+          <p class="text-slate-300">Conecta en vivo con <strong>Serper.dev</strong> y devuelve snippets reales de Glassdoor para el rol y empresa consultados.</p>
+        </div>
+        <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+          <div class="font-bold text-amber-400 mb-1">POST /api/linkedin</div>
+          <p class="text-slate-300">Valida el campo <code>linkedin</code> y consulta a <strong>Enrich Layer</strong> (o devuelve mock si la clave no está activa).</p>
+        </div>
+        <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800">
+          <div class="font-bold text-purple-400 mb-1">POST /api/generate</div>
+          <p class="text-slate-300">Conecta en vivo con <strong>Gemini (gemini-3.8-flash)</strong> y redacta una carta de 3 párrafos en español bien estructurada.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACIERTOS VS PROBLEMAS EN CÓDIGO -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Lo que hace muy bien -->
+      <div class="bg-slate-900/70 border border-emerald-500/30 rounded-xl p-5 space-y-3">
+        <h3 class="text-lg font-bold text-emerald-400">Lo que está muy bien logrado</h3>
+        <ul class="space-y-2.5 text-sm text-slate-300 list-disc pl-5">
+          <li>
+            <strong>UX asíncrona de baja latencia percibida:</strong> En <code>CoverLetterForm.tsx</code>, primero resuelve <code>/api/salary</code>, cambia inmediatamente a <code>ResultsView.tsx</code> para que el usuario lea su análisis salarial local, y en paralelo sigue esperando a <code>/api/generate</code> mostrando un skeleton loader para la carta.
+          </li>
+          <li>
+            <strong>Algoritmo heurístico local (<code>getAggregatedMarketRange</code>):</strong> Bien documentado en <code>docs/development/LOCAL_BRAIN.md</code>. Resuelve un problema real de Glassdoor: cuando un mismo snippet mezcla <code>$20,333 per year</code> con <code>GTQ 13K - GTQ 25K/mo</code>, su regex captura moneda, sufijo <code>K</code> y periodo por número, y prioriza la cubeta <code>gtqValues</code> sobre <code>usdValues</code> para no contaminar el rango local con salarios de EE.UU.
+          </li>
+          <li>
+            <strong>Matriz de negociación de 8 escenarios:</strong> Combina la posición del salario deseado dentro del rango del mercado (parte baja, media, alta, muy por debajo o por encima) con el porcentaje de incremento respecto al salario actual (<code>increasePercent</code>).
+          </li>
+          <li>
+            <strong>Firma local de la carta:</strong> El nombre del candidato nunca se envía a Gemini; Gemini termina con <code>Atentamente,</code> y <code>ResultsView.tsx</code> inyecta el nombre localmente en el navegador.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Problemas y bugs encontrados -->
+      <div class="bg-slate-900/70 border border-rose-500/30 rounded-xl p-5 space-y-3">
+        <h3 class="text-lg font-bold text-rose-400">Deficiencias Técnicas y Bugs Detectados</h3>
+        <ul class="space-y-2.5 text-sm text-slate-300 list-disc pl-5">
+          <li>
+            <strong>Sin sanitización en campos de texto libre (Condición Mínima #2):</strong> A diferencia de tu referencia (<code>src/lib/redact.ts</code>), no hay ningún filtro Regex sobre <code>aboutYou</code> ni <code>jobOffer</code>. Si el usuario escribe <em>"Actualmente gano Q14,000 en Banco Industrial y mi correo es luis@gmail.com"</em> en <code>Acerca de ti</code>, viaja íntegro a <code>/api/salary</code> y a Gemini en <code>/api/generate</code>.
+          </li>
+          <li>
+            <strong>Fuga del empleador actual vía LinkedIn:</strong> La Condición Mínima #2 establece que <em>"El salario actual y el empleador actual nunca salen del dispositivo"</em> (o del entorno seguro antes del LLM). Sin embargo, <code>/api/linkedin</code> extrae <code>experiences[].company</code> (que incluye el empleador actual del usuario) y <code>/api/generate</code> se lo envía completo a Gemini (<code>cleanLinkedinData</code> solo borra <code>.name</code>, <code>.first_name</code> y <code>.last_name</code>, propiedades que ni siquiera existen en el objeto devuelto por <code>/api/linkedin</code>).
+          </li>
+          <li>
+            <strong>Bug de propagación de error en <code>/api/linkedin/route.ts</code> (L71-78):</strong> Si Enrich Layer devuelve HTTP 401/429/500, el endpoint captura el fallo y responde <code>200 OK</code> con <code>linkedinData: { error: "Failed to fetch data from Enrich Layer" }</code>. Luego <code>/api/generate/route.ts</code> serializa ese JSON de error y lo mete al prompt de Gemini como si fuera la experiencia laboral del candidato.
+          </li>
+          <li>
+            <strong>Modo Offline demasiado básico (Condición Mínima #4):</strong> Si se corta el internet, <code>getOfflineCoverLetter(jobTitle, company)</code> devuelve 2 párrafos genéricos fijos que ignoran <code>experienceYears</code>, <code>aboutYou</code> y <code>jobOffer</code>, y usa un rango estático quemado (<code>Q15,000 - Q25,000</code>). Tampoco cuenta con Service Worker.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: EVALUACIÓN DEL ÁREA DE PROFUNDIZACIÓN DE LUIS (APIs) -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>2. ¿Aprendió lo que debía aprender sobre APIs?</span>
+        <span class="badge bg-purple-500/20 text-purple-300 border border-purple-500/30">Requisito Específico de Luis</span>
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        El spec pedía para Luis: <em>"Además del modelo en la nube, integra dos APIs adicionales: una de IA (por ejemplo, generación de imágenes con Nano Banana, video con Gemini Omni, voz u otro proveedor de modelos) y una de cualquier otro tipo (por ejemplo, tipo de cambio o una bolsa de empleo). Para cada API documenta cómo se autentica y dónde vive la credencial, qué pasa si falla o tarda, cuánto cuesta y qué datos le envías."</em>
+      </p>
+    </div>
+
+    <!-- TABLA DE AUDITORÍA DE LAS APIS -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-slate-700 text-slate-300 bg-slate-900/80">
+            <th class="p-3.5 font-semibold">Requisito del Spec (Luis)</th>
+            <th class="p-3.5 font-semibold">Qué hizo Luis en su Proyecto</th>
+            <th class="p-3.5 font-semibold">Qué hiciste tú en la Referencia (<code>/luis</code>)</th>
+            <th class="p-3.5 font-semibold">Veredicto</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800 text-slate-300">
+          <tr>
+            <td class="p-3.5 font-medium text-white">Modelo principal en la nube</td>
+            <td class="p-3.5"><strong>Gemini</strong> (<code>gemini-3.8-flash</code> vía SDK <code>@google/genai</code>) en <code>/api/generate</code>.</td>
+            <td class="p-3.5"><strong>Ollama Cloud</strong> (<code>gemma3:4b</code>) en <code>/api/cover-letter</code>.</td>
+            <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Cumple</span></td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">API Adicional #1: <strong>De IA</strong></td>
+            <td class="p-3.5">
+              <span class="text-rose-400 font-semibold">No integrada en el código.</span> En su lugar integró <strong>Enrich Layer / Proxycurl</strong> (que es una API tradicional de scraping de LinkedIn, no de IA) y creó un archivo suelto <code>API.md</code> con ejemplos teóricos de Imagen 3, Audio y Embeddings que no se llaman en ningún lugar de la app.
+            </td>
+            <td class="p-3.5"><strong>Tavily Search API</strong> (motor de búsqueda optimizado para IA / agentes con scoring semántico) en <code>/api/market- benchmark</code>.</td>
+            <td class="p-3.5"><span class="badge bg-rose-500/20 text-rose-300">Incumple en código</span></td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">API Adicional #2: <strong>De otro tipo (No-IA)</strong></td>
+            <td class="p-3.5"><strong>Serper.dev</strong> (búsqueda en Google filtrada a <code>site:glassdoor.com</code>) en <code>/api/salary</code> + <strong>Enrich Layer</strong> en <code>/api/linkedin</code>.</td>
+            <td class="p-3.5"><strong>JSearch (RapidAPI)</strong> (bolsa de empleo estructurada con rangos salariales) en <code>/api/market-benchmark</code>.</td>
+            <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Cumple (x2 No-IA)</span></td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">Autenticación y dónde vive la credencial</td>
+            <td class="p-3.5">Bien implementado y documentado: viven en <code>.env.local</code> / variables de entorno de Vercel y solo se leen en los Route Handlers del servidor (<code>X-API-KEY</code> para Serper, <code>Authorization: Bearer</code> para Enrich Layer, SDK para Gemini).</td>
+            <td class="p-3.5">Variables de entorno en servidor Next.js (<code>OLLAMA_API_KEY</code>, <code>TAVILY_API_KEY</code>, <code>RAPIDAPI_KEY</code>).</td>
+            <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Excelente</span></td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">¿Qué pasa si falla o tarda? (Timeouts / Retries / Fallbacks)</td>
+            <td class="p-3.5">
+              Documentado en el <code>README.md</code>, pero en el código <strong>no hay <code>AbortController</code> (timeouts) ni reintentos</strong> en ninguna de las 3 rutas. Si una API falla, tiene fallbacks (datos mock si no hay API key, o regla del 20% si Serper no trae datos), pero con el bug de inyectar <code>{error: ...}</code> de LinkedIn en Gemini.
+            </td>
+            <td class="p-3.5">Wrapper <code>fetchWithPolicy</code> en <code>src/lib/http.ts</code> con <code>AbortController</code> explícito (6s Tavily, 8s JSearch, 20s LLM) + 1 retry con backoff de 350ms en HTTP 429/5xx.</td>
+            <td class="p-3.5"><span class="badge bg-amber-500/20 text-amber-300">Parcial (Sin Timeouts)</span></td>
+          </tr>
+          <tr>
+            <td class="p-3.5 font-medium text-white">Documentación de Costos y Datos enviados</td>
+            <td class="p-3.5">Muy bien documentado en tablas dentro del <code>README.md</code> ($0.001/búsqueda en Serper, ~$0.01-$0.03/perfil en Enrich Layer, ~$0.0001/carta en Gemini Flash) con fragmentos de código de los payloads.</td>
+            <td class="p-3.5">Documentado por proveedor en <code>README.md</code> y <code>docs/decisiones.md</code>.</td>
+            <td class="p-3.5"><span class="badge bg-emerald-500/20 text-emerald-300">Excelente</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EVIDENCIA DE CÓDIGO: BUG DE LINKEDIN -> GEMINI Y FALTA DE SANITIZACIÓN -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+      <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+        <div class="text-xs font-semibold text-amber-400 mb-2">
+          📌 Evidencia 1: <code>src/app/api/linkedin/route.ts</code> (L71-78) y <code>/api/generate/route.ts</code> (L14-18)
+        </div>
+        <pre><code>// En /api/linkedin/route.ts:
+} else {
+  console.error("Enrich Layer API error:", response.status);
+  linkedinData = { error: "Failed to fetch data from Enrich Layer" };
+}
+// Devuelve HTTP 200 OK con el objeto de error adentro:
+return NextResponse.json({ success: true, linkedinData }, { status: 200 });
+
+// Luego en /api/generate/route.ts:
+const cleanLinkedinData = { ...linkedinData };
+delete cleanLinkedinData.name; // /api/linkedin ni siquiera envía .name
+// ¡Si falló Enrich Layer, le inyecta {"error": "Failed..."} al prompt de Gemini!
+// Y si tuvo éxito, le inyecta experiences[].company (el empleador actual).</code></pre>
+      </div>
+
+      <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+        <div class="text-xs font-semibold text-sky-400 mb-2">
+          📌 Evidencia 2: <code>API.md</code> (Archivo desconectado de la aplicación)
+        </div>
+        <p class="text-xs text-slate-300 mb-2">
+          Para cubrir el punto de otras capacidades de IA, Luis incluyó un archivo <code>API.md</code> en la raíz con ejemplos genéricos de <code>imagen-3.0-generate-002</code>, análisis de audio/video y <code>text-embedding-004</code>, pero ninguno está integrado en la aplicación:
+        </p>
+        <pre><code>// Extracto de API.md (L19-28) — No existe en src/:
+const response = await ai.models.generateImages({
+    model: 'imagen-3.0-generate-002',
+    prompt: 'Un diseño minimalista de un cerebro dividido en dos...',
+    config: { numberOfImages: 1, outputMimeType: 'image/jpeg' },
+});</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: COMPARATIVA CON TU IMPLEMENTACIÓN DE REFERENCIA -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>3. Contraste con tu Implementación de Referencia (<code>/coverletter-gen/luis</code>)</span>
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        Comparación arquitectónica entre la solución de Luis y tu referencia para el mismo reto.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
+        <h3 class="text-base font-bold text-sky-400 mb-3">Tu Referencia (<code>/Users/ykro/code/coverletter-gen/luis</code>)</h3>
+        <ul class="space-y-2 text-xs text-slate-300 list-disc pl-4">
+          <li><strong>Sanitización proactiva de texto libre (<code>src/lib/redact.ts</code>):</strong> Redacta salarios (<code>Q18,000</code>, <code>$2,500</code>), emails, teléfonos, DPI, URLs, nombres tras <em>"me llamo..."</em> y el nombre del empleador actual con word-boundaries antes de armar cualquier payload de red.</li>
+          <li><strong>Resiliencia HTTP real (<code>src/lib/http.ts</code>):</strong> <code>fetchWithPolicy</code> con <code>AbortController</code> por proveedor (6s Tavily, 8s JSearch, 20s LLM) y 1 retry automático ante errores transitorios (429 / 5xx).</li>
+          <li><strong>Extracción híbrida del salario de mercado:</strong> Extrae señales tanto de la oferta pegada localmente (<code>extractOfferSalary</code>) como de Tavily + JSearch, calculando mediana local.</li>
+          <li><strong>PWA Offline completa (<code>public/sw.js</code>):</strong> Cachea el App Shell para recargar sin red y genera la carta offline usando los logros y requisitos reales ingresados por el usuario.</li>
+          <li><strong>Suite de pruebas exhaustiva:</strong> 5 suites unitarias en Vitest + pruebas E2E en Playwright que interceptan red, prueban caída de las 3 APIs (HTTP 500) y modo <code>context.setOffline(true)</code>.</li>
+        </ul>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5">
+        <h3 class="text-base font-bold text-purple-400 mb-3">Entrega de Luis (<code>cover-letter-local</code>)</h3>
+        <ul class="space-y-2 text-xs text-slate-300 list-disc pl-4">
+          <li><strong>Filtrado solo por omisión de llaves JSON:</strong> Construye <code>safePayload</code> omitiendo las propiedades <code>name</code>, <code>currentSalary</code> y <code>desiredSalary</code>, confiando en que el usuario no escriba datos sensibles dentro de los textareas libres.</li>
+          <li><strong>Enriquecimiento con perfil de LinkedIn:</strong> Idea creativa e intuitiva para el usuario (pegar su LinkedIn para nutrir la carta), aunque introduce fricción con la regla de privacidad porque envía el slug del usuario y su empleador actual a terceros.</li>
+          <li><strong>Parser de Glassdoor muy trabajado:</strong> Su función <code>getAggregatedMarketRange</code> maneja bien la ambigüedad de snippets reales de Google/Glassdoor en Guatemala (conversión GTQ/USD/EUR, anual vs mensual, priorización de moneda local).</li>
+          <li><strong>Botón de Datos de Ejemplo rotativos:</strong> Implementa un botón <em>"Llenar con datos de ejemplo"</em> con empresas reales del ecosistema tech de Guatemala (PayPal, Allied Global, Banco Industrial, Tigo, etc.).</li>
+          <li><strong>Testing:</strong> 1 único test en Playwright (<code>e2e/privacy.spec.ts</code>) que comprueba que <code>payload.currentSalary</code> sea <code>undefined</code> en la petición POST.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: EVALUACIÓN DEL ARTÍCULO EN SUBSTACK -->
+  <section class="glass-card p-8 space-y-6">
+    <div class="border-b border-slate-800 pb-4">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>4. Evaluación del Artículo (Contenido y Longitud)</span>
+        <span class="badge bg-amber-500/20 text-amber-300 border border-amber-500/30">Substack / article/ARTICLE.md</span>
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        Publicado en: <a href="https://cuprumbot.substack.com/p/split-brain-division-de-tareas-para" target="_blank" class="text-sky-400 underline">https://cuprumbot.substack.com/p/split-brain-division-de-tareas-para</a>
+      </p>
+    </div>
+
+    <!-- MÉTRICAS DEL ARTÍCULO -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800 text-center">
+        <div class="text-xs text-slate-400">Extensión Total</div>
+        <div class="text-2xl font-bold text-amber-400 mt-1">~580 palabras</div>
+        <div class="text-xs text-slate-500">61 líneas (~2.5 min lectura)</div>
+      </div>
+      <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800 text-center">
+        <div class="text-xs text-slate-400">Elementos Visuales</div>
+        <div class="text-2xl font-bold text-emerald-400 mt-1">1 Diagrama + 2 Capturas</div>
+        <div class="text-xs text-slate-500">Incluidos en Substack</div>
+      </div>
+      <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800 text-center">
+        <div class="text-xs text-slate-400">Decisión / Error Real</div>
+        <div class="text-2xl font-bold text-emerald-400 mt-1">Sí (Muy bueno)</div>
+        <div class="text-xs text-slate-500">Fallo WebGPU TDR 2s → Regex</div>
+      </div>
+      <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-800 text-center">
+        <div class="text-xs text-slate-400">Profundidad en APIs</div>
+        <div class="text-2xl font-bold text-rose-400 mt-1">Muy Superficial</div>
+        <div class="text-xs text-slate-500">Solo 3 viñetas de 1 línea</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-2">
+        <h3 class="text-base font-bold text-emerald-400">Puntos Fuertes del Artículo</h3>
+        <ul class="space-y-2 text-sm text-slate-300 list-disc pl-5">
+          <li>
+            <strong>Excelente narrativa del "Cementerio de modelos locales":</strong> Cuenta con honestidad técnica cómo intentaron correr <code>Qwen2.5-1.5B</code> y <code>Gemma-2-2B</code> en el navegador vía WebGPU, chocando contra el límite de 2 segundos del driver de Windows (<em>TDR: Timeout Detection and Recovery</em> / <code>DXGI_ERROR_DEVICE_HUNG</code>), el congelamiento en WASM y las alucinaciones en español de <code>Qwen 0.5B</code>.
+          </li>
+          <li>
+            <strong>Lección clave bien explicada:</strong> Desmitifica que <em>Split-Brain</em> requiera forzosamente dos LLMs, justificando por qué reemplazar el LLM local por un algoritmo determinista (Regex + reglas de negocio) fue más rápido, privado y predecible.
+          </li>
+          <li>
+            <strong>Caso real de limpieza de datos:</strong> Explica el problema de mezclar salarios anuales en USD con mensuales en GTQ en Glassdoor y por qué decidieron descartar USD cuando existe al menos un dato en GTQ.
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-2">
+        <h3 class="text-base font-bold text-amber-400">Áreas de Mejora (Longitud y Enfoque)</h3>
+        <ul class="space-y-2 text-sm text-slate-300 list-disc pl-5">
+          <li>
+            <strong>Longitud demasiado corta (~580 palabras):</strong> Se lee en unos 2 minutos y medio. Aunque va al grano, se queda corto para ser un artículo técnico de referencia (por ejemplo, el de Cathy tiene ~1,450 palabras).
+          </li>
+          <li>
+            <strong>Desaprovecha su tema asignado (APIs):</strong> Toda la información valiosa que Luis sí documentó muy bien en su <code>README.md</code> (costos por llamada en Serper vs Proxycurl vs Gemini, cómo ocultar API keys en Route Handlers, cómo desacoplar la latencia de Serper frente a la de Gemini, y qué payload exacto recibe cada API) <strong>no aparece en el artículo de Substack</strong>. En el artículo, las 3 APIs se resumen en 3 bullets de una oración.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: RESUMEN DE RECOMENDACIONES PARA FEEDBACK A LUIS -->
+  <section class="glass-card p-8 space-y-4 border-l-4 border-l-sky-400">
+    <h2 class="text-xl font-bold text-white">5. Resumen de Feedback Accionable para Luis</h2>
+    <ol class="space-y-2 text-sm text-slate-300 list-decimal pl-5">
+      <li>
+        <strong>Agregar sanitización de texto libre (PII Redaction):</strong> Antes de enviar <code>aboutYou</code> y <code>jobOffer</code> a <code>/api/generate</code> (y dejar de enviarlos a <code>/api/salary</code> donde ni se usan), pasar un sanitizador Regex que reemplace montos salariales, correos, teléfonos y el nombre del candidato/empleador actual.
+      </li>
+      <li>
+        <strong>Corregir el manejo de errores y privacidad en <code>/api/linkedin</code>:</strong> No enviar <code>experiences[].company</code> (empleador actual) al prompt de Gemini, y evitar que un fallo de Enrich Layer devuelva <code>200 OK</code> con <code>{ error: "..." }</code> que termina inyectado como texto en el prompt del LLM.
+      </li>
+      <li>
+        <strong>Integrar una 2da API de IA real y añadir <code>AbortController</code>:</strong> El spec pedía explícitamente 1 API adicional de IA + 1 de otro tipo (tanto Serper como Enrich Layer son APIs de datos/scraping, no de IA), además de agregar timeouts explícitos (<code>AbortController</code>) en las llamadas <code>fetch</code> del backend.
+      </li>
+      <li>
+        <strong>Expandir el artículo en Substack (+400-500 palabras):</strong> Incorporar al artículo la sección de arquitectura de APIs, costos por mil llamadas, manejo de fallos/latencia asíncrona y tabla de privacidad por proveedor que ya tiene escrita en su <code>README.md</code>.
+      </li>
+    </ol>
+  </section>
+
+</body>
+</html>
