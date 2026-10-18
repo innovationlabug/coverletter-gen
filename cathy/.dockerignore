@@ -1,11 +1,14 @@
+# Sintaxis .gitignore: un patrón sin "/" excluye esa carpeta en CUALQUIER nivel.
+# Por eso las carpetas de la raíz van ancladas con "/": `ollama` a secas también dejaba
+# fuera src/app/api/ollama y la app salía sin el proxy a Ollama (404 en producción).
 node_modules
 .next
-ollama
-bench
-tests
-docs
-playwright-report
-test-results
+/ollama
+/bench
+/tests
+/docs
+/playwright-report
+/test-results
 .env
 .env.*
 !.env.example
