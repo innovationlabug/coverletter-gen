@@ -190,6 +190,8 @@ Alternativa: `OLLAMA_URL=https://ollama-coverletter-….run.app` y `OLLAMA_TOKEN
 
 **Producción** (Cloud Run): `./deploy-app.sh` crea la cuenta de servicio `coverletter-cathy-app`, le da `roles/aiplatform.user` y `roles/run.invoker` **solo** sobre `ollama-coverletter`, construye con Cloud Build y despliega `rango` (pública) con las variables de entorno. El Ollama se despliega aparte con `ollama/deploy.sh`.
 
+Antes de desplegar, `.gcloudignore` y `.dockerignore` deben anclar a la raíz las carpetas que no van a la imagen (`/ollama`, `/bench`, `/tests`, `/docs`). Sin el `/`, el patrón `ollama` también saca `src/app/api/ollama/` y la API responde 404; `tests/deploy-context.test.ts` lo revisa. El Ollama escala a cero: la primera generación tras un rato sin uso tarda hasta unos 3 minutos mientras la GPU despierta (2 min 45 s medido el 18 de octubre de 2026); ya despierta, 2 o 3 segundos.
+
 Variables: `OLLAMA_URL`, `OLLAMA_MODEL` (modelo que usa la app; la UI no lo expone), `OLLAMA_TOKEN` (solo dev), `OLLAMA_TIMEOUT_MS` (default 300000), `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION=global`, `GOOGLE_GENAI_USE_VERTEXAI=true`, `GEMINI_MODEL` (default `gemini-3.8-flash`).
 
 ---
